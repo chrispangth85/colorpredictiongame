@@ -1,0 +1,263 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared;
+@using FreshMVC.Models
+@model PaginationAdminModel
+
+<script type="text/javascript">
+
+    $("#btnSearch, #btnPage").click(function (evt) {
+        var filterValue = $("#FilterValue").val();
+        var e = document.getElementById("page")
+        var page = "1";
+        if (e != null) {
+            page = e.options[e.selectedIndex].value;
+        }
+        var selectedOption = $("#SelectedFilteringCriteria").val();
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/UserList",
+            data: {
+                selectedPage: page,
+                filterType: selectedOption,
+                filterValue: filterValue, },
+            success: function (data) {
+                $("#main-content").html(data);
+                event.stopPropagation();
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+            }
+        });
+    });
+
+    $(".ShowPassword").click(function (e) {
+        Swal.fire({
+            title: 'Password : ' + this.id,
+            showDenyButton: false,
+            showCancelButton: false,
+            confirmButtonText: 'Yes',
+        });
+    });
+
+    $(".EditData").click(function (e) {
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/ModalEditUserListData",
+            data: { Username: this.id, isAgent: $(this).attr("isagentz") },
+            success: function (data) {
+                $("#main-content").html(data);
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+            }
+        });
+    });
+
+    $("#btnCreateUser").click(function (e) {
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/ModalEditUserListData",
+            data: { isAgent: false },
+            success: function (data) {
+                $("#main-content").html(data);
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+            }
+        });
+    });
+
+    $("#btnCreateAgent").click(function (e) {
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/ModalEditUserListData",
+            data: { isAgent: true },
+            success: function (data) {
+                $("#main-content").html(data);
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+            }
+        });
+    });
+
+    @*$(".DeleteUser").click(function (e) {
+        Swal.fire({
+                title: 'Are you sure you want to delete this member?',
+                showDenyButton: false,
+                showCancelButton: true,
+                confirmButtonText: 'Yes',
+            }).then((result) => {
+                /* Read more about isConfirmed, isDenied below */
+                if (result.isConfirmed) {
+                    $('.page-loader-wrapper').show();
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/AdminGeneral/DeleteMember",
+                        data: { Username: this.id },
+                        success: function (data) {
+                            $("#main-content").html(data);
+                            $('.page-loader-wrapper').hide();
+                            alert("@resShared.lblDeleteSuccessfully");
+                        },
+                        error: function (xhr, status, error) {
+                            let r = jQuery.parseJSON(xhr.responseText);
+                            var errorM = r.message;
+                            alert(errorM);
+                            $('.page-loader-wrapper').hide();
+                        }
+                    });
+                }
+            })
+    });*@
+
+</script>
+
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <h2>@resShared.mnuUser</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                    <li class="breadcrumb-item active">@resShared.mnuUserListing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="grid" style="margin-left: 10px; margin-right: 10px" id="grid">
+        <input type="hidden" id="eliminateId" />
+        <div class="table-responsive">
+            <div class="row">
+
+                <div class="grid" style="margin-left: 15px;" id="grid">
+                    <strong>Filter option</strong>
+                    @Html.DropDownListFor(model => model.SelectedFilteringCriteria, @Model.FilteringCriteria, new { @id = "SelectedFilteringCriteria", @class = "form-control", @style = "width:150px; height:34px" })
+
+                </div>
+
+                <div class="grid" style="margin-left: 5px;" id="gridFilterValue">
+                    <strong id="optionText">Value</strong>
+                    @Html.TextBoxFor(model => model.FilterValue, new { @class = "form-control", @id = "FilterValue" })
+                </div>
+
+
+                <div class="grid" style="margin-left: 5px;" id="grid">
+                    <br />
+                    <button id="btnSearch" type="button" class="btn btn-primary" style="width: 100px;">@resShared.btnSearch</button>
+
+                </div>
+            </div>
+            
+            <div class="grid" style="margin-left: 5px;" id="grid">
+                <button id="btnCreateAgent" type="button" class="btn btn-primary" style="float:right;width:180px;">@resShared.btnCreate (@resShared.lblAgent)</button>
+                <button id="btnCreateUser" type="button" class="btn btn-primary" style="float:right;width:180px;margin-right:10px;">@resShared.btnCreate (@resShared.mnuUser)</button>
+            </div>
+            <br/><br />
+            @*<table style="width:100%">
+            <tr>
+                <td style="text-align:right;padding-bottom:10px;padding-right:10px">
+                    <a href="@Url.Action("ExportUserList", "AdminGeneral")" class="button" target="_blank">
+                        @resShared.lblExport
+                    </a>
+                </td>
+            </tr>
+        </table>*@
+            <table id="tablestyle" width="100%" class="table table-bordered table-hover table-striped" border="1px solid #414558;">
+                <thead>
+                    <tr style="background-color: #414558;color:white">
+                        <th>#</th>
+                        <th>
+                            @resShared.lblPhone
+                        </th>
+                        <th>
+                            @resShared.lblRechargeWallet
+                        </th>
+                        <th>
+                            @resShared.lblMemberType
+                        </th>
+                        <th>
+                            @resShared.lblCashWallet
+                        </th>
+                        @*<th>
+
+                    </th>*@
+                        <th style="width: 5%; color: White; ">
+                            @resShared.lblEdit
+                        </th>
+                        <th>
+                            @resShared.lblShowPassword
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.AdminList.Count == 0)
+                    {
+                        <tr style="height: 25px; border-top: 1px solid white;">
+                            <td style="padding: 5px;" colspan="10">
+                                @resShared.lblNoRecFound
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var item in Model.AdminList)
+                    {
+                        <tr style="height: 25px; border-top: 1px solid white;">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Number)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CashWallet)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.AccountType)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CashWallet)
+                            </td>
+                            @*<td>
+                            <a class="DeleteUser" href="#" id="@item.Username">@resShared.lblDelete</a>
+                        </td>*@
+                            <td>
+                                <a class="EditData" href="#" id="@item.Username" isagentz="@item.IsAgent"><i class="fa fa-edit"></i></a>
+                            </td>
+                            <td>
+                                <a class="ShowPassword" href="#" id="@item.Password"><i class="fa fa-key"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (Model.AdminList.Count != 0)
+        {
+            <table width="auto" style="text-align:right; margin-right:0px; margin-left:auto;margin-bottom:30px">
+                <tr style="text-align: right">
+                    <td style="text-align: right">
+                        <div class="BtnClass" style="float: right;">
+                            @Html.DropDownList("page", @Model.Pages, new
+                            {
+                                style = "width:80px;",
+                                @class = "form-control"
+                            })
+
+                        </div>
+                    </td>
+                    <td style="text-align: right">
+                        <button id="btnPage" type="button" class="btn btn-primary" style="width:100px">@resShared.btnView</button>
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+</div>

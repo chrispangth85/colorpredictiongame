@@ -1,0 +1,180 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Color Prediction Admin</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="description" content="Lucid Bootstrap 4x Admin Template">
+    <meta name="author" content="WrapTheme, design by: ThemeMakker.com">
+
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+    <!-- VENDOR CSS -->
+    <link rel="stylesheet" href="~/Lucid/assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Lucid/assets/vendor/font-awesome/css/font-awesome.min.css">
+
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="~/Lucid/assets/css/main.css">
+    <link rel="stylesheet" href="~/Lucid/assets/css/color_skins.css">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+
+    <script>
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        if ('@ViewBag.ReloadPage' == 'Y') {
+            alert('@resShared.msgSessionExpired')
+             location.href = "/Admin/Login";
+        }
+
+        $(document).ready(function () {
+
+            $('#username').val(getCookie("herbiadminid"));
+            $('#password').val(getCookie("herbiadminpassword"));
+
+            if (getCookie("herbiadminremember") == "true") {
+                document.getElementById("inputBasicRemember1").checked = true;
+            }
+
+            function isValid(count, ids, msgs) {
+                if (ids) {
+                    // check text box
+                    let arraySize = count;
+                    for (var i = 0; i < arraySize; i++) {
+                        const element = document.getElementById(ids[i]);
+                        if (!(element && element.value)) {
+                            //alert(string.Format("{0} {1}", @resShared.lblWarning, msgs[i]));
+                            alert(`${"@resShared.lblWarning"} ${msgs[i]}`);
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            $("#forgetPassword").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                location.href = "/Admin/ForgotPassword";
+            });
+
+            $("#username").select().focus();
+
+            $("#password,#username").keypress(function (e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            $("#password,#username").keyup(function (event) {
+                if (event.keyCode === 13) {
+                    $("#btnMemberLogin").click();
+                }
+            });
+
+            $("#btnMemberLogin").click(function (evt) {
+                var valid = isValid(2, ['username', 'password'],
+                    ["@resShared.lblUsernameIsRequired", "@resShared.lblPasswordIsRequired"]);
+
+                if (valid) {
+                    $('.page-loader-wrapper').show();
+                    $.ajax({
+                        type: "POST",
+                        url: "/Admin/ValidateLogin",
+                        data: { userName: $('#username').val(), password: $('#password').val(), rememberMeCheck: document.getElementById("inputBasicRemember1").checked },
+                        success: function (data) {
+                            location.href = "/Admin/Home";
+                        },
+                        error: function (xhr, status, error) {
+                            let r = jQuery.parseJSON(xhr.responseText);
+                            alert(r.message);
+                            $('.page-loader-wrapper').hide();
+                        }
+                    });
+
+                }
+
+            });
+
+        });
+
+    </script>
+    <style>
+        .auth-main:before {
+            /*background: none !important;*/
+            width: 20%;
+            left: 0%;
+        }
+
+        .auth-main::after {
+            width: 80%;
+            left: 20%;
+            background: url('/Lucid/assets/images/auth_bg.jpg');
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+
+<body class="theme-green">
+    <!-- WRAPPER -->
+    <div id="wrapper">
+        <div class="vertical-align-wrap">
+            <div class="vertical-align-middle auth-main">
+                <div class="auth-box">
+                    <div class="top">
+                        <img src="~/Lucid/assets/images/logo.png" alt="Lucid">
+                    </div>
+                    <div class="card">
+                        <div class="header">
+                            <p class="lead">
+                                Welcome to the Color Prediction Admin Portal!
+                            </p>
+                        </div>
+                        <div class="body">
+                            <div class="form-group">
+                                <label for="signin-email" class="control-label sr-only">@resShared.lblUsername</label>
+                                <input type="text" class="form-control" id="username" placeholder="@resShared.lblUsername">
+                            </div>
+                            <div class="form-group">
+                                <label for="signin-password" class="control-label sr-only">@resShared.lblPassword</label>
+                                <input type="password" class="form-control" id="password" placeholder="@resShared.lblPassword">
+                            </div>
+                            <div class="form-group clearfix">
+                                <label class="fancy-checkbox element-left">
+                                    <input type="checkbox" class="form-check-input" aria-label="Remember Me" id="inputBasicRemember1" />
+                                    <span>@resShared.lblRememberMe</span>
+                                </label>
+
+                            </div>
+                            @*<button type="submit" class="btn btn-primary btn-lg btn-block">LOGIN</button>*@
+                            <button id="btnMemberLogin" class="btn btn-primary btn-lg btn-block" aria-label="@resShared.btnLogIn">
+                                @resShared.btnLogIn
+                            </button>
+                            <br />
+                            <a href="#" id="forgetPassword">Forget password</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- END WRAPPER -->
+</body>
+</html>

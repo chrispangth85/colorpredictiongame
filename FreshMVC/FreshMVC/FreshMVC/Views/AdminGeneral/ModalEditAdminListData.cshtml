@@ -1,0 +1,124 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared;
+@using FreshMVC.Models
+@model AdminModel
+
+<script type="text/javascript">
+
+    $("#btnSaveAd").click(function (evt) {
+        $('.page-loader-wrapper').show();
+            $.ajax({
+                type: "POST",
+                url: "/AdminGeneral/EditAdminListFromDialog",
+                data: $("#editAdForm").serialize(),
+                success: function (data) {
+                    $('.page-loader-wrapper').hide();
+                    $("#main-content").html(data);
+                    alert("@resShared.msgSaveSuccessfully");
+                },
+                error: function (xhr, status, error) {
+                    $('.page-loader-wrapper').hide();
+                   let r = jQuery.parseJSON(xhr.responseText);
+                    var errorM = r.message;
+                    alert(errorM);
+                }
+            });
+     });
+
+    $('#1').hide();
+    $('#2').hide();
+    $('#3').hide();
+
+    $("#AdminChangePassword").click(function () {
+        var checkedValue = $('#AdminChangePassword:checked').val();
+        if (checkedValue == "true") {
+            $("#1").show();
+            $('#2').show();
+            $('#3').show();
+        } else {
+            $('#1').hide();
+            $('#2').hide();
+            $('#3').hide();
+        }
+    });
+
+</script>
+
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <h2>\@resShared.mnuAdminListing</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                    <li class="breadcrumb-item active"></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    @using (Html.BeginForm("EditAdminPermissionMethod", "AdminGeneral", FormMethod.Post, new { name = "editAdForm", id = "editAdForm" }))
+    {
+        <div class="page-content p-6">
+            <div class="content container">
+                @Html.HiddenFor(model => model.UserID)
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <div class="example">
+                            <div class="description">
+                                <div class="description-text">
+                                </div>
+                            </div>
+                            <div class="source-preview-wrapper">
+                                <div class="preview">
+                                    <div class="preview-elements">
+                                        <div class="form-group">
+                                            <strong>@resShared.lblUsername <span style="color: Red">*</span></strong>
+                                            @if (@Model.Username == null || @Model.Username == "")
+                                            {
+                                                @Html.TextBoxFor(model => model.Username, new { @class = "form-control" })
+                                            }
+                                            else
+                                            {
+                                                @Html.TextBoxFor(m => @Model.Username, new { @class = "form-control", @readonly = "readonly" })
+                                            }
+                                        </div>
+                                        <div class="form-group">
+                                            <strong>@resShared.lblName <span style="color: Red">*</span></strong>
+                                            @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                                        </div>
+                                        @if (@Model.Username == null || @Model.Username == "")
+                                        {
+                                            <div class="form-group">
+                                                <strong>@resShared.lblPassword <span style="color: Red">*</span></strong>
+                                                @Html.PasswordFor(model => model.Password, new { @class = "form-control" })
+                                            </div>
+                                        }
+                                        else
+                                        {
+                                            <div class="form-group">
+                                                @Html.CheckBoxFor(model => model.IsChangePassword, new { @id = "AdminChangePassword" })
+                                                @resShared.lblChangePassword
+                                            </div>
+                                            <div class="form-group" id="1">
+                                                <strong>@resShared.lblCurrPwd</strong>
+                                                @Html.PasswordFor(model => model.CurrentPassword, new { @class = "form-control" })
+                                            </div>
+                                            <div class="form-group" id="2">
+                                                <strong>@resShared.lblNewPwd</strong>
+                                                @Html.PasswordFor(model => model.NewPassword, new { @class = "form-control" })
+                                            </div>
+                                            <div class="form-group" id="3">
+                                                <strong>@resShared.lblConfirmNewPass</strong>
+                                                @Html.PasswordFor(model => model.ConfirmNewPassword, new { @class = "form-control" })
+                                            </div>
+                                        }
+                                        <input id="btnSaveAd" type="button" class="btn btn-sm btn-primary" style="width:180px; height:35px" value="@resShared.btnSave" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

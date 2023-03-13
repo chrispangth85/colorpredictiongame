@@ -1,0 +1,188 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="generator" content="">
+    <title>Hot Mall</title>
+
+    <!-- manifest meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="~/MobileUX/img/favicon180.png" sizes="180x180">
+    <link rel="icon" href="~/MobileUX/img/favicon32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="~/MobileUX/img/favicon16.png" sizes="16x16" type="image/png">
+
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <!-- style css for this template -->
+    <link href="~/MobileUX/css/style.css" rel="stylesheet" id="style">
+    <link href="~/MobileUX/css/styleOldMobileUX.css" rel="stylesheet" id="style">
+
+    <!--Alertify-->
+    <script src="~/Content/assets/alertify.min.js"></script>
+    <!-- include the style -->
+    <link rel="stylesheet" href="~/Content/assets/css/alertify.min.css" />
+    <!-- include a theme -->
+    <link rel="stylesheet" href="~/Content/assets/css/themes/default.min.css" />
+
+
+    <!-- <msdropdown> -->
+    <script src="~/DropDownCountry/js/jquery/customdropdown.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/DropDownCountry/css/msdropdown/dd.css" />
+    <script src="~/DropDownCountry/js/msdropdown/jquery.dd.min.js"></script>
+    <!-- </msdropdown> -->
+    <link rel="stylesheet" type="text/css" href="~/DropDownCountry/css/msdropdown/flags.css" />
+</head>
+
+<body class="body-scroll d-flex flex-column h-100 client-dark-bg" data-page="signin">
+
+    <!-- Begin page content -->
+    <main class="container-fluid h-100">
+        <div class="row h-100">
+            <div class="col-10 col-md-6 col-lg-5 col-xl-3 mx-auto mt-auto pt-4 text-center mb-100px d-grid gap-2">
+                <h3 class="mb-1">Welcome to Hot Mall! </h3>
+                <p class="text-muted mb-4"></p>
+
+                <select name="countries" id="countries" style="width:border:none;text-align:left;width:100%;" class="">
+                    <option value='91' data-image="images/msdropdown/icons/blank.gif" data-imagecss="flag in" data-title="Malaysia">India(+91)</option>
+                    <option value='60' data-image="images/msdropdown/icons/blank.gif" data-imagecss="flag my" data-title="Malaysia">Malaysia(+60)</option>
+                </select>
+
+                <div class="form-group form-floating is-valid">
+                    <input type="tel" class="form-control" value="" id="username" placeholder="@@resShared.lblPhone" autocomplete="off">
+                    <label class="form-control-label" for="email">@resShared.lblPhone</label>
+                </div>
+
+                <div class="form-group form-floating is-valid">
+                    <input type="password" class="form-control " id="password" placeholder="Password" autocomplete="off">
+                    <label class="form-control-label" for="password">@resShared.lblPassword</label>
+                </div>
+                <p class="mb-0"><a href="#" id="btnForgetPassword" class="btn btn-link text-white">@resShared.lblForgetPassword?</a></p>
+                <div class="flex-container-space-around">
+                    <div style="width:50%;">
+                        <a href="#" id="btnBack" target="_self" class="btn btn-primary" style="width:80%;">@resShared.btnBack</a>
+                    </div>
+                    <div style="width:50%;">
+                        <a href="#" id="btnMemberLogin" target="_self" class="btn" style="width:80%; background-color:green; color:white;">@resShared.btnLogIn</a>
+                    </div>
+                </div>
+
+                <a href="#" target="_self" id="btnSignUp" class="text-white btn btn-lg btn-link">Sign up now!</a>
+
+                @*<div class="">
+                        <div style="width:100%;">
+                            <a href="#" id="btnLoginFB" target="_self" class="btn btn-primary" style="width:100%; background-color:#3b5898; color:white;">Login With Facebook</a>
+                        </div>
+                    </div>
+                    <div class="">
+                        <div style="width:100%;">
+                            <a href="#" id="btnLoginGoogle" target="_self" class="btn" style="width:100%; background-color:#4286f4; color:white;">Login With Google</a>
+                        </div>
+                    </div>*@
+            </div>
+        </div>
+    </main>
+
+    <script>
+        $(document).ready(function () {
+
+        $("#countries").msDropdown();
+
+            function isValid(count, ids, msgs) {
+                if (ids) {
+                    // check text box
+                    let arraySize = count;
+                    for (var i = 0; i < arraySize; i++) {
+                        const element = document.getElementById(ids[i]);
+                        if (!(element && element.value)) {
+                            alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: msgs[i] }).show();
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            $("#forgetPassword").click(function (evt) {
+                $('#page-loader-wrapper').show();
+                location.href = "/UserLogin/ForgetPassword";
+            });
+
+            $("#username").select().focus();
+
+            $("#password,#username").keypress(function (e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            $("#password,#username").keyup(function (event) {
+                if (event.keyCode === 13) {
+                    $("#btnMemberLogin").click();
+                }
+            });
+
+            $("#btnBack").click(function (evt) {
+                location.href = "/User/Home";
+            });
+
+            $("#btnMemberLogin").click(function (evt) {
+                var valid = isValid(2, ['username', 'password'],
+                    ["@resShared.lblPhoneIsRequired", "@resShared.lblPasswordIsRequired"]);
+                if (valid) {
+                    $.ajax({
+                        type: "POST",
+                        url: "/UserLogin/ValidateLogin",
+                        data: { userName: $('#username').val(), countrycode: $('#countries').val(), password: $('#password').val() },
+                        success: function (data) {
+                            location.href = "/User/Home";
+                        },
+                        error: function (xhr, status, error) {
+                            let r = JSON.parse(xhr.responseText);
+                            alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
+                        }
+                    });
+
+                }
+            });
+
+            $("#btnForgetPassword").click(function (evt) {
+                location.href = "/UserLogin/ForgetPassword";
+            });
+
+            $("#btnSignUp").click(function (evt) {
+                $.ajax({
+                        type: "POST",
+                        url: "/UserLogin/SignUp",
+                        data: { userName: $('#username').val(), password: $('#password').val() },
+                        success: function (data) {
+                            location.href = "/UserLogin/SignUp";
+                        },
+                        error: function (xhr, status, error) {
+                            let r = jQuery.parseJSON(xhr.responseText);
+                            alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
+                        }
+                    });
+            });
+        });
+
+    </script>
+
+</body>
+
+
+
+</html>

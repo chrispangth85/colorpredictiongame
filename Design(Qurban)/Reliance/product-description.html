@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product - Reliance</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/product.css">
+    <link rel="stylesheet" href="css/custome.css">
+    <link rel="stylesheet" href="css/custome-responsive.css">
+</head>
+
+<body>
+    <div class="foot-skip">
+        <header class="section-wrap">
+            <!-- Logo section -->
+            <div class="header-inner-wrapper">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a class="navbar-brand" href="index.html">
+                        <img src="img/logo.jpg" alt="" class="logo">
+                    </a>
+                    <a class="app-btn d-flex align-items-center" href="https://reliance-mall.com/testapp_1.0.0.apk">Open
+                        With an App <i class="bi bi-cloud-arrow-down-fill ms-2 mt-1"></i></a>
+                </div>
+            </div>
+        </header>
+
+        <main>
+            <!--Navgation on Desktop-->
+            <nav id="menu-nav" class="section-wrap bg-white z-index-10">
+                <div class="section-inner-wrapper nav-mobile">
+                    <div class="w-100 navbar-links ">
+                        <div class="container-fluid">
+                            <ul class="d-flex justify-content-around w-100 navbar-links-ul m-0">
+                                <li class="nav-item">
+                                    <a class="nav-link active-nav" aria-current="page" href="index.html"><i
+                                            class="bi bi-house-fill me-2"></i> Home</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link " aria-current="page" href="search.html"><i
+                                            class="bi bi-search me-2"></i> Search</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link " aria-current="page" href="win.html"><i
+                                            class="bi bi-trophy-fill me-2"></i> Win</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link " aria-current="page" href="profile.html"><i
+                                            class="bi bi-person-circle me-2"></i> Profile</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <section class="section-wrap">
+                <section class="section-wrap bg-peach">
+                    <div class="section-inner-wrapper padding-s" style="overflow: visible;">
+                        <div class="display-space">
+                            <div class="middle">
+                                <img class="mall-icon-top pointer" src="img/back-arrow.svg" alt=""
+                                    onclick="history.back();">
+                            </div>
+                            <div style="width: 65%;">
+                                <form class="width-100 center " action="">
+                                    <div class="input-custom max-width-800">
+                                        <input class="width-100 " type="text" name="search" id="search"
+                                            placeholder="Search">
+                                        <button class="search-button" type="submit">
+                                            <i class="bi bi-search text-grey search-icon"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="quick-cart" class="mall-cart-p z-index-5 middle">
+                                <a href="cart.html">
+                                    <div class="noti-number pointer">
+                                        <img class="mall-icon-top" src="img/cart.png" alt="">
+                                        <span class="nav-mobile-number cart-number border-round">2</span>
+                                    </div>
+                                </a>
+                                <div class="padding-m border-25 border-dark mall-cart">
+                                    <div class="middle mrgn-btm-s">
+                                        <i class="text-link mrgn-right-s fa-solid fa-check"></i>
+                                        <div>Item added to your cart</div>
+                                    </div>
+                                    <div class="display-flex mrgn-btm-s">
+                                        <div class="border-dark border-12 mrgn-right-s width-40 middle center">
+                                            <img src="img/images/5.jpg" alt="">
+                                        </div>
+                                        <div>
+                                            <h4>Om Jewells</h4>
+                                            <div class="mrgn-btm-s text-grey">Fine Cleansing Oil 100-ml</div>
+                                            <div class="text-grey">4 Set x 1</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <!-- <section class="bg-peach">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-lg-8 mx-auto">
+                            <div class="section-inner-wrapper padding-s" style="overflow: visible;">
+                                <form class="width-100 center" action="">
+                                    <div class="input-custom max-width-800">
+                                        <input class="width-100 " type="search" name="search" id="search"
+                                            placeholder="Search">
+                                        <button class="search-button" type="submit">
+                                            <i class="bi bi-search text-grey search-icon"></i></button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="quick-cart" class="mall-cart-p z-index-5 middle">
+                                <div class="noti-number pointer">
+                                    <img class="mall-icon-top" src="img/cart.png" alt="">
+                                    <span class="nav-mobile-number cart-number border-round">2</span>
+                                </div>
+                                <div class="padding-m border-25 border-dark mall-cart">
+                                    <div class="middle mrgn-btm-s">
+                                        <i class="text-link mrgn-right-s fa-solid fa-check"></i>
+                                        <div>Item added to your cart</div>
+                                    </div>
+                                    <div class="display-flex mrgn-btm-s">
+                                        <div class="border-dark border-12 mrgn-right-s width-40 middle center">
+                                            <img src="img/product/fine-cleansing-oil.png" alt="">
+                                        </div>
+                                        <div>
+                                            <h4>DAILY.</h4>
+                                            <div class="mrgn-btm-s text-grey">Fine Cleansing Oil 100-ml</div>
+                                            <div class="text-grey">4 Bottle x 1</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </section> -->
+                <section class="px-lg-3 py-lg-4 ">
+                    <div class="section-inner-wrapper p-0">
+                        <div class="container-fluid">
+                            <div class="row">
+                                <div class="col-lg-5 col-md-7 mx-auto my-lg-0 mt-3">
+                                    <div class="product-gallery mrgn-btm-m ">
+                                        <div class="border-dark-s border-25 product-carousel-p middle overflow-hide">
+                                            <div id="product-carousel" class="width-100 bg-white border-25">
+                                                <div class="product-cell">
+                                                    <img src="img/images/5.jpg" alt="">
+                                                </div>
+                                                <div class="product-cell">
+                                                    <img src="img/images/4.jpg" alt="">
+                                                </div>
+                                                <div class="product-cell">
+                                                    <img src="img/images/3.jpg" alt="">
+                                                </div>
+                                                <div class="product-cell">
+                                                    <img src="img/images/2.jpg" alt="">
+                                                </div>
+                                            </div>
+                                            <svg class="product-left-nav" width="28" height="110" viewBox="0 0 70 220"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M 0 0 L 36 20 C 51 30 60 50 60 60 L 60 140 C 60 150 51 170 36 180 L 0 200 L 0 0 Z"
+                                                    fill="#F60000" stroke="black" stroke-width="3"></path>
+                                            </svg>
+                                            <svg class="product-right-nav" width="28" height="110"
+                                                viewBox="-10 0 70 220" xmlns="http://www.w3.org/2000/svg">
+                                                <path
+                                                    d="M 60 0 L 24 20 C 9 30 0 50 0 60 L 0 140 C 0 150 9 170 24 180 L 60 200 L 60 0 Z"
+                                                    fill="#F60000" stroke="black" stroke-width="3"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="product-countdown border-25 border-dark-s center-block padding-s">
+                                            <div class="mrgn-btm-xs">Sale ends April 26, 2022 at 12:00pm +08</div>
+                                            <div class="display-even width-100">
+                                                <div class="center-block">
+                                                    <div class="countdown-number">08</div>
+                                                    <div class="text-s">Days</div>
+                                                </div>
+                                                <div class="center-block">
+                                                    <div class="countdown-number">08</div>
+                                                    <div class="text-s">Hours</div>
+                                                </div>
+                                                <div class="center-block">
+                                                    <div class="countdown-number">08</div>
+                                                    <div class="text-s">Minutes</div>
+                                                </div>
+                                                <div class="center-block">
+                                                    <div class="countdown-number">08</div>
+                                                    <div class="text-s">Seconds</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- <div class=" my-lg-0 my-4 ">
+                                    <div class="border-dark-s border-25 product-carousel-p middle overflow-hide ">
+                                        <div id="product-carousel" class="width-100 ">
+                                            <div class="product-cell description-img-div ">
+                                                <img src="img/images/5.jpg" alt="" class="img-fluid">
+                                            </div>
+                                            <div class="product-cell description-img-div ">
+                                                <img src="img/images/6.jpg" alt="" class=" img-fluid">
+                                            </div>
+                                            <div class="product-cell description-img-div ">
+                                                <img src="img/images/10.jpg" alt="" class="img-fluid">
+                                            </div>
+    
+                                        </div>
+                                        <svg class="product-left-nav" width="28" height="110" viewBox="0 0 70 220"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M 0 0 L 36 20 C 51 30 60 50 60 60 L 60 140 C 60 150 51 170 36 180 L 0 200 L 0 0 Z"
+                                                fill="#01308C" stroke="black" stroke-width="3"></path>
+                                        </svg>
+                                        <svg class="product-right-nav" width="28" height="110" viewBox="-10 0 70 220"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M 60 0 L 24 20 C 9 30 0 50 0 60 L 0 140 C 0 150 9 170 24 180 L 60 200 L 60 0 Z"
+                                                fill="#01308C" stroke="black" stroke-width="3"></path>
+                                        </svg>
+                                    </div>
+                                </div> -->
+                                </div>
+                                <div class="col-lg-7 ">
+                                    <div class="">
+                                        <h1>Om Jewells</h1>
+                                        <!-- <div class="text-grey mrgn-btm-xs text-sm">Fine Cleansing Oil - 100ml</div> -->
+                                        <div class="text-s text-grey mrgn-btm-s mt-3">Om Jewells Rhodium Plated Blue
+                                            Crystal Jewellery Combo of Designer Drop Pendant Set with Adjustable Bangle
+                                            Kada and
+                                            Adjustable Solitaire Finger Ring for Girls and Women CO1000209
+                                        </div>
+                                        <div class="divider-grey width-100 mb-3"></div>
+                                        <div class="price-p ">
+                                            <h2 class="font-std text-bold mrgn-btm-xs text-primary">₹ 6788.00</h2>
+                                            <div class="text-grey">Status : <span
+                                                    class="text-link text-bold ms-2">Available</span></div>
+                                        </div>
+                                        <h5 class="mt-3">Product Specifications</h5>
+                                        <div class="table-responsive mt-3">
+                                            <table class="table">
+                                                <tbody>
+
+                                                    <tr>
+                                                        <td class="table-heading">Brand</td>
+                                                        <td class="table-value">
+                                                            Ratnavali Jewels
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="table-heading">Stone</td>
+                                                        <td class="table-value">
+                                                            American Diamond
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="table-heading">Material</td>
+                                                        <td class="table-value">
+                                                            Gold-plated
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="table-heading">Metal</td>
+                                                        <td class="table-value">
+                                                            Gold-plated
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="table-heading">Modal Number</td>
+                                                        <td class="table-value">
+                                                            RV87
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="table-heading">Packaging</td>
+                                                        <td class="table-value">
+                                                            Box
+                                                        </td>
+                                                    </tr>
+                                                    <tr>
+
+                                                        <td class="table-heading">Warranty Description</td>
+                                                        <td class="table-value">
+                                                            6 months manufacturing defects warranty. For claim please us
+                                                            for
+                                                            refund or new product.
+                                                        </td>
+
+                                                    </tr>
+                                                    <tr>
+                                                        <td class="table-heading">Warranty Type</td>
+                                                        <td class="table-value">
+                                                            Seller
+                                                        </td>
+                                                    </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <form action="">
+                                            <div class="mrgn-btm-s displa">
+                                                <label class="text-grey text-s" for="quantity">Quantity</label>
+                                                <div
+                                                    class="quantity mrgn-top-xs border-grey middle center border-round">
+                                                    <div class="pointer quantity-btn minus" data-quantity="minus"
+                                                        data-field="quantity">-</div>
+                                                    <input type="number" name="quantity" class="qty text-center"
+                                                        step="1" min="1" max="10" value="1">
+                                                    <div class="pointer quantity-btn plus" data-quantity="plus"
+                                                        data-field="quantity">+</div>
+                                                </div>
+                                            </div>
+                                            <button class="button-primary pointer border-8 max-width-400 mrgn-btm-m">+
+                                                ADD TO CART</button>
+                                        </form>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </section>
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer ">
+        <div class="footer-menu">
+            <ul class="d-flex justify-content-around w-100  m-0 navbar-links-ul">
+                <li class="nav-item nav-item-f active-nav">
+                    <i class="bi bi-house-fill "></i>
+                    <a class="nav-link " aria-current="page" href="index.html"> Home</a>
+                </li>
+                <li class="nav-item nav-item-f ">
+                    <i class="bi bi-search "></i>
+                    <a class="nav-link " aria-current="page" href="search.html"> Search</a>
+                </li>
+                <li class="nav-item nav-item-f ">
+                    <i class="bi bi-trophy-fill "></i>
+                    <a class="nav-link " aria-current="page" href="win.html"> Win</a>
+                </li>
+                <li class="nav-item nav-item-f ">
+                    <i class="bi bi-person-circle "></i>
+                    <a class="nav-link " aria-current="page" href="profile.html"> Profile</a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+
+    <div class="section-wrap bg-primary text-white">
+        <div class="section-inner-wrapper center-block padding-section">
+            <div>Reliance © 2023 | ALL RIGHTS RESERVED </div>
+        </div>
+    </div>
+
+    <link rel="stylesheet" href="flickity/flickity-product.css">
+    <script src="flickity/flickity.pkgd.min.js"></script>
+    <script src="main.js" type="text/javascript"></script>
+    <script src="js/product.js" type="text/javascript"></script>
+    <script>
+        // Flickity Slider
+        $('#product-carousel').flickity({
+            // options
+            cellAlign: 'left',
+            contain: true,
+            pageDots: false,
+            imagesLoaded: true,
+            arrowShape: 'M 0,50 L 80,00 L 80,100 Z'
+        })
+    </script>
+</body>
+
+</html>

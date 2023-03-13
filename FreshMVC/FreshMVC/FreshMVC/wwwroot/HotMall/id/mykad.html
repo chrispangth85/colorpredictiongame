@@ -1,0 +1,87 @@
+<div class="padding-s max-width-600" style="margin-left: auto; margin-right: auto;">
+    <form id="regForm" action="">
+        <div class="step active">
+            <h2 class="heading-bold">WHY IDENTITY VERIFICATION?</h2>
+            <div class="text-grey mrgn-btm-s">
+                We are required to verify your identity for security reasons and in accordance with the applicable laws. We need your permission to collect, use, disclose and process your following personal data in accordance with our Terms of Service and Privacy Policy for the purpose mention below:
+                <br><br>
+                <div>1. Verification and identification for the service registration</div>
+                <div>2. Service and system development</div>
+            </div>
+            <h3 class="mrgn-btm-s">Remarks</h3>
+            <div class="text-grey mrgn-btm-m">
+                <div>1. This verification and authentication process is a regulatory requirement.</div>
+                <div>2. Your Sensetive Data will be protects under our <a href="privacy-policy.html">Privacy Policy.</a></div>
+                <div>3. We will be unable to provide the service without permission.</div>
+            </div>
+            <div class="middle left mrgn-top-s">
+                <input type="radio" id="agree" required class="catx-checkbox" required>
+                <label for="agree" class="mrgn-left-xs">I agree to the <a href="terms-conditions.html">terms and conditions</a></label>
+            </div>
+            <button type="button" class="next-btn button-primary width-100 border-8 pointer mrgn-top-s">NEXT</button>  
+        </div>
+        <div class="step">
+            <div class="text-left mrgn-btm-s">
+                <label for="front-passport">Front of ID Card:</label>
+                <div class="file-input width-100 pos-rel middle center">
+                    <input class="width-100 mrgn-top-xs custom-file-input height-250" type="file" id="front-passport" required>
+                    <div class="pos-abs center-block">
+                        <img class="img-s" src="https:via.placeholder.com/50" alt="">
+                        <div class="text-grey">UPLOAD</div>
+                    </div>
+                </div>
+            </div>
+            <div class="text-left mrgn-btm-s">
+                <label for="front-passport">back of ID Card:</label>
+                <div class="file-input width-100 pos-rel middle center">
+                    <input class="width-100 mrgn-top-xs custom-file-input height-250" type="file" id="front-passport" required>
+                    <div class="pos-abs center-block">
+                        <img class="img-s" src="https:via.placeholder.com/50" alt="">
+                        <div class="text-grey">UPLOAD</div>
+                    </div>
+                </div>
+            </div>
+            <a class="width-100 text-right mrgn-btm-s" href="instruction.html">View Instruction</a>
+            <button type="submit" class="button-primary width-100 border-8 pointer mrgn-top-s">SUBMIT</button>
+        </div>
+    </form>
+</div>
+<script>
+    // Form Multi Step
+    const steps = Array.from(document.querySelectorAll("form .step"));  
+    const nextBtn = document.querySelectorAll("form .next-btn");  
+    const prevBtn = document.querySelectorAll("form .previous-btn");  
+    const form = document.querySelector("form");  
+    nextBtn.forEach((button) => {  
+        button.addEventListener("click", () => {  
+            changeStep("next");  
+        });  
+    });  
+    prevBtn.forEach((button) => {  
+        button.addEventListener("click", () => {  
+        changeStep("prev");  
+        });  
+    });  
+    form.addEventListener("submit", (e) => {  
+        e.preventDefault();  
+        const inputs = [];  
+        form.querySelectorAll("input").forEach((input) => {  
+        const { name, value } = input;  
+        inputs.push({ name, value });  
+        });  
+        console.log(inputs);  
+        form.reset();  
+    });  
+    function changeStep(btn) {  
+        let index = 0;  
+        const active = document.querySelector(".active");  
+        index = steps.indexOf(active);  
+        steps[index].classList.remove("active");  
+        if (btn === "next") {  
+            index++;  
+        } else if (btn === "prev") {  
+            index--;  
+        }  
+        steps[index].classList.add("active");  
+    }
+</script>

@@ -1,0 +1,7 @@
+
+*.dll
+*.cache
+*.gs.cs
+
+obj/
+/FreshMVC.csproj.user

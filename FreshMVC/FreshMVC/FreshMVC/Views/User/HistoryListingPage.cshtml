@@ -1,0 +1,50 @@
+﻿<!doctype html>
+@using FreshMVC.Models
+@using resSharedPB = FreshMVC.Resources.PackBuddyShared;
+@model PaginationReceiptModel
+@inject IJsonHelper Json;
+
+<div id="main-content">
+    
+    <div class="row">
+        <div class="col-12">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col">
+                            <h6 class="my-1">Receipts</h6>
+                        </div>
+                        <div class="col-auto px-0">
+                            @*<a class="btn btn-link btn-sm" href="projects.html">View all</a>*@
+                        </div>
+                    </div>
+                </div>
+                <ul class="list-group list-group-flush">
+                    @foreach (var itemz in Model.List)
+                    {
+                        <li class="list-group-item border-0">
+                            <div class="row">
+                                <div class="col-auto">
+                                    <figure class="avatar avatar-50 rounded-circle">
+                                        <img src="@itemz.ProtraitPhotoPath" alt="">
+                                    </figure>
+                                </div>
+                                <div class="col px-0">
+                                    <p>Category: @itemz.SelectedCategory<br><small class="text-muted">@itemz.Date </small></p>
+                                </div>
+                                <div class="col-auto text-end">
+                                    <p>
+                                        <a href="@itemz.ProtraitPhotoPath" target="_blank">View</a>
+                                    </p>
+                                </div>
+                            </div>
+                        </li>
+                    }
+
+                </ul>
+                
+            </div>
+        </div>
+    </div>
+
+</div>

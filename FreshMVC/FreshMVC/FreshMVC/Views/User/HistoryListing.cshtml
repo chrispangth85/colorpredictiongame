@@ -1,0 +1,190 @@
+﻿<!doctype html>
+@using FreshMVC.Models
+@using resSharedPB = FreshMVC.Resources.PackBuddyShared;
+@model PaginationReceiptModel
+@inject IJsonHelper Json;
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="generator" content="">
+    <title>Hot Mall</title>
+
+    <!-- manifest meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="~/MobileUX/img/faviconABC888.png" sizes="180x180">
+    <link rel="icon" href="~/MobileUX/img/faviconABC888.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="~/MobileUX/img/faviconABC888.png" sizes="16x16" type="image/png">
+
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <!-- nouislider CSS -->
+    <link href="~/MobileUX/vendor/nouislider/nouislider.min.css" rel="stylesheet">
+
+    <!-- swiper carousel css -->
+    <link rel="stylesheet" href="~/MobileUX/vendor/swiperjs-6.6.2/swiper-bundle.min.css">
+
+    <!-- style css for this template -->
+    <link href="~/MobileUX/css/style.css" rel="stylesheet" id="style">
+    <link href="~/MobileUX/css/styleOldMobileUX.css" rel="stylesheet" id="style">
+
+    <!--Alertify-->
+    <script src="~/Content/assets/alertify.min.js"></script>
+    <!-- include the style -->
+    <link rel="stylesheet" href="~/Content/assets/css/alertify.min.css" />
+    <!-- include a theme -->
+    <link rel="stylesheet" href="~/Content/assets/css/themes/default.min.css" />
+
+    <script src="~/MobileUX/js/jquery-3.3.1.min.js"></script>
+
+    <link rel="stylesheet" href="~/CustomUIFIFA/assets/css/pagination.css">
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#backToMerchant").click(function (evt) {
+                location.href = "/User/Home";
+            });
+
+
+
+        });
+
+
+
+    </script>
+    <style>
+        .flex {
+            display: flex;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body class="body-scroll" data-page="cartpage" tabindex="-1" style="background:white;">
+
+    <!-- Begin page -->
+    <main class="h-100 has-header">
+
+        <!-- Header -->
+        <header class="container-fluid header kh-center">
+            <div class="row kh-screen-width" style="width:100%; height:50px;">
+                <div class="col-auto" style="padding-left:0px;width:20%;">
+                    <button type="button" class="btn btn-link menu-btn" id="backToMerchant">
+                        <i class="bi bi-arrow-left" style="font-size:25px;"></i>
+                    </button>
+                </div>
+                <div class="col text-center align-self-center">
+                    <h6 class="my-0">Receipt History</h6>
+                </div>
+                <div class="col-auto" style="width:20%;">
+                    @*<button class="btn btn-link filter-btn py-1"><i class="bi bi-filter fs-3"></i></button>*@
+                </div>
+            </div>
+        </header>
+
+        <!-- page main start -->
+        <div class="page main-container container kh-screen-width">
+            <div id="main-content">
+
+            </div>
+            <div class="flex justify-center items-center mt-4" id="results-pagination">
+
+            </div>
+        </div>
+
+
+        <!-- fluid footer at bottom of page -->
+        <div class="container-fluid kh-center">
+            <div class="row footer-info kh-screen-width" style="width:100%;">
+                @*<div class="col-auto bg-white-opac small py-3"><span class="text-muted ">Connect with us</span></div>*@
+                <div class="col bg-white-opac py-2 text-end">
+                    @*<a href="" class="btn btn-sm btn-link">
+                            <i class="bi bi-envelope-fill"></i>
+                        </a>*@
+                    @*<a href="https://www.facebook.com/Mypackbuddy-156985109810757" class="btn btn-sm btn-link" target="_blank">
+                            <i class="bi bi-facebook"></i>
+                        </a>*@
+                    @*<a href="" class="btn btn-sm btn-link">
+                            <i class="bi bi-twitter"></i>
+                        </a>
+                        <a href="" class="btn btn-sm btn-link">
+                            <i class="bi bi-linkedin"></i>
+                        </a>*@
+                </div>
+                <div class="col-12 text-center bg-white small py-2 text-muted">@resSharedPB.lblCopyrightz</div>
+            </div>
+        </div>
+        <!-- fluid footer at bottom of page ends -->
+
+    </main>
+    <!-- Page ends-->
+    <!-- Required jquery and libraries -->
+
+    <script src="~/MobileUX/js/popper.min.js"></script>
+    <script src="~/MobileUX/vendor/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+
+    <!-- cookie js -->
+    <script src="~/MobileUX/js/jquery.cookie.js"></script>
+
+    <!-- Customized jquery file  -->
+    <script src="~/MobileUX/js/main.js"></script>
+    <script src="~/MobileUX/js/color-scheme.js"></script>
+
+    <!-- swiper js script -->
+    <script src="~/MobileUX/vendor/swiperjs-6.6.2/swiper-bundle.min.js"></script>
+
+    <!-- nouislider js -->
+    <script src="~/MobileUX/vendor/nouislider/nouislider.min.js"></script>
+
+    <!-- page level custom script -->
+    <script src="~/MobileUX/js/app.js"></script>
+
+    <script src="~/CustomUIFIFA/assets/js/pagination.min.js"></script>
+
+    <script>
+        $('#results-pagination').pagination({
+            dataSource: @Html.Raw(Json.Serialize(Model.NewPages)),
+            pageSize: 1,
+            autoHidePrevious: true,
+            autoHideNext: true,
+            ajax: {
+                beforeSend: function () {
+                    //$('.preloader-container').show();
+                }
+            },
+            callback: function (data, pagination) {
+                $('.loader-wrap').show();
+                $.ajax({
+                    type: "POST",
+                    url: "/User/HistoryListingPage",
+                    data: { selectedPage: data },
+                    success: function (data) {
+                        $("#main-content").html(data);
+                        $('.loader-wrap').hide();
+                        event.stopPropagation();
+                    },
+                    error: function (xhr, status, error) {
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                        $('.loader-wrap').hide();
+                    }
+                });
+            }
+        })
+    </script>
+
+</body>

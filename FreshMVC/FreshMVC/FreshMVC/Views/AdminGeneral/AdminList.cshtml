@@ -1,0 +1,194 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared;
+@using FreshMVC.Models
+@model PaginationAdminModel
+
+<script type="text/javascript">
+
+    //doesn't know how to clear the interval when navigate to other page. So each and every page I run this to clear interval.
+    $(function () {
+        if (timerMessageRefresh) {
+            clearInterval(timerMessageRefresh);
+        }
+    });
+
+    $("#btnPage").click(function (evt) {
+        var e = document.getElementById("page")
+        var page = e.options[e.selectedIndex].value;
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/AdminList",
+            data: { selectedPage: page },
+            success: function (data) {
+                $("#main-content").html(data);
+                event.stopPropagation();
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+            }
+        });
+    });
+
+    $("#btnCreate").click(function (evt) {
+        $('#Loading').show();
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/ModalEditAdminListData",
+            data: {},
+            success: function (data) {
+                $("#main-content").html(data);
+                $('#Loading').hide();
+                event.stopPropagation();
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+                $('#Loading').hide();
+            }
+        });
+    });
+
+    $(".EditData").click(function (e) {
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/ModalEditAdminListData",
+            data: { Username: this.id },
+            success: function (data) {
+                $("#main-content").html(data);
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+            }
+        });
+    });
+
+    $(".DeleteData").click(function (e) {
+        deleteAdmin(this.id);
+    });
+
+    function deleteAdmin(username) {
+        if (confirm("@resShared.msgConfirmDelete")) {
+            $.ajax({
+                url: "/AdminGeneral/DeleteAdminList",
+                type: "POST",
+                data: { Username: username },
+                success: function (data) {
+                    alert("@resShared.msgSaveSuccessfully");
+                    $("#main-content").html(data);
+                    $('#Loading').hide();
+                    event.stopPropagation();
+                },
+                error: function (xhr, status, error) {
+                    var errorM = xhr.responseText;
+                    errorM = errorM.replace('""', '');
+
+                    alert(errorM);
+                    $('#Loading').hide();
+                }
+            });
+        }
+    };
+
+</script>
+
+
+
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <h2>@resShared.mnuAdmin</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                    <li class="breadcrumb-item active">@resShared.mnuAdminListing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="grid" style="margin-left: 10px; margin-right: 10px" id="grid">
+        <input type="hidden" id="eliminateId" />
+        <div class="grid" style="margin-left: 5px;" id="grid">
+            <button id="btnCreate" type="button" class="btn btn-primary" style="float:right;width:180px;">@resShared.btnCreate</button>
+        </div>
+        <br />
+        <br />
+        <div class="table-responsive">
+            <table id="tablestyle" width="100%" class="table table-bordered table-hover table-striped" border="1px solid #414558;">
+                <thead>
+                    <tr style="background-color: #414558;color:white">
+                        <th>#</th>
+                        <th>
+                            @resShared.lblUsername
+                        </th>
+                        <th>
+                            @resShared.lblName
+                        </th>
+                        <th style="width: 5%; color: White; ">
+                            @resShared.lblEdit
+                        </th>
+                        <th style="width: 5%; color: White;">
+                            @resShared.lblDelete
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.AdminList.Count == 0)
+                    {
+                        <tr style="height: 25px; border-top: 1px solid white;">
+                            <td style="padding: 5px;" colspan="10">
+                                @resShared.lblNoRecFound
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var item in Model.AdminList)
+                    {
+                        <tr style="height: 25px; border-top: 1px solid white;">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Number)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                <a class="EditData" href="#" id="@item.Username"><i class="fa fa-edit"></i></a>
+                            </td>
+                            <td>
+                                <a class="DeleteData" href="#" id="@item.Username"><i class="fa fa-trash"></i></a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (Model.AdminList.Count != 0)
+        {
+            <table width="auto" style="text-align:right; margin-right:0px; margin-left:auto;margin-bottom:30px">
+                <tr style="text-align: right">
+                    <td style="text-align: right">
+                        <div class="BtnClass" style="float: right;">
+                            @Html.DropDownList("page", @Model.Pages, new
+                            {
+                                style = "width:80px;",
+                                @class = "form-control"
+                            })
+
+                        </div>
+                    </td>
+                    <td style="text-align: right">
+                        <button id="btnPage" type="button" class="btn btn-primary" style="width:100px">@resShared.btnView</button>
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+
+
+
+</div>

@@ -1,0 +1,366 @@
+﻿<!doctype html>
+@using FreshMVC.Models
+@using resSharedPB = FreshMVC.Resources.PackBuddyShared;
+@model MemberGamePageModel
+@inject IJsonHelper Json;
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="generator" content="">
+    <title>Hot Mall</title>
+
+    <!-- manifest meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="~/MobileUX/img/faviconABC888.png" sizes="180x180">
+    <link rel="icon" href="~/MobileUX/img/faviconABC888.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="~/MobileUX/img/faviconABC888.png" sizes="16x16" type="image/png">
+
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <!-- nouislider CSS -->
+    <link href="~/MobileUX/vendor/nouislider/nouislider.min.css" rel="stylesheet">
+
+    <!-- swiper carousel css -->
+    <link rel="stylesheet" href="~/MobileUX/vendor/swiperjs-6.6.2/swiper-bundle.min.css">
+
+    <!-- style css for this template -->
+    <link href="~/MobileUX/css/style.css" rel="stylesheet" id="style">
+    <link href="~/MobileUX/css/styleOldMobileUX.css" rel="stylesheet" id="style">
+
+    <!--Alertify-->
+    <script src="~/Content/assets/alertify.min.js"></script>
+    <!-- include the style -->
+    <link rel="stylesheet" href="~/Content/assets/css/alertify.min.css" />
+    <!-- include a theme -->
+    <link rel="stylesheet" href="~/Content/assets/css/themes/default.min.css" />
+
+    <script src="~/MobileUX/js/jquery-3.3.1.min.js"></script>
+
+    <link rel="stylesheet" href="~/CustomUIFIFA/assets/css/pagination.css">
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+            $('.loader-wrap').hide();
+
+            $("#backToMerchant").click(function (evt) {
+                location.href = "/User/Home";
+            });
+
+            function placenumbergame(numz, gamez, periodz) {
+                //hard code amount dulu. Wait Qurban give me pop up i lazy to do pop up
+                var amountz = 30;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/User/PlaceNumberGame",
+                    data: { num: numz, amount: amountz, gameid: gamez, period: periodz },
+                    success: function (data) {
+                        alertify.alert('Hot Mall', 'Upload sucessfully', function () {
+
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        $('.loader-wrap').hide();
+                        let r = jQuery.parseJSON(xhr.responseText);
+                        var errorM = r.message;
+                        alertify.alert('Hot Mall', errorM);
+                    }
+                });
+            }
+
+            $(".btnJoinGreen").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(55, gameid, currentperiod);
+            });
+
+            $(".btnJoinViolet").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(66, gameid, currentperiod);
+            });
+
+            $(".btnJoinRed").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(77, gameid, currentperiod);
+            });
+
+            $(".btnPlay0").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(0, gameid, currentperiod);
+            });
+
+            $(".btnPlay1").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(1, gameid, currentperiod);
+            });
+
+            $(".btnPlay2").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(2, gameid, currentperiod);
+            });
+
+            $(".btnPlay3").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(3, gameid, currentperiod);
+            });
+
+            $(".btnPlay4").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(4, gameid, currentperiod);
+            });
+
+            $(".btnPlay5").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(5, gameid, currentperiod);
+            });
+
+            $(".btnPlay6").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(6, gameid, currentperiod);
+            });
+
+            $(".btnPlay7").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(7, gameid, currentperiod);
+            });
+
+            $(".btnPlay8").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(8, gameid, currentperiod);
+            });
+
+            $(".btnPlay9").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+
+                placenumbergame(9, gameid, currentperiod);
+            });
+
+        });
+
+
+
+    </script>
+    <style>
+        .flex {
+            display: flex;
+        }
+
+        .justify-center {
+            justify-content: center;
+        }
+
+        .center {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    </style>
+</head>
+
+<body class="body-scroll" data-page="cartpage" tabindex="-1" style="background:white;">
+
+    <!-- loader section -->
+    <div class="container-fluid loader-wrap">
+        <div class="row h-100">
+            <div class="col-10 col-md-6 col-lg-5 col-xl-3 mx-auto text-center align-self-center">
+                <div class="loader-cube-wrap mx-auto">
+                    <div class="loader-cube1 loader-cube"></div>
+                    <div class="loader-cube2 loader-cube"></div>
+                    <div class="loader-cube4 loader-cube"></div>
+                    <div class="loader-cube3 loader-cube"></div>
+                </div>
+                <p><br><strong>@resSharedPB.lblPleaseWait...</strong></p>
+            </div>
+        </div>
+    </div>
+    <!-- loader section ends -->
+    <!-- Begin page -->
+    <main class="h-100 has-header">
+
+        <!-- Header -->
+        <header class="container-fluid header kh-center">
+            <div class="row kh-screen-width" style="width:100%; height:50px;">
+                <div class="col-auto" style="padding-left:0px;width:10%;">
+                    <button type="button" class="btn btn-link menu-btn" id="backToMerchant">
+                        <i class="bi bi-arrow-left" style="font-size:25px;"></i>
+                    </button>
+                </div>
+                <div class="col text-center align-self-center">
+                    <a href="/User/Home" style="text-decoration:none;"><h6 class="my-0">Red Packet</h6></a>
+                </div>
+                <div class="col-auto" style="padding-left:0px;width:10%;">
+                    @*<button type="button" class="btn btn-link menu-btn">
+                            <i id="btnCreate" class="bi bi-plus" style="font-size:35px;"></i>
+                        </button>*@
+                </div>
+            </div>
+        </header>
+
+        <!-- page main start -->
+        <div class="page main-container container kh-screen-width" style="max-width:100%;">
+            <div id="main-content">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="col">
+                            <h6 class="my-1">Games</h6>
+                        </div>
+                        <div>
+                            @Model.GameList[0].CurrentPeriod
+                        </div>
+                        <div>
+                            <div class="display-even width-100">
+                                <div class="center-block">
+                                    <div class="countdown-number" id="promoMinute"></div>
+                                    <div class="text-s">Minutes</div>
+                                    <div class="countdown-number" id="promoSecond"></div>
+                                    <div class="text-s">Seconds</div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+                        @foreach (var g in Model.GameList)
+                        {
+                            <div>
+                                <div class="row">
+                                    <div class="col-4 d-grid"><a href="#" class="btn mt-3 btnJoinGreen" periodz="@g.CurrentPeriod" gamez="@g.GameID" style="background-color:green; color:white;">Green</a></div>
+                                    <div class="col-4 d-grid"><a href="#" class="btn mt-3 btnJoinViolet" periodz="@g.CurrentPeriod" gamez="@g.GameID" style="background-color: violet; color: white;">Violet</a></div>
+                                    <div class="col-4 d-grid"><a href="#" class="btn mt-3 btnJoinRed" periodz="@g.CurrentPeriod" gamez="@g.GameID" style="background-color: red; color: white;">Red</a></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-1 d-grid"></div>
+                                    <div class="col-2 d-grid"><a href="#" class="btn btn-primary mt-3 btnPlay0" periodz="@g.CurrentPeriod" gamez="@g.GameID" >0</a></div>
+                                    <div class="col-2 d-grid"><a href="#" class="btn btn-primary mt-3 btnPlay1" periodz="@g.CurrentPeriod" gamez="@g.GameID" >1</a></div>
+                                    <div class="col-2 d-grid"><a href="#" class="btn btn-primary mt-3 btnPlay2" periodz="@g.CurrentPeriod" gamez="@g.GameID" >2</a></div>
+                                    <div class="col-2 d-grid"><a href="#" class="btn btn-primary mt-3 btnPlay3" periodz="@g.CurrentPeriod" gamez="@g.GameID" >3</a></div>
+                                    <div class="col-2 d-grid"><a href="#" class="btn btn-primary mt-3 btnPlay4" periodz="@g.CurrentPeriod" gamez="@g.GameID" >4</a></div>
+                                    <div class="col-1 d-grid"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-1 d-grid"></div>
+                                    <div class="col-2 d-grid"><a href="#" class="btn btn-primary mt-3 btnPlay5" periodz="@g.CurrentPeriod" gamez="@g.GameID" >5</a></div>
+                                    <div class="col-2 d-grid"><a href="#" class="btn btn-primary mt-3 btnPlay6" periodz="@g.CurrentPeriod" gamez="@g.GameID" >6</a></div>
+                                    <div class="col-2 d-grid"><a href="#" class="btn btn-primary mt-3 btnPlay7" periodz="@g.CurrentPeriod" gamez="@g.GameID" >7</a></div>
+                                    <div class="col-2 d-grid"><a href="#" class="btn btn-primary mt-3 btnPlay8" periodz="@g.CurrentPeriod" gamez="@g.GameID" >8</a></div>
+                                    <div class="col-2 d-grid"><a href="#" class="btn btn-primary mt-3 btnPlay9" periodz="@g.CurrentPeriod" gamez="@g.GameID" >9</a></div>
+                                    <div class="col-1 d-grid"></div>
+                                </div>
+                            </div>
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- fluid footer at bottom of page -->
+        <div class="container-fluid kh-center">
+            <div class="row footer-info kh-screen-width" style="width:100%;">
+                <div class="col bg-white-opac py-2 text-end">
+                    <small>Need help? <a href="#" target="_blank">Contact</a></small>
+                </div>
+                <div class="col-12 text-center bg-white small py-2 text-muted">@resSharedPB.lblCopyrightz</div>
+            </div>
+        </div>
+        <!-- fluid footer at bottom of page ends -->
+
+    </main>
+    <!-- Page ends-->
+    <!-- Required jquery and libraries -->
+
+    <script src="~/MobileUX/js/popper.min.js"></script>
+    <script src="~/MobileUX/vendor/bootstrap-5/js/bootstrap.bundle.min.js"></script>
+
+    <!-- cookie js -->
+    <script src="~/MobileUX/js/jquery.cookie.js"></script>
+
+    <!-- Customized jquery file  -->
+    <script src="~/MobileUX/js/main.js"></script>
+    <script src="~/MobileUX/js/color-scheme.js"></script>
+
+    <!-- swiper js script -->
+    <script src="~/MobileUX/vendor/swiperjs-6.6.2/swiper-bundle.min.js"></script>
+
+    <!-- nouislider js -->
+    <script src="~/MobileUX/vendor/nouislider/nouislider.min.js"></script>
+
+    <!-- page level custom script -->
+    <script src="~/MobileUX/js/app.js"></script>
+
+    <script src="~/CustomUIFIFA/assets/js/pagination.min.js"></script>
+
+    <script>
+        var timerPool;
+            var totalSeconds = '@Model.TimeLeftBasedEndDateTotalSeconds';
+
+            clearInterval(timerPool);
+
+            timerPool = setInterval(function () {
+                var nTotalSeconds = parseInt(totalSeconds);
+                var days = Math.floor(nTotalSeconds / 24 / 60 / 60);
+                var hoursLeft = Math.floor((nTotalSeconds) - (days * 86400));
+                var hours = Math.floor(hoursLeft / 3600);
+
+                var minutesLeft = Math.floor((hoursLeft) - (hours * 3600));
+                var minutes = Math.floor(minutesLeft / 60);
+
+                var remainingSeconds = nTotalSeconds % 60;
+
+                //var xx = days + ":" + hours + ":" + minutes + ":" + remainingSeconds;
+                //console.log(xx);
+
+                //$('#promoDay').html(days);
+                //$('#promoHour').html(hours);
+                $('#promoMinute').html(minutes);
+                $('#promoSecond').html(remainingSeconds);
+
+                function pad(n) {
+                    return (n < 10 ? "0" + n : n);
+                }
+
+                if (totalSeconds == 0) {
+                    clearInterval(timerPool);
+                    //document.getElementById('countdown').innerHTML = "Completed";
+                } else {
+                    totalSeconds--;
+                }
+
+            }, 1000);
+    </script>
+
+</body>

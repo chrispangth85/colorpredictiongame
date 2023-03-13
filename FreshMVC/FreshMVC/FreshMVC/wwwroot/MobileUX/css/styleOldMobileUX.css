@@ -1,0 +1,258 @@
+/* ========================================================== *
+/*!
+ * MobileUX v1.0.0
+ * Copyright 2018 by maxartkiller.com - by maxartkiller
+ * Licence must be purchased before use. Buy it before use in any project
+*/
+
+
+/*---------------------------------------------------------
+
+[Table of contents]
+
+1. base layout css
+2. sidebar css 
+3. fullscreen menu 
+4. modal box 
+5. navigation menu
+6. header css 
+7. color scheme css
+8. button css 
+9. background css
+10. dashboard swiper slider 
+11. swiper css
+12. List group css
+13. card css
+14. media css
+15. media css
+16. sparkline  chart toolti
+17. avatar css
+18. footer
+19. login page
+20. form control
+21. tabs
+22. Footer
+23. iphone x updates
+24. Scrolbar webkit css 
+25. Media query css
+
+---------------------------------------------------------*/
+
+
+/* card  */
+
+.card {
+    margin-bottom: 15px
+}
+.md .card {
+    box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.15);
+    -webkit-box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.15);
+    -moz-box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.15);
+    -ms-box-shadow: 0px 3px 15px 0px rgba(0, 0, 0, 0.15);
+    border: 0;
+    border-radius: 10px;
+}
+.md.card-footer,
+.md .card-header {
+    border-radius: 10px 10px 0 0;
+}
+.md .card .card-body {
+    padding: 10px 15px;
+}
+.card .card-body {
+    z-index: 1
+}
+.card-footer,
+.card-header {
+    background: none;
+    padding: 10px 15px;
+    z-index: 2;
+    border-color: rgba(0, 0, 0, .06)
+}
+.card-footer i {
+    font-size: 16px;
+    vertical-align: middle;
+    color: #999999
+}
+.card-footer {
+    line-height: 30px;
+    color: #000000
+}
+.card-footer .post-seconds {
+    font-size: 15px;
+    vertical-align: middle;
+    font-weight: 500
+}
+.card-footer .post-seconds span {
+    font-size: 14px;
+    color: #999999;
+    font-weight: 300
+}
+.card-title {
+    margin: .3rem 0;
+    font-size: 1.2em
+}
+
+/* location details*/
+
+.detailblock-top {
+    margin-top: -50px !important;
+    z-index: 2
+}
+
+/* Karhong Custom*/
+
+.kh-bg-thumbsup {
+	background-color: #fb737c;
+	border-color: #fb737c;
+	color: white;
+}
+
+.kh-img {
+  height:100%;
+  width:100%;
+}
+
+.kh-img-cart {
+  height:60px;
+  width:80px;
+}
+
+.kh-img-order-history {
+  height:100%;
+  width:80px;
+}
+
+.flex-container-center {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-container-center-start {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-container-space-around {
+  display: flex;
+  justify-content: space-around;
+}
+
+.flex-container-space-between {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.break-word
+{
+	word-wrap: break-word;
+}
+
+.flex-container-column {
+	display: flex;
+	flex-direction: column;
+}
+
+.flex-container-row {
+	display: flex;
+	flex-direction: row;
+}
+
+.kh-button-transparent {
+	background-color:transparent; 
+	border-color:transparent;
+	font-size:15px;
+}
+
+.kh-screen-width {
+	max-width: 639px;
+}
+
+.kh-center {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.avatar>i {
+	margin-top:12px;
+}
+
+.swiper-container {
+  width: 100%;
+  height: 180px;
+}
+
+.swiper-button-next{
+    display:none;   
+}
+
+.swiper-button-prev{
+    display:none;   
+}
+
+.swiper-scrollbar{
+    display:none;   
+}
+
+.client-dark-bg{
+	background:#3d8f57 url("../img/backgorund1.png") repeat-x top left;color:#fff
+}
+
+/* for the pricing */
+.card {
+    position: relative;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-direction: column;
+    flex-direction: column;
+    min-width: 0;
+    word-wrap: break-word;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.pricing li {
+    list-style: none;
+    padding: 13px;
+}
+
+.card .body {
+    color: #444;
+    padding: 20px;
+    font-weight: 400;
+}
+
+.pricing li+li {
+    border-top: 1px solid #f0f0f0;
+}
+
+.pricing big {
+    font-size: 32px;
+}
+
+.specialHeader {
+    position: sticky;
+    top: 65px;
+    padding-top: 4px;
+    height: 45px;
+    background: rgba(220,224,241,0.95);
+    text-align: center;
+    z-index: 100000;
+    overflow: hidden;
+}
+
+.swiper-category-card {
+    height: 100% !important;
+    width: 100% !important;
+    padding: 10px !important;
+    line-height: 10px !important;
+}

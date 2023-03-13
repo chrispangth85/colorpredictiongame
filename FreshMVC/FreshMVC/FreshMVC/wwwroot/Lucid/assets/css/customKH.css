@@ -1,0 +1,47 @@
+.flex-container-center {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-container-center-start {
+  display: flex;
+  justify-content: flex-start;
+  flex-direction: row;
+  align-items: center;
+}
+
+.flex-container-space-around {
+  display: flex;
+  justify-content: space-around;
+}
+
+.flex-container-space-betweenColumn {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.flex-container-space-betweenColumn > div {
+  height: 187px;
+}
+
+.flex-container-space-betweenRow {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.flex-container-column {
+	display: flex;
+	flex-direction: column;
+}
+
+.card {
+	margin-bottom: 30px;
+}
+
+.top_counter .content {
+    height: 70px;
+}

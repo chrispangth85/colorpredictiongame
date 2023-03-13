@@ -1,0 +1,172 @@
+﻿@using FreshMVC.Models
+@using resShared = FreshMVC.Resources.PackBuddyShared;
+@model ClientModel
+<!doctype html>
+<html lang="en" class="h-100">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="generator" content="">
+    <title>Hot Mall</title>
+
+    <!-- manifest meta -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="manifest.json" />
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="~/MobileUX/img/favicon180.png" sizes="180x180">
+    <link rel="icon" href="~/MobileUX/img/favicon32.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="~/MobileUX/img/favicon16.png" sizes="16x16" type="image/png">
+
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+    <!-- bootstrap icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+
+    <!-- style css for this template -->
+    <link href="~/MobileUX/css/style.css" rel="stylesheet" id="style">
+    <link href="~/MobileUX/css/styleOldMobileUX.css" rel="stylesheet" id="style">
+
+    <!--Alertify-->
+    <script src="~/Content/assets/alertify.min.js"></script>
+    <!-- include the style -->
+    <link rel="stylesheet" href="~/Content/assets/css/alertify.min.css" />
+    <!-- include a theme -->
+    <link rel="stylesheet" href="~/Content/assets/css/themes/default.min.css" />
+
+
+    <!-- <msdropdown> -->
+    <script src="~/DropDownCountry/js/jquery/customdropdown.js"></script>
+    <link rel="stylesheet" type="text/css" href="~/DropDownCountry/css/msdropdown/dd.css" />
+    <script src="~/DropDownCountry/js/msdropdown/jquery.dd.min.js"></script>
+    <!-- </msdropdown> -->
+    <link rel="stylesheet" type="text/css" href="~/DropDownCountry/css/msdropdown/flags.css" />
+</head>
+
+<body class="body-scroll d-flex flex-column h-100 client-dark-bg" data-page="signin">
+
+    <!-- Begin page content -->
+    <main class="container-fluid h-100" id="main-content">
+        <div class="row h-100">
+            <div class="col-10 col-md-6 col-lg-5 col-xl-3 mx-auto mt-auto pt-4 text-center d-grid gap-2" style="margin-bottom:180px;">
+                <h3 class="mb-1">Make your order easy</h3>
+                <p class="text-muted mb-4">Sign up with ReceiptTracker now by entering your phone.</p>
+                <br />
+
+                <select name="countries" id="countries" style="width:border:none;text-align:left;width:100%;" class="">
+                    <option value='91' data-image="images/msdropdown/icons/blank.gif" data-imagecss="flag in" data-title="Malaysia">India(+91)</option>
+                    <option value='60' data-image="images/msdropdown/icons/blank.gif" data-imagecss="flag my" data-title="Malaysia">Malaysia(+60)</option>
+                </select>
+
+                <div class="form-group form-floating">
+                    <input type="tel" class="form-control" value="" id="username" placeholder="@@resShared.lblPhone" autocomplete="off">
+                    <label class="form-control-label" for="email">@resShared.lblPhone</label>
+                </div>
+                <div class="form-group form-floating">
+                    <input type="password" class="form-control" value="" id="password" placeholder="@@resShared.lblPassword" autocomplete="off">
+                    <label class="form-control-label" for="email">@resShared.lblPassword</label>
+                </div>
+                <div class="form-group form-floating">
+                    <input type="password" class="form-control" value="" id="confirmpassword" placeholder="@@resShared.lblPassword" autocomplete="off">
+                    <label class="form-control-label" for="email">@resShared.lblConfirmPassword</label>
+                </div>
+
+                <div class="form-group form-floating">
+                    <input type="text" class="form-control" value="@Model.IntroCode" id="introcode" placeholder="@@resShared.lblIntroCode" autocomplete="off">
+                    <label class="form-control-label" for="email">@resShared.lblIntroCode</label>
+                </div>
+
+                <div class="flex-container-space-around">
+                    <div style="width:50%;">
+                        <a href="#" id="btnBack" target="_self" class="btn btn-primary" style="width:80%;">@resShared.btnBack</a>
+                    </div>
+                    <div style="width:50%;">
+                        <a href="#" id="btnSignUp" target="_self" class="btn" style="width:80%; background-color:green; color:white;">@resShared.btnSignUp</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        $(document).ready(function () {
+            $("#countries").msDropdown();
+
+            $("#username").select().focus();
+
+            function isValid(count, ids, msgs) {
+                if (ids) {
+                    // check text box
+                    let arraySize = count;
+                    for (var i = 0; i < arraySize; i++) {
+                        const element = document.getElementById(ids[i]);
+                        if (!(element && element.value)) {
+                            alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: msgs[i] }).show();
+                            return false;
+                        }
+                    }
+                    return true;
+                }
+                return false;
+            }
+
+            $("#password,#username,#confirmpassword,#introcode").keypress(function (e) {
+                if (e.keyCode == 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+
+            $("#password,#username,#confirmpassword,#introcode").keyup(function (event) {
+                if (event.keyCode === 13) {
+                    $("#btnMemberLogin").click();
+                }
+            });
+
+            $("#btnBack").click(function (evt) {
+                var url = '@Url.Action("ClientLogin", "UserLogin", new { })';
+
+                window.location.href = url;
+            });
+
+            $("#btnSignUp").click(function (evt) {
+                $.ajax({
+                    type: "POST",
+                    url: "/UserLogin/SignUpMethod",
+                    data: { phone: $('#username').val(), countrycode: $('#countries').val(), password: $('#password').val(), confirmpassword: $('#confirmpassword').val(), introcode: $('#introcode').val() },
+                    success: function (data) {
+                        location.href = "/User/Home";
+                    },
+                    error: function (xhr, status, error) {
+                        let r = JSON.parse(xhr.responseText);
+                        alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
+                    }
+                });
+            });
+
+            //$("#btnSignUp").click(function (evt) {
+            //    $.ajax({
+            //        type: "POST",
+            //        url: "/UserLogin/GetOTPMethod",
+            //        data: { phone: $('#username').val(), countrycode: $('#countries').val() },
+            //        success: function (data) {
+            //            location.href = "/UserLogin/VerifyOTP";
+            //        },
+            //        error: function (xhr, status, error) {
+            //            let r = JSON.parse(xhr.responseText);
+            //            alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
+            //        }
+            //    });
+            //});
+        })
+    </script>
+
+</body>
+
+
+
+</html>

@@ -1,0 +1,401 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared;
+@using Microsoft.AspNetCore.Http;
+@model TemporaryAddressModel
+@inject IHttpContextAccessor HttpContextAccessor
+
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Hot Mall</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="description" content="Admin Template">
+    <meta name="author" content="H2Init">
+    <link rel="shortcut icon" type="image/x-icon" href="~/MobileUX/img/faviconABC888.png" />
+
+    <!-- VENDOR CSS -->
+    <link rel="stylesheet" href="~/Lucid/assets/vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="~/Lucid/assets/vendor/font-awesome/css/font-awesome.min.css">
+
+    <link rel="stylesheet" href="~/Lucid/assets/vendor/toastr/toastr.min.css">
+
+    <!-- MAIN CSS -->
+    <link rel="stylesheet" href="~/Lucid/assets/css/main.css">
+    <link rel="stylesheet" href="~/Lucid/assets/css/color_skins.css">
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
+
+    <!--Alertify-->
+    <script src="~/Content/assets/alertify.min.js"></script>
+    <!-- include the style -->
+    <link rel="stylesheet" href="~/Content/assets/css/alertify.min.css" />
+
+    <!-- Sweet Alert 2 -->
+    <script src="~/Lucid/assets/vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="~/Lucid/assets/vendor/sweetalert2/dist/sweetalert2.min.css">
+
+    <script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#Logout").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                var url = '@Url.Action("Login", "Admin", new { reloadPage = -1 })';
+                url = url.replace("-1", true);
+
+                window.location.href = url;
+            });
+
+            $("#adminListing").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/AdminList",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
+            $("#gameListing").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/GameListing",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
+            $("#userListing").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/UserList",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
+            $("#redpacketListing").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/RedPacketList",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
+        });
+    </script>
+</head>
+<body class="theme-green">
+
+    <!-- Page Loader -->
+    <div class="page-loader-wrapper" style="background-color:transparent">
+        <div class="loader">
+            <div class="m-t-30"><img src="~/Lucid/assets/images/loading.gif" width="48" height="48" alt="ReceiptTracker"></div>
+            <p style="color:green">Please wait...</p>
+        </div>
+    </div>
+    <!-- Overlay For Sidebars -->
+
+    <div id="wrapper">
+        @Html.HiddenFor(m => m.TemporaryLat)
+        @Html.HiddenFor(m => m.TemporaryLng)
+        @Html.HiddenFor(m => m.TemporaryPostalCode)
+        @Html.HiddenFor(m => m.TemporaryCity)
+        <nav class="navbar navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-btn">
+                    <button type="button" class="btn-toggle-offcanvas"><i class="lnr lnr-menu fa fa-bars"></i></button>
+                </div>
+
+                <div class="navbar-brand">
+                    <a href="./Home"><img src="~/Lucid/assets/images/logo.png" alt="Lucid Logo" class="img-responsive logo" style="width:40px;"></a>
+                </div>
+
+                <div class="navbar-right">
+                    <div id="navbar-menu">
+                        <ul class="nav navbar-nav">
+
+                            <li><a id="Logout" href="#" class="icon-menu"><i class="icon-login"></i></a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div id="left-sidebar" class="sidebar">
+            <div class="sidebar-scroll">
+                <div class="user-account">
+                    <img src="~/Lucid/assets/images/user.png" class="rounded-circle user-photo" alt="User Profile Picture">
+                    <div class="dropdown">
+                        <span>Welcome</span>
+                    </div>
+                </div>
+                <!-- Nav tabs -->
+                <ul class="nav nav-tabs">
+                    <li class="nav-item"><a class="nav-link active" data-toggle="tab" href="#hr_menu">HR</a></li>
+                </ul>
+
+                <!-- Tab panes -->
+                <div class="tab-content p-l-0 p-r-0">
+                    <div class="tab-pane animated fadeIn active" id="hr_menu">
+                        <nav class="sidebar-nav">
+                            <ul class="main-menu metismenu">
+                                <li><a href="./Home"><i class="icon-speedometer"></i><span>HR Dashboard</span></a></li>
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("UserType") == "admin")
+                                {
+                                    <li>
+                                        <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuAdmin</span></a>
+                                        <ul class="mainMenuKH">
+                                            <li id="adminListing" style="cursor:pointer"><a>@resShared.mnuAdminListing</a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                <li>
+                                    <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuUser</span></a>
+                                    <ul class="mainMenuKH">
+                                        <li id="userListing" style="cursor:pointer"><a>@resShared.mnuUserListing</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuGame</span></a>
+                                    <ul class="mainMenuKH">
+                                        <li id="gameListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuRedPacket</span></a>
+                                    <ul class="mainMenuKH">
+                                        <li id="redpacketListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="main-content">
+            <div class="container-fluid">
+                <div class="block-header">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-8 col-sm-12">
+                            <h2>Dashboard</h2>
+                            <ul class="breadcrumb">
+                                <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                                <li class="breadcrumb-item active">Dashboard</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal fade" id="taskmodal" tabindex="-1" aria-labelledby="taskmodal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content bg-lights border-0">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="taskmodalLabel">Set Address</h6>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-primary d-block w-100" data-bs-dismiss="modal" id="btnGoogleAddressSave">Set Address</button>
+                </div>
+                <div class="modal-body" style="padding-top:0px; padding-bottom:0px;">
+                    <div class="form-floating mb-3">
+                        @Html.TextAreaFor(m => Model.TemporaryClientAddress, new { @class = "form-control", @Placeholder = "Your Delivery Address", @style = "height:135px;", autocomplete = "off" })
+                        <label class="form-control-label">Your Address</label>
+                    </div>
+                </div>
+                <div id="googlemapDiv" style="width:100%;height:600px;"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+
+        function initz(geocoder, zoomGM, lat, lng) {
+            mapOptions = {
+                center: { lat: lat, lng: lng },
+                zoom: zoomGM,
+                minZoom: 15,
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+
+            map = new google.maps.Map(document.getElementById("googlemapDiv"), mapOptions);
+
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(lat, lng),
+                map: map
+            });
+
+            marker.setDraggable(true);
+            google.maps.event.addListener(marker, 'dragend', function (event) {
+                var currentLocation = marker.getPosition();
+                geocoder.geocode({ 'location': currentLocation }, function (results, status) {
+                    if (status === 'OK') {
+                        if (results[0]) {
+                            //gather address + Lat + Lng
+                            result = results[0];
+                            //console.log(result);
+                            var address = result.address_components;
+                            var zipcode = address[address.length - 1].long_name;
+                            var city = address[address.length - 4].long_name;
+                            console.log(result.geometry.location.lat());
+                            console.log(result.geometry.location.lng());
+                            document.getElementById('TemporaryClientAddress').value = result.formatted_address;
+                            document.getElementById('TemporaryLat').value = result.geometry.location.lat();
+                            document.getElementById('TemporaryLng').value = result.geometry.location.lng();
+                            document.getElementById('TemporaryPostalCode').value = zipcode;
+                            document.getElementById('TemporaryCity').value = city;
+                        }
+                    }
+                });
+            });
+
+            //This is from placepicker.js. Click on it to get the location. Free time only implement this
+            //google.maps.event.addListener(placePickerMap, 'click', function(event) {
+            //    var clickedLocation = event.latLng;
+            //    if(marker === false){
+            //        marker = new google.maps.Marker({
+            //            position: clickedLocation,
+            //            map: placePickerMap,
+            //            draggable: true
+            //        });
+            //        google.maps.event.addListener(marker, 'dragend', function(event){
+            //            markerLocation(true);
+            //        });
+            //    } else{
+            //        marker.setPosition(clickedLocation);
+            //    }
+            //    markerLocation(true);
+            //});
+        }
+
+        function callbackFromCurrentLocationInit(defaultLat, defaultLng, geocoder, zoomGM) {
+            var options = {
+                componentRestrictions: { country: "my" },//KH Set the autocomplete country restriction
+                fields: ["address_components", "geometry", "icon", "name"],
+                origin: { lat: defaultLat, lng: defaultLng },
+                strictBounds: true,
+                //types: ["establishment"],//KH to be able to search for place  [establishment/geocode/address] Dont set will get even more better result. Else setting Establishment, some more detailed search no result one
+            };
+
+            initz(geocoder, zoomGM, defaultLat, defaultLng);
+
+            var input = document.getElementById('TemporaryClientAddress');
+            var autocomplete = new google.maps.places.Autocomplete(input, options);
+
+            google.maps.event.addListener(autocomplete, 'place_changed', function () {
+                //gather address + Lat + Lng
+
+                var place = autocomplete.getPlace();
+                //console.log(place);
+
+                var address = place.address_components;
+                var zipcode = address[address.length - 1].long_name;
+                var city = address[address.length - 4].long_name;
+
+                document.getElementById('TemporaryLat').value = place.geometry.location.lat();
+                document.getElementById('TemporaryLng').value = place.geometry.location.lng();
+                document.getElementById('TemporaryPostalCode').value = zipcode;
+                document.getElementById('TemporaryCity').value = city;
+
+                initz(geocoder, zoomGM, place.geometry.location.lat(), place.geometry.location.lng());
+            });
+        }
+
+        google.maps.event.addDomListener(window, 'load', function () {
+
+            var zoomGM = 17;
+            var geocoder = new google.maps.Geocoder;
+
+            var defaultLat = 3.15916;
+            var defaultLng = 101.71366;
+
+            // Try HTML5 geolocation.
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    defaultLat = position.coords.latitude;
+                    defaultLng = position.coords.longitude;
+
+                    callbackFromCurrentLocationInit(defaultLat, defaultLng, geocoder, zoomGM);
+                }, function () {
+                    //handleLocationError(true, infoWindow, map.getCenter());
+                    callbackFromCurrentLocationInit(defaultLat, defaultLng, geocoder, zoomGM);
+                });
+            } else {
+                // Browser doesn't support Geolocation
+                console.log('Unable to retrieve location')
+                callbackFromCurrentLocationInit(defaultLat, defaultLng, geocoder, zoomGM);
+            }
+        });
+
+    </script>
+
+    <!-- Javascript -->
+    <script src="~/Lucid/assets/bundles/libscripts.bundle.js"></script>
+    <script src="~/Lucid/assets/bundles/vendorscripts.bundle.js"></script>
+
+    <script src="~/Lucid/assets/vendor/toastr/toastr.js"></script>
+    <script src="~/Lucid/assets/bundles/knob.bundle.js"></script> <!-- Jquery Knob-->
+
+    <script src="~/Lucid/assets/bundles/mainscripts.bundle.js"></script>
+    <script src="~/Lucid/assets/js/index.js"></script>
+
+    <script src="~/Lucid/assets/vendor/dropify/js/dropify.min.js"></script>
+    <script src="~/Lucid/assets/js/pages/forms/dropify.js"></script>
+</body>
+</html>

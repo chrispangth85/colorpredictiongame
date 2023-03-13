@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Referrals </title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+        integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+        integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/product.css">
+    <link rel="stylesheet" href="css/custome.css">
+    <link rel="stylesheet" href="css/custome-responsive.css">
+</head>
+
+<body class="fixed-body">
+    <header class="section-wrap">
+        <!-- Logo section -->
+        <div class="header-inner-wrapper">
+            <div class="d-flex justify-content-between align-items-center">
+                <a class="navbar-brand" href="index.html">
+                    <img src="img/logo.jpg" alt="" class="logo">
+                </a>
+                <a class="app-btn d-flex align-items-center" href="https://reliance-mall.com/testapp_1.0.0.apk">Open
+                    With an App <i class="bi bi-cloud-arrow-down-fill ms-2 mt-1"></i></a>
+            </div>
+        </div>
+    </header>
+    <!--Navgation on Desktop-->
+    <nav id="menu-nav" class="section-wrap bg-white z-index-10">
+        <div class="section-inner-wrapper nav-mobile">
+            <div class="w-100 navbar-links ">
+                <div class="container-fluid">
+                    <ul class="d-flex justify-content-around w-100 navbar-links-ul m-0">
+                        <li class="nav-item">
+                            <a class="nav-link " aria-current="page" href="index.html"><i
+                                    class="bi bi-house-fill me-2"></i> Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " aria-current="page" href="search.html"><i
+                                    class="bi bi-search me-2"></i> Search</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " aria-current="page" href="win.html"><i
+                                    class="bi bi-trophy-fill me-2"></i> Win</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active-nav" aria-current="page" href="profile.html"><i
+                                    class="bi bi-person-circle me-2"></i> Profile</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+    <!--Title Section-->
+    <section class="section-wrap bg-peach hide-desktop">
+        <div class="section-inner-wrapper padding-s" style="overflow: visible;">
+            <div class="display-space">
+                <div style="width: 10%;">
+                    <img class="mall-icon-top pointer" src="img/back-arrow.svg" alt="" onclick="history.back();">
+                </div>
+                <div class="text-center width-80">
+                    <h1>Referrals</h1>
+                </div>
+                <div style="width: 10%;">
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section-wrap section-inner-wrapper p-0">
+        <div class="display-flex">
+            <div class="width-20 hide-mobile h-100">
+                <div id="navigation-sidebar" class="border-grey h-100">
+                    <div id="profile-info" class="padding-s display-flex align-items-center">
+                        <div style="width: 25%"><img class="border-round border-dark" src="img/profile.png" alt=""
+                                style="width: 60px; height: 60px;"></div>
+                        <div style="width: 65%" class="ms-2">
+                            <h2>Username</h2>
+                            <div> ID: A262626</div>
+                        </div>
+                        <div style="width: 10%"><i class="pointer profile-setting fa-solid fa-arrow-left"></i></div>
+                    </div>
+                    <div id="profile-nav">
+                        <div class="profile-p">
+                            <div class="profile-menu-accordion padding-s pointer">
+                                <div class="middle left heading-bold">
+                                    <img class="profile-menu-img mrgn-right-s" src="img/c-wallet_icon.png" alt="">
+                                    <!-- <a href="recharge.html" class="text-dark">Balance</a> -->
+                                    Balance
+                                </div>
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+
+                            <div class="profile-menu-panel">
+                                <a class="profile-menus width-100 padding-s" href="recharge.html">Recharge</a>
+                                <a class="profile-menus width-100 padding-s" href="">Page 1</a>
+                                <a class="profile-menus width-100 padding-s" href="">Page 2</a>
+                            </div>
+
+                        </div>
+                        <div class="profile-p">
+                            <div class="profile-menu-accordion padding-s pointer">
+                                <div class="middle left heading-bold">
+                                    <img class="profile-menu-img mrgn-right-s" src="img/reports_icon.png" alt="">
+                                    <!-- <a href="commission.html" class="text-dark">Commission</a> -->
+                                    Commission
+                                </div>
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+
+                            <div class="profile-menu-panel">
+                                <a class="profile-menus width-100 padding-s" href="commission.html">View Commission</a>
+                                <a class="profile-menus width-100 padding-s" href="">Page 1</a>
+                                <a class="profile-menus width-100 padding-s" href="">Page 2</a>
+                            </div>
+                        </div>
+                        <div class="profile-p">
+                            <div class="profile-menu-accordion padding-s pointer">
+                                <div class="middle left heading-bold">
+                                    <img class="profile-menu-img mrgn-right-s" src="img/reports_icon.png" alt="">
+                                    <!-- <a href="interest.html" class="text-dark">Interest</a> -->
+                                    Interest
+                                </div>
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+                            <div class="profile-menu-panel">
+                                <a class="profile-menus width-100 padding-s" href="interest.html">View Interest</a>
+                                <a class="profile-menus width-100 padding-s" href="">Page 1</a>
+                                <a class="profile-menus width-100 padding-s" href="">Page 2</a>
+                            </div>
+                        </div>
+                        <div class="profile-p">
+                            <div class="profile-menu-accordion padding-s pointer">
+                                <div class="middle left heading-bold">
+                                    <img class="profile-menu-img mrgn-right-s" src="img/ranking.svg" alt="">
+                                    <!-- <a href="promotion.html" class="text-dark">Promotion</a> -->
+                                    Promotion
+                                </div>
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+
+                            <div class="profile-menu-panel">
+                                <a class="profile-menus width-100 padding-s" href="promotion.html">Promote</a>
+                                <a class="profile-menus width-100 padding-s" href="">Page 1</a>
+                                <a class="profile-menus width-100 padding-s" href="">Page 2</a>
+                            </div>
+                        </div>
+                        <div class="profile-p">
+                            <div class="profile-menu-accordion padding-s pointer">
+                                <div class="middle left heading-bold">
+                                    <img class="profile-menu-img mrgn-right-s" src="img/invite-friends.jpeg" alt="">
+                                    <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
+                                    Referrals
+                                </div>
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+
+                            <div class="profile-menu-panel">
+                                <a class="profile-menus width-100 padding-s" href="referrals.html">Referr</a>
+                                <a class="profile-menus width-100 padding-s" href="">Page 1</a>
+                                <a class="profile-menus width-100 padding-s" href="">Page 2</a>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="width-80 width-100-t fixed-slider">
+                <section class="section-wrap">
+                    <div class="section-inner-wrapper center-block overflow-hidden">
+                        <div class="max-width-600 center-block">
+                            <h2>Refer a Friend</h2>
+                            <div class="mrgn-btm-s max-width-400">Get your friends to join just by scanning your
+                                Referral QR Code!</div>
+                            <div class="border-dark-s  mrgn-btm-m max-width-300 padding-s border-12">
+                                <div id="qrcode" style="width: 100%; height: auto;"></div>
+                            </div>
+                            <div class="input-custom focus-active width-100 mrgn-btm-m pos-rel">
+                                <label class="label-move text-grey to-top" for="referral-code">Referral Link</label>
+                                <input class="width-100 width-100 bg-white" type="text" id="referral-link"
+                                    data-link="https://reliance-mall.com#/register?r_code="
+                                    value="https://reliance-mall.com#/register?r_code=" disabled>
+                                <div class="input-copy padding-xs center middle border-12">
+                                    <img src="img/icon-copy.png" alt="" onclick="copyLink()" class="input-copy-icon">
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </section>
+    <!-- Footer -->
+    <footer class="footer ">
+        <div class="footer-menu">
+            <ul class="d-flex justify-content-around w-100  m-0 navbar-links-ul">
+                <li class="nav-item nav-item-f ">
+                    <i class="bi bi-house-fill "></i>
+                    <a class="nav-link " aria-current="page" href="index.html"> Home</a>
+                </li>
+                <li class="nav-item nav-item-f ">
+                    <i class="bi bi-search "></i>
+                    <a class="nav-link " aria-current="page" href="search.html"> Search</a>
+                </li>
+                <li class="nav-item nav-item-f ">
+                    <i class="bi bi-trophy-fill "></i>
+                    <a class="nav-link " aria-current="page" href="win.html"> Win</a>
+                </li>
+                <li class="nav-item nav-item-f active-nav">
+                    <i class="bi bi-person-circle "></i>
+                    <a class="nav-link " aria-current="page" href="profile.html"> Profile</a>
+                </li>
+            </ul>
+        </div>
+    </footer>
+
+    <script src="main.js" type="text/javascript"></script>
+    <script src="js/qrcode.js"></script>
+    <script>
+        var referralLink = $('#referral-link').attr('data-link');
+        new QRCode(document.getElementById("qrcode"), referralLink,);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,18 @@
+USE XXX
+
+DECLARE @username NVARCHAR(50)
+
+	DECLARE tzCur CURSOR FOR
+			SELECT [CUSR_USERNAME]
+			FROM [dbo].[CVD_MEMBER]
+	OPEN tzCur
+	FETCH NEXT FROM tzCur INTO @username
+	WHILE @@FETCH_STATUS = 0
+		BEGIN 	
+
+
+
+	FETCH NEXT FROM tzCur INTO @username
+	END
+	CLOSE tzCur
+	DEALLOCATE tzCur

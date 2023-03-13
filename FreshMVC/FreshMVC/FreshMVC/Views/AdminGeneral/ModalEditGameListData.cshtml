@@ -1,0 +1,214 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared;
+@using FreshMVC.Models
+@model GameModel
+
+<link rel="stylesheet" href="~/Lucid/assets/vendor/dropify/css/dropify.min.css">
+<link rel="stylesheet" href="~/Lucid/assets/css/jquery.fileupload.css">
+
+<script type="text/javascript">
+
+    $("#btnSaveAd").click(function (evt) {
+        $('.page-loader-wrapper').show();
+        let formData = new FormData($("#editAdForm")[0]);
+
+        var productFileINput = $('#ProductImage')[0];
+        var productFile = productFileINput.files[0];
+        formData.append("ProductImage", productFile);
+
+        formData.append("ID", $("#ID").val());
+        formData.append("Name", $("#Name").val());
+        formData.append("SelectedStatus", $("#SelectedStatus").val());
+        formData.append("SelectedGameType", $("#SelectedGameType").val());
+        formData.append("No9Return", $("#No9Return").val());
+        formData.append("No8Return", $("#No8Return").val());
+        formData.append("No7Return", $("#No7Return").val());
+        formData.append("No6Return", $("#No6Return").val());
+        formData.append("No5Return", $("#No5Return").val());
+        formData.append("No4Return", $("#No4Return").val());
+        formData.append("No3Return", $("#No3Return").val());
+        formData.append("No2Return", $("#No2Return").val());
+        formData.append("No1Return", $("#No1Return").val());
+        formData.append("No0Return", $("#No0Return").val());
+        formData.append("RedReturn", $("#RedReturn").val());
+        formData.append("Red0Return", $("#Red0Return").val());
+        formData.append("VioletReturn", $("#VioletReturn").val());
+        formData.append("GreenReturn", $("#GreenReturn").val());
+        formData.append("Green5Return", $("#Green5Return").val());
+        formData.append("Duration", $("#Duration").val());
+
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/ModalEditGameListDataMethod",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('.page-loader-wrapper').hide();
+                $("#main-content").html(data);
+                alert("@resShared.msgSaveSuccessfully");
+            },
+            error: function (xhr, status, error) {
+                $('.page-loader-wrapper').hide();
+                let r = jQuery.parseJSON(xhr.responseText);
+                var errorM = r.message;
+                alert(errorM);
+            }
+        });
+     });
+
+</script>
+
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <h2>@resShared.mnuGame</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                    <li class="breadcrumb-item active">@resShared.lblUpdate</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    @using (Html.BeginForm("EditAdminPermissionMethod", "AdminGeneral", FormMethod.Post, new { name = "editAdForm", id = "editAdForm" }))
+    {
+        <div class="page-content p-6">
+            <div class="content container">
+                @Html.HiddenFor(model => model.ID)
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <div class="example">
+                            <div class="description">
+                                <div class="description-text">
+                                </div>
+                            </div>
+                            <div class="source-preview-wrapper">
+                                <div class="preview">
+                                    <div class="preview-elements">
+                                        <div class="panel panel-transparent" style="margin-bottom:15px;">
+                                            <strong>@resShared.lblImage</strong>
+                                            <div class="form-group">
+                                                @Html.HiddenFor(x => x.ImagePath)
+                                                <input type="file" id="ProductImage" class="dropify" data-default-file="@Model.ImagePath">
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-bottom:20px;">
+                                            <div class="col-lg-6 col-md-6">
+                                                <strong>@resShared.lblName <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.Name, new { @class = "form-control" })
+                                            </div>
+                                            @if (Model.ID == 0)
+                                            {
+                                                <div class="col-lg-6 col-md-6">
+                                                    <strong>@resShared.lblDuration <span style="color: Red">*</span></strong>
+                                                    @Html.TextBoxFor(model => model.Duration, new { @class = "form-control" })
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="col-lg-6 col-md-6">
+                                                    <strong>@resShared.lblDuration <span style="color: Red">*</span></strong>
+                                                    @Html.TextBoxFor(model => model.Duration, new { @class = "form-control", @readonly = "readonly" })
+                                                </div>
+                                            }
+
+                                        </div>
+                                        <div class="form-group">
+                                            
+                                        </div>
+                                        <div class="row" style="padding-bottom:20px;">
+                                            <div class="col-lg-6 col-md-6">
+                                                <strong>@resShared.lblStatus <span style="color: Red">*</span></strong>
+                                                @Html.DropDownListFor(model => model.SelectedStatus, @Model.StatusList, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-6 col-md-6">
+                                                <strong>@resShared.lblType <span style="color: Red">*</span></strong>
+                                                @Html.DropDownListFor(model => model.SelectedGameType, @Model.GameTypeList, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-bottom:20px;">
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblNumber9ReturnRate <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.No9Return, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblNumber8ReturnRate <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.No8Return, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblNumber7ReturnRate <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.No7Return, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-bottom:20px;">
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblNumber6ReturnRate <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.No6Return, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblNumber5ReturnRate <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.No5Return, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblNumber4ReturnRate <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.No4Return, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-bottom:20px;">
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblNumber3ReturnRate <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.No3Return, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblNumber2ReturnRate <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.No2Return, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblNumber1ReturnRate <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.No1Return, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-bottom:20px;">
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblNumber0ReturnRate <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.No0Return, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblRedReturn <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.RedReturn, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblRed0Return <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.Red0Return, new { @class = "form-control" })
+                                            </div>                                            
+                                        </div>
+                                        <div class="row" style="padding-bottom:20px;">
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblVioletReturn <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.VioletReturn, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblGreenReturn <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.GreenReturn, new { @class = "form-control" })
+                                            </div>
+                                            <div class="col-lg-4 col-md-4">
+                                                <strong>@resShared.lblGreen5Return <span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(model => model.Green5Return, new { @class = "form-control" })
+                                            </div>
+                                        </div>
+
+                                        <input id="btnSaveAd" type="button" class="btn btn-sm btn-primary" style="width:180px; height:35px" value="@resShared.btnSave" />
+                                        <br /><br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script src="~/Lucid/assets/vendor/dropify/js/dropify.min.js"></script>
+<script src="~/Lucid/assets/js/pages/forms/dropify.js"></script>

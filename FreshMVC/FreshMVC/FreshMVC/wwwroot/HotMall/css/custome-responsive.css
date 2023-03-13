@@ -1,0 +1,228 @@
+:root {
+    --primary: #EF0A07;
+}
+
+@media only screen and (min-width:1500px) {
+    /* .outside-left-nav {
+        position: absolute;
+        left: clamp(75px, calc(4.6875rem + ((1vw - 9.49px) * 51.6416)), 452.5px);
+    }
+    
+    .outside-right-nav {
+        position: absolute;
+        right: clamp(75px, calc(4.6875rem + ((1vw - 9.49px) * 51.6416)), 452.5px);
+    }
+
+    #challenge-carousel .flickity-prev-next-button.next {
+        right: clamp(80px, calc(7rem + ((1vw - 8.49px) * 51.2996)), 455px);
+    }
+    
+    #challenge-carousel .flickity-prev-next-button.previous {
+        left: clamp(80px, calc(7rem + ((1vw - 9.49px) * 51.2996)), 455px);
+    } */
+}
+
+@media only screen and (max-width:1300px) {
+    .header-slider {
+        height: 850px;
+    }
+
+    .carousel-inner .carousel-item img {
+        height: 850px;
+    }
+
+    .mall-product-name a {
+        width: 130px;
+    }
+}
+
+@media only screen and (max-width:1100px) {
+    .header-slider {
+        height: 700px;
+    }
+
+    .carousel-inner .carousel-item img {
+        height: 700px;
+    }
+
+}
+
+@media only screen and (max-width:991px) {
+
+    .mall-product-name a {
+        width: 150px;
+    }
+
+    .fixed-body {
+        height: 100% !important;
+        overflow: auto;
+    }
+
+    .fixed-slider {
+        height: 100%;
+    }
+}
+
+@media only screen and (max-width:767px) {
+    body {
+        padding-bottom: 55px !important;
+    }
+
+    .header-slider {
+        height: 500px;
+    }
+
+    .carousel-inner .carousel-item img {
+        height: 500px;
+    }
+
+    .navbar-links {
+        display: none;
+    }
+
+    .nav-link {
+        padding: 0px 5px;
+    }
+
+    .active-nav i,
+    .active-nav .nav-link {
+        color: black !important;
+        border-bottom: 3px solid transparent !important;
+        font-weight: 600 !important;
+    }
+
+    .nav-item {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .footer-menu {
+        display: block;
+    }
+
+    .challenge-cell-text {
+        background-color: var(--primary);
+        color: white;
+        padding: 20px 20px 40px 20px;
+        position: relative;
+    }
+
+    .challenge-cell-text .price {
+        position: absolute;
+        bottom: -20%;
+        background-color: #e0a442;
+        color: white;
+        padding: 7px;
+        left: 20px;
+        right: 20px;
+        font-size: 30px;
+
+    }
+
+    .product-card-padding {
+        padding: 10px;
+    }
+
+    .mall-product-name a {
+        width: 130px;
+    }
+}
+
+@media only screen and (max-width:500px) {
+    .header-slider {
+        height: 260px;
+    }
+
+    .carousel-inner .carousel-item img {
+        height: 260px;
+    }
+
+    .logo {
+        height: 60px;
+    }
+
+    .app-btn {
+        background-color: var(--primary);
+        color: white;
+        font-size: 14px;
+        padding: 3px 8px;
+    }
+
+    .main-heading {
+        font-size: 25px;
+
+    }
+
+    .main-heading-2 {
+        font-size: 22px;
+
+    }
+
+    .second-hrading {
+        color: #A5A5A5;
+        font-size: 18px;
+    }
+
+    .nav-link {
+        color: #A5A5A5;
+        font-size: 14px;
+        font-weight: 500;
+        border-bottom: 3px solid transparent;
+    }
+
+    .nav-link i {
+        font-size: 16px;
+    }
+
+    .product-card-padding {
+        padding: 7px;
+    }
+
+    .mall-product-name a {
+        color: var(--color-font);
+        font-family: sans-serif;
+        font-size: 16px;
+        line-height: 21px;
+    }
+
+    .mall-product-price {
+        font-size: 16px
+    }
+
+    .mall-product-name a {
+        width: 140px;
+    }
+
+    .description-img-div {
+        height: 280px;
+    }
+
+    .section-inner-wrapper {
+        padding: 25px 10px;
+
+    }
+
+    .tab button {
+        min-width: 120px;
+    }
+
+    .tab {
+        padding: 12px 10px 8px 10px;
+    }
+
+    .join-btn {
+        font-size: 13px;
+        padding: 8px 10px;
+    }
+
+    .tabcontent {
+        margin: 6px 10px;
+        padding: 7px;
+    }
+
+    .modal-dialog-privacy {
+        max-width: 100% !important;
+    }
+}
