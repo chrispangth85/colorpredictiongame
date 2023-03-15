@@ -89,6 +89,28 @@
                 });
             });
 
+            $("#productListing").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/ProductListing",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
+            
             $("#userListing").click(function (evt) {
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -203,6 +225,12 @@
                                     <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuUser</span></a>
                                     <ul class="mainMenuKH">
                                         <li id="userListing" style="cursor:pointer"><a>@resShared.mnuUserListing</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuProduct</span></a>
+                                    <ul class="mainMenuKH">
+                                        <li id="productListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
                                     </ul>
                                 </li>
                                 <li>

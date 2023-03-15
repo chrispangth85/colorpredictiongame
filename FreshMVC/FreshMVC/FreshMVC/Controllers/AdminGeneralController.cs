@@ -1026,5 +1026,240 @@ namespace FreshMVC.Controllers
             }
         }
         #endregion
+
+        #region ProdutListing
+        public IActionResult ProductListing(int selectedPage = 1, string filterType = "", string filterValue = "")
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            filterValue = Helper.NVL(filterValue);
+
+            int ok;
+            string msg;
+            int pages = 0;
+            var model = new PaginationProductModel();
+            var dsAdmin = AdminGeneralDB.GetAllProducts(selectedPage, filterType, filterValue, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new ProductModel();
+                am.Number = int.Parse(dr["rownumber"].ToString());
+                am.id = int.Parse(dr["CPRO_ID"].ToString());
+                am.Title = dr["CPRO_TITLE"].ToString();
+
+                string basePath = dr["CPRO_IMAGES"] == DBNull.Value ? "" : "/Uploads/Products/" + dr["CPRO_IMAGES"].ToString();
+                am.ImagePath = basePath;
+                model.List.Add(am);
+            }
+
+            #region filtering
+            List<SelectListItem> filterOptionList = new List<SelectListItem>();
+            List<String> filterList = new List<string> { "Name" };
+
+
+            foreach (var value in filterList)
+            {
+                filterOptionList.Add(new SelectListItem() { Text = value, Value = value });
+            }
+
+            if (filterType == null || filterType == "")
+            {
+                model.SelectedFilteringCriteria = filterOptionList.First().Value;
+
+            }
+            else
+            {
+                model.SelectedFilteringCriteria = filterType;
+            }
+            model.FilterValue = Helper.NVL(filterValue);
+
+            model.FilteringCriteria = filterOptionList;
+            #endregion
+
+            return PartialView("ProductListing", model);
+        }
+
+        public ActionResult ModalEditProductData(int id = 0)
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new ProductModel();
+
+            if (id != 0)
+            {
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var productFound = dbContext.CvdProduct.FirstOrDefault(c => c.CproId == id);
+                    am.Title = productFound.CproTitle;
+                    am.Desc = productFound.CproDesc;
+                    am.AdditionalDesc = productFound.CproDescAdd;
+                    am.ImagePath = string.Format("{0}/{1}", Misc._baseUrl, productFound.CproImages);
+                    am.Price = productFound.CproPrice;
+                }
+            }
+
+            return PartialView("ModalEditProductData", am);
+        }
+
+        [HttpPost]
+        public IActionResult ModalEditProductDataMethod(ProductModel am)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                if (string.IsNullOrEmpty(am.Title))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidTitle
+                    });
+                }
+
+                string directoryBasePath = Path.Combine(Path.Combine(Path.Combine("Uploads", "Products"), am.Title.Replace(" ", "")));
+                string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, directoryBasePath);
+
+                if (am.ImagePhoto != null && am.ImagePhoto.FileName != string.Empty)
+                {
+                    if (Directory.Exists(basePath) == false)
+                    {
+                        Directory.CreateDirectory(basePath);
+                    }
+
+                    string path = Path.Combine(basePath, am.ImagePhoto.FileName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        am.ImagePhoto.CopyTo(stream);
+                    }
+
+                    am.ImagePath = am.ImagePhoto.FileName;
+                }
+                else if (am.ImagePhoto != null)
+                {
+                    am.ImagePath = am.ImagePhoto.FileName;
+                }
+                else if ((am.ImagePath == "" || am.ImagePath == null) && am.Number == 0)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidImage
+                    });
+                }
+
+                if (am.id == 0)
+                {
+                    using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                    {
+                        var product = new CvdProduct();
+
+                        product.CproTitle = am.Title;
+                        product.CproDesc = am.Desc;
+                        product.CproDescAdd = am.AdditionalDesc;
+                        product.CproImages = am.ImagePath;
+                        product.CproPrice = am.Price;
+
+                        dbContext.CvdProduct.Add(product);
+                        dbContext.SaveChanges();
+                    }
+                }
+                else
+                {
+                    using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                    {
+                        var product = dbContext.CvdProduct.FirstOrDefault(c => c.CproId == am.id);
+                        if (product != null)
+                        {
+                            product.CproTitle = am.Title;
+                            product.CproDesc = am.Desc;
+                            product.CproDescAdd = am.AdditionalDesc;
+                            product.CproImages = am.ImagePath;
+                            product.CproPrice = am.Price;
+                            dbContext.SaveChanges();
+                        }
+                    }
+                }
+
+                return ProductListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult DeleteProduct(int idz = 0)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var product = dbContext.CvdProduct.FirstOrDefault(c => c.CproId == idz);
+                    if (product != null)
+                    {
+                        dbContext.CvdProduct.Remove(product);
+                        dbContext.SaveChanges();
+                    }
+                }
+
+                return ProductListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        #endregion
     }
 }

@@ -165,6 +165,9 @@
   <data name="lblBlock" xml:space="preserve">
     <value>Block</value>
   </data>
+  <data name="lblCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
   <data name="lblCashWallet" xml:space="preserve">
     <value>Cash Wallet</value>
   </data>
@@ -173,6 +176,9 @@
   </data>
   <data name="lblClaimedOn" xml:space="preserve">
     <value>Claimed On</value>
+  </data>
+  <data name="lblConfirm" xml:space="preserve">
+    <value>Confirm</value>
   </data>
   <data name="lblConfirmNewPass" xml:space="preserve">
     <value>Confirm new password</value>
@@ -198,14 +204,26 @@
   <data name="lblCurrPwd" xml:space="preserve">
     <value>Current password</value>
   </data>
+  <data name="lblDeal" xml:space="preserve">
+    <value>Deal</value>
+  </data>
   <data name="lblDelete" xml:space="preserve">
     <value>Delete</value>
+  </data>
+  <data name="lblDeleteSuccessfully" xml:space="preserve">
+    <value>Deleted Successfully</value>
+  </data>
+  <data name="lblDescription" xml:space="preserve">
+    <value>Description</value>
   </data>
   <data name="lblDuration" xml:space="preserve">
     <value>Duration</value>
   </data>
   <data name="lblEdit" xml:space="preserve">
     <value>Edit</value>
+  </data>
+  <data name="lblExtraInfo" xml:space="preserve">
+    <value>Extra Info</value>
   </data>
   <data name="lblFailed" xml:space="preserve">
     <value>Failed</value>
@@ -234,8 +252,23 @@
   <data name="lblIntroCode" xml:space="preserve">
     <value>Intro Code</value>
   </data>
+  <data name="lblInvalidImage" xml:space="preserve">
+    <value>Invalid Picture</value>
+  </data>
+  <data name="lblInvalidTitle" xml:space="preserve">
+    <value>Invalid Title</value>
+  </data>
   <data name="lblInvalidUsername" xml:space="preserve">
     <value>Invalid username</value>
+  </data>
+  <data name="lblJoinGreen" xml:space="preserve">
+    <value>Join Green</value>
+  </data>
+  <data name="lblJoinRed" xml:space="preserve">
+    <value>Join Red</value>
+  </data>
+  <data name="lblJoinViolet" xml:space="preserve">
+    <value>Join Violet</value>
   </data>
   <data name="lblLogin" xml:space="preserve">
     <value>Login</value>
@@ -255,6 +288,9 @@
   <data name="lblNameIsRequired" xml:space="preserve">
     <value>Name is required</value>
   </data>
+  <data name="lblNew" xml:space="preserve">
+    <value>New</value>
+  </data>
   <data name="lblNewPasswordIsRequired" xml:space="preserve">
     <value>New password is required</value>
   </data>
@@ -264,8 +300,14 @@
   <data name="lblNoRecFound" xml:space="preserve">
     <value>No record found</value>
   </data>
+  <data name="lblNotAvailable" xml:space="preserve">
+    <value>Not Available</value>
+  </data>
   <data name="lblNotUsed" xml:space="preserve">
     <value>Not Used</value>
+  </data>
+  <data name="lblNumber" xml:space="preserve">
+    <value>Number</value>
   </data>
   <data name="lblNumber0ReturnRate" xml:space="preserve">
     <value>Number 0 return rate</value>
@@ -297,6 +339,12 @@
   <data name="lblNumber9ReturnRate" xml:space="preserve">
     <value>Number 9 return rate</value>
   </data>
+  <data name="lblOK" xml:space="preserve">
+    <value>Ok</value>
+  </data>
+  <data name="lblOutOfStock" xml:space="preserve">
+    <value>OUT OF STOCK</value>
+  </data>
   <data name="lblPassNotMatch" xml:space="preserve">
     <value>Password does not match</value>
   </data>
@@ -306,6 +354,9 @@
   <data name="lblPasswordIsRequired" xml:space="preserve">
     <value>Password is required</value>
   </data>
+  <data name="lblPeriod" xml:space="preserve">
+    <value>Period</value>
+  </data>
   <data name="lblPhone" xml:space="preserve">
     <value>Phone</value>
   </data>
@@ -314,6 +365,12 @@
   </data>
   <data name="lblPleaseWait" xml:space="preserve">
     <value>Please Wait</value>
+  </data>
+  <data name="lblPrice" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="lblQualityGuarantee" xml:space="preserve">
+    <value>Quality Guarantee</value>
   </data>
   <data name="lblRechargeWallet" xml:space="preserve">
     <value>Recharge Wallet</value>
@@ -330,8 +387,14 @@
   <data name="lblRememberMe" xml:space="preserve">
     <value>Remember Me</value>
   </data>
+  <data name="lblResult" xml:space="preserve">
+    <value>Result</value>
+  </data>
   <data name="lblShowPassword" xml:space="preserve">
     <value>Show Password</value>
+  </data>
+  <data name="lblSoldOut" xml:space="preserve">
+    <value>SOLD OUT</value>
   </data>
   <data name="lblStatus" xml:space="preserve">
     <value>Status</value>
@@ -357,11 +420,20 @@
   <data name="lblView" xml:space="preserve">
     <value>View</value>
   </data>
+  <data name="lblViewAll" xml:space="preserve">
+    <value>View All</value>
+  </data>
   <data name="lblVioletReturn" xml:space="preserve">
     <value>Violet return rate</value>
   </data>
   <data name="lblWarning" xml:space="preserve">
     <value>Warning</value>
+  </data>
+  <data name="lblWelcomeBack" xml:space="preserve">
+    <value>Welcome Back</value>
+  </data>
+  <data name="lblWin" xml:space="preserve">
+    <value>Win</value>
   </data>
   <data name="mnuAdmin" xml:space="preserve">
     <value>Admin</value>
@@ -374,6 +446,9 @@
   </data>
   <data name="mnuListing" xml:space="preserve">
     <value>Listing</value>
+  </data>
+  <data name="mnuProduct" xml:space="preserve">
+    <value>Products</value>
   </data>
   <data name="mnuRedPacket" xml:space="preserve">
     <value>Red Packet</value>
@@ -389,6 +464,9 @@
   </data>
   <data name="msgConfirmDelete" xml:space="preserve">
     <value>Are you sure you want to delete?</value>
+  </data>
+  <data name="msgConfirmToDelete" xml:space="preserve">
+    <value>Are you sure you want to delete this ?</value>
   </data>
   <data name="msgDurationMustBeLongerThan60Seconds" xml:space="preserve">
     <value>Duration must be longer than 60 seconds</value>
@@ -408,6 +486,9 @@
   <data name="msgInsufficientWalletBalance" xml:space="preserve">
     <value>Insufficient wallet balance</value>
   </data>
+  <data name="msgInvalidAmount" xml:space="preserve">
+    <value>Invalid Amount</value>
+  </data>
   <data name="msgInvalidLogin" xml:space="preserve">
     <value>Invalid Login</value>
   </data>
@@ -426,11 +507,17 @@
   <data name="msgInvalidReferral" xml:space="preserve">
     <value>Invalid referral</value>
   </data>
+  <data name="msgOrderPlaceSucessfully" xml:space="preserve">
+    <value>Order placed successfully</value>
+  </data>
   <data name="msgPasswordNotMatch" xml:space="preserve">
     <value>Password do not match</value>
   </data>
   <data name="msgPhoneIsNotRegistered" xml:space="preserve">
     <value>Phone is not registered</value>
+  </data>
+  <data name="msgPleaseAgreeRules" xml:space="preserve">
+    <value>You are required to agree with the rules</value>
   </data>
   <data name="msgSaveSuccessfully" xml:space="preserve">
     <value>Save successfully</value>

@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
           integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
+
 </head>
 
 <body>
@@ -68,7 +68,7 @@
                                                         <a href="./ProductDescription?ID=@product.id" class="carousel__slide">
                                                             <figure>
                                                                 <div>
-                                                                    <img src="~/HotMall/@product.ImagePath" alt="">
+                                                                    <img src="~/@product.ImagePath" alt="">
                                                                 </div>
                                                             </figure>
                                                         </a>
@@ -102,10 +102,10 @@
                                                             </svg>
                                                             break;
                                                         case "DEAL":
-                                                            <div class="promo-top label-deal">Deal</div>
+                                                            <div class="promo-top label-deal">@resSharedPB.lblDeal</div>
                                                             break;
                                                         case "NEW":
-                                                            <div class="promo-top label-new">NEW</div>
+                                                            <div class="promo-top label-new">@resSharedPB.lblNew</div>
                                                             break;
                                                     }
                                                 </div>
@@ -216,6 +216,9 @@
             */
 
         });
+    </script>
+    <script>
+        $('#loader-wrapper').hide();
     </script>
 </body>
 

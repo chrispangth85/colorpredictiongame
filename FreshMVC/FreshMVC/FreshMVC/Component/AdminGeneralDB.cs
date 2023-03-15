@@ -3500,5 +3500,104 @@ namespace FreshMVC.Component
             return ds;
         }
         #endregion
+
+        #region GetGameSessionHistory
+        public static DataSet GetGameSessionHistory(int gameid)
+        {
+            SqlConnection sqlConn = DBConn.GetConnection();
+            SqlDataAdapter da = new SqlDataAdapter();
+
+            SqlCommand sqlComm = new SqlCommand("SP_GetGameSessionHistory", sqlConn);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter pGameID = sqlComm.Parameters.Add("@gameid", SqlDbType.Int);
+            pGameID.Direction = ParameterDirection.Input;
+            pGameID.Value = gameid;
+
+            da.SelectCommand = sqlComm;
+            DataSet ds = new DataSet();
+
+            sqlConn.Open();
+            da.Fill(ds);
+
+            sqlConn.Close();
+
+            return ds;
+        }
+        #endregion
+
+        #region GetBetHistory
+        public static DataSet GetBetHistory(int gameid, string username)
+        {
+            SqlConnection sqlConn = DBConn.GetConnection();
+            SqlDataAdapter da = new SqlDataAdapter();
+
+            SqlCommand sqlComm = new SqlCommand("SP_GetBetHistory", sqlConn);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter pGameID = sqlComm.Parameters.Add("@gameid", SqlDbType.Int);
+            pGameID.Direction = ParameterDirection.Input;
+            pGameID.Value = gameid;
+
+            SqlParameter pTitle = sqlComm.Parameters.Add("@username", SqlDbType.NVarChar, 200);
+            pTitle.Direction = ParameterDirection.Input;
+            pTitle.Value = username;
+
+            da.SelectCommand = sqlComm;
+            DataSet ds = new DataSet();
+
+            sqlConn.Open();
+            da.Fill(ds);
+
+            sqlConn.Close();
+
+            return ds;
+        }
+        #endregion
+
+        #region GetAllProduct
+        public static DataSet GetAllProducts(int viewPage, string filterType, string filterValue, out int pages, out int ok, out string msg)
+        {
+            SqlConnection sqlConn = DBConn.GetConnection();
+            SqlDataAdapter da = new SqlDataAdapter();
+
+            SqlCommand sqlComm = new SqlCommand("SP_GetAllProducts", sqlConn);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter pViewPage = sqlComm.Parameters.Add("@viewPage", SqlDbType.Int);
+            pViewPage.Direction = ParameterDirection.Input;
+            pViewPage.Value = viewPage;
+
+            SqlParameter pFilterType = sqlComm.Parameters.Add("@filterType", SqlDbType.VarChar, 200);
+            pFilterType.Direction = ParameterDirection.Input;
+            pFilterType.Value = filterType;
+
+            SqlParameter pUsername = sqlComm.Parameters.Add("@keyword", SqlDbType.VarChar, 200);
+            pUsername.Direction = ParameterDirection.Input;
+            pUsername.Value = Helper.NVL(filterValue);
+
+            SqlParameter pPages = sqlComm.Parameters.Add("@pages", SqlDbType.Int);
+            pPages.Direction = ParameterDirection.Output;
+
+            SqlParameter pOk = sqlComm.Parameters.Add("@ok", SqlDbType.Int);
+            pOk.Direction = ParameterDirection.Output;
+
+            SqlParameter pMessage = sqlComm.Parameters.Add("@msg", SqlDbType.VarChar, 50);
+            pMessage.Direction = ParameterDirection.Output;
+
+            da.SelectCommand = sqlComm;
+            DataSet ds = new DataSet();
+
+            sqlConn.Open();
+            da.Fill(ds);
+
+            ok = (int)pOk.Value;
+            msg = pMessage.Value.ToString();
+            pages = (int)pPages.Value;
+            sqlConn.Close();
+
+            return ds;
+        }
+        #endregion
     }
 }

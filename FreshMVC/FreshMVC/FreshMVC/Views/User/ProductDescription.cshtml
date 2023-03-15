@@ -59,7 +59,7 @@
                                 </div>
                                 <div class="display-flex mrgn-btm-s">
                                     <div class="border-dark border-12 mrgn-right-s width-40 middle center">
-                                        <img src="~/HotMall/@Model.ImagePath" alt="">
+                                        <img src="~/@Model.ImagePath" alt="">
                                     </div>
                                     <div>
                                         <h4>Om Jewells</h4>
@@ -80,11 +80,11 @@
                                 <div class="product-gallery mrgn-btm-m ">
                                     <div class="border-dark-s border-25 product-carousel-p middle overflow-hide">
                                         <div class="product-cell">
-                                            <img src="~/HotMall/@Model.ImagePath" alt="">
+                                            <img src="~/@Model.ImagePath" alt="">
                                         </div>
                                     </div>
-                                    </div>
                                 </div>
+                            </div>
                             <div class="col-lg-7 ">
                                 <div class="">
                                     <h1>@Model.Title</h1>
@@ -92,7 +92,7 @@
                                     <div class="price-p ">
                                         <h2 class="font-std text-bold mrgn-btm-xs text-primary">₹ @Model.Price</h2>
                                         <div class="text-grey">
-                                            Status : <span class="text-link text-bold ms-2">Not Available</span>
+                                            Status : <span class="text-link text-bold ms-2">@resSharedPB.lblNotAvailable</span>
                                         </div>
                                     </div>
                                     <h5 class="mt-3">Product Specifications</h5>
@@ -110,7 +110,7 @@
                                             </div>
                                         </div>
                                         <button class="button-primary pointer border-8 max-width-400 mrgn-btm-m" disabled>
-                                            SOLD OUT
+                                            @resSharedPB.lblSoldOut
                                         </button>
                                     </form>
                                 </div>
@@ -133,7 +133,9 @@
     <script src="~/HotMall/flickity/flickity.pkgd.min.js"></script>
     <script src="~/HotMall/main.js" type="text/javascript"></script>
     <script src="~/HotMall/js/product.js" type="text/javascript"></script>
-
+    <script>
+        $('#loader-wrapper').hide();
+    </script>
 </body>
 
 </html>

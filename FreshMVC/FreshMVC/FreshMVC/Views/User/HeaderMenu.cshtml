@@ -2,6 +2,11 @@
 <link rel="stylesheet" href="~/HotMall/css/product.css">
 <link rel="stylesheet" href="~/HotMall/css/custome.css">
 <link rel="stylesheet" href="~/HotMall/css/custome-responsive.css">
+
+<!-- Sweet Alert 2 -->
+<script src="~/Lucid/assets/vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
+<link rel="stylesheet" href="~/Lucid/assets/vendor/sweetalert2/dist/sweetalert2.min.css">
+
 <script>
     $(document).ready(function () {
 
@@ -49,22 +54,6 @@
             var url = '@Url.Action("ClientLogin", "UserLogin", new { })';
 
             window.location.href = url;
-        });
-
-        $("#logoutBtn").click(function (evt) {
-            $.ajax({
-                type: "POST",
-                url: "/UserLogin/Logout",
-                data: { },
-                success: function (data) {
-                    var url = '@Url.Action("Home", "User", new { })';
-                    window.location.href = url;
-                },
-                error: function (xhr, status, error) {
-                    let r = JSON.parse(xhr.responseText);
-                    alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
-                }
-            });
         });
 
         @*$("#aboutUsBtn").click(function (evt) {
@@ -116,7 +105,7 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link " aria-current="page" href="search.html">
+                        <a class="nav-link " aria-current="page" href="/User/ProductListing">
                             <i class="bi bi-search me-2"></i> Search
                         </a>
                     </li>
@@ -135,3 +124,10 @@
         </div>
     </div>
 </nav>
+
+<!-- Loader -->
+<div id="loader-wrapper">
+    <div id="loader"></div>
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+</div>

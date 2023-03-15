@@ -30,6 +30,9 @@
         @Html.Partial("HeaderMenu")
 
         <main>
+            <input type="hidden" id="periodzId" />
+            <input type="hidden" id="gamezId" />
+            <input type="hidden" id="selectedPositionz" />
             <section class="section-wrap ">
                 <section class="section-wrap bg-peach px-lg-4 px-1">
                     <div class="section-inner-wrapper padding-s " style="overflow: visible;">
@@ -42,9 +45,10 @@
                                 <div>
                                     <a href="recharge.html" class="blue-btn-recharge">Recharge</a>
                                 </div>
-                                <div class="ms-3">
-                                    <a href="trend.html" class="white-btn">Trend</a>
-                                </div>
+                                @*Hide*@
+                                @*<div class="ms-3">
+                                        <a href="trend.html" class="white-btn">Trend</a>
+                                    </div>*@
                             </div>
                         </div>
                     </div>
@@ -53,938 +57,218 @@
                     <div class="games-slider">
                         <div class="section-inner-wrapper p-0 w-100">
                             <div class="tab ">
-                                <button class="tablinks" id="defaultOpen"
-                                        onclick="openCity(event, 'Parity')">
-                                    Parity
-                                </button>
-                                <button class="tablinks" onclick="openCity(event, 'Parity')">Sapre</button>
-                                <button class="tablinks" onclick="openCity(event, 'Parity')">Bcone</button>
-                                <button class="tablinks" onclick="openCity(event, 'Parity')">Emerd</button>
+                                @for (var z = 0; z < Model.GameList.Count; z++)
+                                {
+                                    string active = "";
+
+                                    if (z == 0)
+                                    {
+                                        active = "active";
+                                    }
+
+                                    <button class="tablinks @Model.GameList[z].Name @active" gameidzzz="@Model.GameList[z].GameID" gamenamezzz="@Model.GameList[z].Name" onclick="openCity(event, '@Model.GameList[z].Name')">@Model.GameList[z].Name</button>
+                                }
                             </div>
                         </div>
                     </div>
                     <!-- Tab content -->
-                    <div id="Parity" class="tabcontent ">
-                        <div class="section-inner-wrapper  px-lg-4 py-0 px-0 overflow-hidden">
-                            <div class="container-fluid p-0 bg-peach-2 px-2 py-3">
-                                <div class="row">
-                                    <div class="col-lg-12 mx-auto d-flex justify-content-between flex-lg-row flex-column">
-                                        <div>
-                                            <div class="d-flex flex-column mb-lg-0 mb-3">
-                                                <div class="text-bold text-s">Period</div>
-                                                <h2 class="text-m">20230310422</h2>
+                    @for (var z = 0; z < Model.GameList.Count; z++)
+                    {
+                        var display = "hidden";
+
+                        if (z == 0)
+                        {
+                            display = "block";
+                        }
+
+                        <div id="@Model.GameList[z].Name" class="tabcontent " style="display: @display;">
+                            <div class="section-inner-wrapper  px-lg-4 py-0 px-0 overflow-hidden">
+                                <div class="container-fluid p-0 bg-peach-2 px-2 py-3">
+                                    <div class="row">
+                                        <div class="col-lg-12 mx-auto d-flex justify-content-between flex-lg-row flex-column">
+                                            <div>
+                                                <div class="d-flex flex-column mb-lg-0 mb-3">
+                                                    <div class="text-bold text-s">@resSharedPB.lblPeriod</div>
+                                                    <h2 class="text-m">@Model.GameList[z].CurrentPeriod</h2>
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div>
-                                            <div class="d-flex flex-column ">
-                                                <div class="text-bold text-s mb-1">Count Down</div>
-                                                <button class="continue-btn continue-enable  mb-0" type="button">
-                                                    Continue
-                                                </button>
-                                                <div class="clock-count-down">
-                                                    <button class="clock-count-down-number ">
-                                                        01
+                                            <div>
+                                                <div class="d-flex flex-column ">
+                                                    <div class="text-bold text-s mb-1">Count Down</div>
+                                                    <button class="continue-btn continue-enable mb-0 " id="btnContinue" type="button" style="background-color:green; color:white; max-width:100px;">
+                                                        Continue
                                                     </button>
-                                                    <p class="clock-space mb-0 mx-1">:</p>
-                                                    <button class="clock-count-down-number">
-                                                        36
-                                                    </button>
+                                                    <div class="clock-count-down">
+                                                        <button class="clock-count-down-number promoMinute">
+                                                        </button>
+                                                        <p class="clock-space mb-0 mx-1">:</p>
+                                                        <button class="clock-count-down-number promoSecond">
+                                                        </button>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="d-flex justify-content-between py-lg-3 py-2">
-                                <button class="green-btn join-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#greenModal">
-                                    Join Green
-                                </button>
-                                <button class="violate-btn join-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#violateModal">
-                                    Join Violate
-                                </button>
-                                <button class="red-btn join-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                        data-bs-target="#redModal">
-                                    Join Red
-                                </button>
-                            </div>
-                            <div class="container-fluid ">
-                                <div class="row justify-content-between">
-                                    <div class="col-2 p-0">
-                                        <button class="number-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#blueModal">
-                                            0
-                                        </button>
-                                    </div>
-                                    <div class="col-2 p-0">
-                                        <button class="number-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#blueModal1">
-                                            1
-                                        </button>
-                                    </div>
-                                    <div class="col-2 p-0">
-                                        <button class="number-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#blueModal2">
-                                            2
-                                        </button>
-                                    </div>
-                                    <div class="col-2 p-0">
-                                        <button class="number-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#blueModal3">
-                                            3
-                                        </button>
-                                    </div>
-                                    <div class="col-2 p-0">
-                                        <button class="number-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#blueModal4">
-                                            4
-                                        </button>
-                                    </div>
+                                <div class="d-flex justify-content-between py-lg-3 py-2">
+                                    <button class="green-btn join-btn allbtnable playPopup" posiz="green" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                            data-bs-target="#greenModal">
+                                        @resSharedPB.lblJoinGreen
+                                    </button>
+                                    <button class="violate-btn join-btn allbtnable playPopup" posiz="violet" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                            data-bs-target="#greenModal">
+                                        @resSharedPB.lblJoinViolet
+                                    </button>
+                                    <button class="red-btn join-btn allbtnable playPopup" posiz="red" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                            data-bs-target="#greenModal">
+                                        @resSharedPB.lblJoinRed
+                                    </button>
                                 </div>
-                                <div class="row justify-content-between">
-                                    <div class="col-2 p-0">
-                                        <button class="number-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#blueModal5">
-                                            5
-                                        </button>
+                                <div class="container-fluid ">
+                                    <div class="row justify-content-between">
+                                        <div class="col-2 p-0">
+                                            <button class="number-btn allbtnable playPopup" posiz="0" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#greenModal">
+                                                0
+                                            </button>
+                                        </div>
+                                        <div class="col-2 p-0">
+                                            <button class="number-btn allbtnable playPopup" posiz="1" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#greenModal">
+                                                1
+                                            </button>
+                                        </div>
+                                        <div class="col-2 p-0">
+                                            <button class="number-btn allbtnable playPopup" posiz="2" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#greenModal">
+                                                2
+                                            </button>
+                                        </div>
+                                        <div class="col-2 p-0">
+                                            <button class="number-btn allbtnable playPopup" posiz="3" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#greenModal">
+                                                3
+                                            </button>
+                                        </div>
+                                        <div class="col-2 p-0">
+                                            <button class="number-btn allbtnable playPopup" posiz="4" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#greenModal">
+                                                4
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="col-2 p-0">
-                                        <button class="number-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#blueModal6">
-                                            6
-                                        </button>
+                                    <div class="row justify-content-between">
+                                        <div class="col-2 p-0">
+                                            <button class="number-btn allbtnable playPopup" posiz="5" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#greenModal">
+                                                5
+                                            </button>
+                                        </div>
+                                        <div class="col-2 p-0">
+                                            <button class="number-btn allbtnable playPopup" posiz="6" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#greenModal">
+                                                6
+                                            </button>
+                                        </div>
+                                        <div class="col-2 p-0">
+                                            <button class="number-btn allbtnable playPopup" posiz="7" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#greenModal">
+                                                7
+                                            </button>
+                                        </div>
+                                        <div class="col-2 p-0">
+                                            <button class="number-btn allbtnable playPopup" posiz="8" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#greenModal">
+                                                8
+                                            </button>
+                                        </div>
+                                        <div class="col-2 p-0">
+                                            <button class="number-btn allbtnable playPopup" posiz="9" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
+                                                    data-bs-target="#greenModal">
+                                                9
+                                            </button>
+                                        </div>
                                     </div>
-                                    <div class="col-2 p-0">
-                                        <button class="number-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#blueModal7">
-                                            7
-                                        </button>
-                                    </div>
-                                    <div class="col-2 p-0">
-                                        <button class="number-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#blueModal8">
-                                            8
-                                        </button>
-                                    </div>
-                                    <div class="col-2 p-0">
-                                        <button class="number-btn allbtndisable allbtnable" type="button" data-bs-toggle="modal"
-                                                data-bs-target="#blueModal9">
-                                            9
-                                        </button>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-12 p-0 mt-3">
-                                        <h1 class="main-heading-3">
-                                            <i class="bi bi-trophy"></i> Parity Record
-                                        </h1>
+                                    <div class="row">
+                                        <div class="col-lg-12 p-0 mt-3">
+                                            <h1 class="main-heading-3">
+                                                <i class="bi bi-trophy"></i> Parity Record
+                                            </h1>
 
-                                        <table id="parityRecord" class="display mt-2">
-                                            <thead class="record-table">
-                                                <tr>
-                                                    <th class="text-center">Period</th>
-                                                    <th class="text-center">Price</th>
-                                                    <th class="text-center">Number</th>
-                                                    <th class="text-center">Result</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="record-table-body">
-                                                <tr>
-                                                    <td class="text-center">20230310309</td>
-                                                    <td class="text-center">14967</td>
-                                                    <td class="green-number text-center">7</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">20230310309</td>
-                                                    <td class="text-center">14967</td>
-                                                    <td class="green-number text-center">7</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">20230310309</td>
-                                                    <td class="text-center">14967</td>
-                                                    <td class="green-number text-center">7</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                                <div class="row mb-3">
-                                    <div class="col-lg-12 p-0 mt-3">
-                                        <h1 class="main-heading-3">
-                                            <i class="bi bi-bar-chart-line"></i> My Record
-                                        </h1>
+                                            <table id="" class="display mt-2 parityRecord">
+                                                <thead class="record-table">
+                                                    <tr>
+                                                        <th class="text-center">@resSharedPB.lblPeriod</th>
+                                                        <th class="text-center">@resSharedPB.lblPrice</th>
+                                                        <th class="text-center">@resSharedPB.lblNumber</th>
+                                                        <th class="text-center">@resSharedPB.lblResult</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="record-table-body">
+                                                    @foreach (var x in @Model.GameList[z].HistoryList)
+                                                    {
+                                                        <tr>
+                                                            <td class="text-center">@x.Period</td>
+                                                            <td class="text-center">@x.Price</td>
+                                                            <td class="green-number text-center">@x.ResultNumber</td>
+                                                            <td class="text-center">
+                                                                <div class="d-flex justify-content-center">
+                                                                    @if (x.ResultNumber == 0 || x.ResultNumber == 5)
+                                                                    {
+                                                                        <div class="violate-result"></div>
+                                                                    }
 
-                                        <table id="myRecord" class="display mt-2 ">
-                                            <thead class="record-table">
-                                                <tr>
-                                                    <th class="text-center">Period</th>
-                                                    <th class="text-center">Price</th>
-                                                    <th class="text-center">Number</th>
-                                                    <th class="text-center">Result</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody class="record-table-body">
-                                                <tr>
-                                                    <td class="text-center">20230310309</td>
-                                                    <td class="text-center">14967</td>
-                                                    <td class="green-number text-center">7</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">20230310309</td>
-                                                    <td class="text-center">14967</td>
-                                                    <td class="green-number text-center">7</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">20230310309</td>
-                                                    <td class="text-center">14967</td>
-                                                    <td class="green-number text-center">7</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023103086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="red-number text-center">9</td>
-                                                    <td class="text-center">
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="red-result"></div>
-                                                            <div class="green-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td class="text-center">2023108086</td>
-                                                    <td class="text-center">14975</td>
-                                                    <td class="violate-number text-center">5</td>
-                                                    <td>
-                                                        <div class="d-flex justify-content-center">
-                                                            <div class="violate-result"></div>
-                                                            <div class="red-result"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                                                    @if (x.ResultNumber == 5 || x.ResultNumber == 1 || x.ResultNumber == 3 || x.ResultNumber == 7 || x.ResultNumber == 9)
+                                                                    {
+                                                                        <div class="green-result"></div>
+                                                                    }
+
+                                                                    @if (x.ResultNumber == 0 || x.ResultNumber == 2 || x.ResultNumber == 4 || x.ResultNumber == 6 || x.ResultNumber == 8)
+                                                                    {
+                                                                        <div class="red-result"></div>
+                                                                    }
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div class="row mb-3">
+                                        <div class="col-lg-12 p-0 mt-3">
+                                            <h1 class="main-heading-3">
+                                                <i class="bi bi-bar-chart-line"></i> My Record
+                                            </h1>
+
+                                            <table id="" class="display mt-2 myRecord">
+                                                <thead class="record-table">
+                                                    <tr>
+                                                        <th class="text-center">@resSharedPB.lblPeriod</th>
+                                                        <th class="text-center">@resSharedPB.lblPrice</th>
+                                                        <th class="text-center">@resSharedPB.lblNumber</th>
+                                                        <th class="text-center">@resSharedPB.lblWin</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="record-table-body">
+                                                    @foreach (var x in @Model.GameList[z].MyRecordHistoryList)
+                                                    {
+                                                        <tr>
+                                                            <td class="text-center">@x.Period</td>
+                                                            <td class="text-center">@x.Price</td>
+                                                            <td class="green-number text-center">@x.ResultNumberString</td>
+                                                            <td class="green-number text-center">@x.Won</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    }
 
-                    <div id="Sapre" class="tabcontent">
-                        <div class="section-inner-wrapper  px-lg-4 py-0 px-0">
-                            <h3>London</h3>
-                            <p>London is the capital city of England.</p>
-                        </div>
-                    </div>
-
-                    <div id="Bcone" class="tabcontent">
-                        <div class="section-inner-wrapper  px-lg-4 py-0 px-0">
-                            <h3>London</h3>
-                            <p>London is the capital city of England.</p>
-                        </div>
-                    </div>
-
-                    <div id="Emerd" class="tabcontent">
-                        <div class="section-inner-wrapper  px-lg-4 py-0 px-0">
-                            <h3>London</h3>
-                            <p>London is the capital city of England.</p>
-                        </div>
-                    </div>
                 </section>
 
             </section>
@@ -997,8 +281,8 @@
     <div class="modal fade" id="greenModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content  ">
-                <div class="modal-header join-modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Join Green</h5>
+                <div class="modal-header" id="playPopupHeaderID">
+                    <h5 class="modal-title" id="modalplaypopTitle">@resSharedPB.lblJoinGreen</h5>
                 </div>
                 <div class="modal-body">
                     <div class="join-modal">
@@ -1015,14 +299,14 @@
                                 <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
                                     -
                                 </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
+                                <input type="number" name="quantity" id="qtyNumber" class="qty text-center w-100 qty-number" step="1"
                                        min="1" max="10" value="1">
                                 <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
                                     +
                                 </div>
                             </div>
                         </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
+                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money" id="total-contract-money">10</span></p>
                         <form action="">
                             <div class="form-check d-flex align-items-center  mt-3">
                                 <input class="form-check-input green-checkbox" type="checkbox" value=""
@@ -1039,652 +323,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn green-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Join violate -->
-    <div class="modal fade" id="violateModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-violate">
-                    <h5 class="modal-title" id="exampleModalLabel">Join Green</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input violate-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="violate-number modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn violate-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Join red-->
-    <div class="modal fade" id="redModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-red">
-                    <h5 class="modal-title" id="exampleModalLabel">Join Green</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input red-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="text-red modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn red-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Join 0-->
-    <div class="modal fade" id="blueModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-primary">
-                    <h5 class="modal-title" id="exampleModalLabel">Select 0</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input blue-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="text-blue modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Join 1-->
-    <div class="modal fade" id="blueModal1" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-primary">
-                    <h5 class="modal-title" id="exampleModalLabel">Select 1</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input blue-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="text-blue modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Join 2-->
-    <div class="modal fade" id="blueModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-primary">
-                    <h5 class="modal-title" id="exampleModalLabel">Select 2</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input blue-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="text-blue modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Join 3-->
-    <div class="modal fade" id="blueModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-primary">
-                    <h5 class="modal-title" id="exampleModalLabel">Select 3</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input blue-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="text-blue modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Join 4-->
-    <div class="modal fade" id="blueModal4" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-primary">
-                    <h5 class="modal-title" id="exampleModalLabel">Select 4</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input blue-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="text-blue modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Join 5-->
-    <div class="modal fade" id="blueModal5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-primary">
-                    <h5 class="modal-title" id="exampleModalLabel">Select 5</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input blue-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="text-blue modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Join 6-->
-    <div class="modal fade" id="blueModal6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-primary">
-                    <h5 class="modal-title" id="exampleModalLabel">Select 6</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input blue-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="text-blue modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Join 7-->
-    <div class="modal fade" id="blueModal7" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-primary">
-                    <h5 class="modal-title" id="exampleModalLabel">Select 7</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input blue-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="text-blue modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Join 8-->
-    <div class="modal fade" id="blueModal8" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-primary">
-                    <h5 class="modal-title" id="exampleModalLabel">Select 8</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input blue-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="text-blue modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">Confirm</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Join 9-->
-    <div class="modal fade" id="blueModal9" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-            <div class="modal-content  ">
-                <div class="modal-header join-modal-header-primary">
-                    <h5 class="modal-title" id="exampleModalLabel">Select 9</h5>
-                </div>
-                <div class="modal-body">
-                    <div class="join-modal">
-                        <p class="mb-2">Contract Money</p>
-                        <div class="money-numbers">
-                            <h2 class="active-number">10</h2>
-                            <h2>100</h2>
-                            <h2>1000</h2>
-                            <h2>10000</h2>
-                        </div>
-                        <p class="mb-2 mt-4">Number</p>
-                        <div class="w-100 ">
-                            <div class=" d-flex align-items-center justify-content-between ">
-                                <div class="pointer quantity-btn minus-btn" data-quantity="minus" data-field="quantity">
-                                    -
-                                </div>
-                                <input type="number" name="quantity" class="qty text-center w-100 qty-number" step="1"
-                                       min="1" max="10" value="1">
-                                <div class="pointer quantity-btn plus-btn" data-quantity="plus" data-field="quantity">
-                                    +
-                                </div>
-                            </div>
-                        </div>
-                        <p class="mb-2 mt-4 ">Total contract money is <span class="total-contract-money">10</span></p>
-                        <form action="">
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input blue-checkbox" type="checkbox" value=""
-                                       id="flexCheckDefault">
-                                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault">
-                                    I agree <button type="button" data-bs-dismiss="modal" data-bs-toggle="modal"
-                                                    data-bs-target="#privacyModal" class="text-blue modal-privacy-btn">
-                                        PRESAL
-                                        RULES
-                                    </button>
-                                </label>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn " data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">Confirm</button>
+                    <button type="button" class="btn " data-bs-dismiss="modal">@resSharedPB.lblCancel</button>
+                    <button type="button" id="btnConfirm" class="btn green-btn text-white">@resSharedPB.lblConfirm</button>
                 </div>
             </div>
         </div>
@@ -1695,7 +335,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-privacy">
             <div class="modal-content  ">
                 <div class="modal-header join-modal-header-privacy">
-                    <h5 class="modal-title text-dark" id="exampleModalLabel">Privacy Policy</h5>
+                    <h5 class="modal-title text-dark">Privacy Policy</h5>
                 </div>
                 <div class="modal-body">
                     <div class="join-modal join-modal-privacy">
@@ -1881,18 +521,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn blue-btn text-white" data-bs-dismiss="modal">@resSharedPB.lblOK</button>
                 </div>
             </div>
         </div>
     </div>
-
-    <button class="clock-dummy-btn">
-        Clock
-    </button>
-    <button class="join-dummy-btn">
-        BtnClr
-    </button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
             integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
@@ -1900,10 +533,10 @@
 
     <link rel="stylesheet" href="flickity/flickity-product.css">
     <script src="flickity/flickity.pkgd.min.js"></script>
-    <script src="main.js" type="text/javascript"></script>
-    <script src="js/product.js" type="text/javascript"></script>
+    <script src="~/HotMall/main.js" type="text/javascript"></script>
+    <script src="~/HotMall/js/product.js" type="text/javascript"></script>
     <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
-    <script src="js/win.js"></script>
+    <script src="~/HotMall/js/win.js"></script>
     <script>
         function openCity(evt, cityName) {
             // Declare all variables
@@ -1925,21 +558,252 @@
             document.getElementById(cityName).style.display = "block";
             evt.currentTarget.className += " active";
         }
-        document.getElementById("defaultOpen").click();
 
     </script>
     <script>
+        $(window).on("load", function (e) {
+            $("#loader-wrapper").fadeOut("fast");
+        })
+
         $(document).ready(function () {
-            $('#parityRecord').DataTable({
-                responsive: true
+
+            //this is to navigate to that particular tab. Use for when placed order i need to refresh the page to load the bet history
+            if ('@ViewBag.GameIDTab' != "0") {
+                $('.tablinks').each(function (idx, zz) {
+                    var tabz = $(zz);
+
+                    if (tabz.attr("gameidzzz") == '@ViewBag.GameIDTab') {
+
+                        setTimeout(function () {                            
+                            tabz.click();
+                        }, 500); // executes after 200 miliseconds
+
+                        setTimeout(function () {
+                            tabz.addClass('active');
+                        }, 500); // executes after 200 miliseconds
+                    }
+                });
+            }
+
+            $("#btnContinue").click(function (evt) {
+                location.reload();
             });
 
-        });
-        $(document).ready(function () {
-            $('#myRecord').DataTable({
-                responsive: true
+
+            $('#qtyNumber').keyup(function (event) {
+                var qty = document.getElementById('qtyNumber').value;
+                var activeQty = $('.money-numbers').find('.active-number').text();
+
+                var totalAmount = qty * activeQty;
+
+                if (totalAmount > 0) {
+                    document.getElementById('total-contract-money').innerHTML = totalAmount;
+                }
+
+                //console.log(qty);
+                //console.log(activeQty);
+                //console.log(totalAmount);
             });
+
+
+            $("#btnConfirm").click(function (evt) {
+                var isGLMei = $('#flexCheckDefault').is(':checked');
+
+                if (!isGLMei) {
+                    Swal.fire({
+                        title: '@resSharedPB.msgPleaseAgreeRules',
+                        showDenyButton: false,
+                        showCancelButton: false,
+                        confirmButtonText: '@resSharedPB.lblOK',
+                    });
+                }
+                else {
+                    var periodz = document.getElementById('periodzId').value;
+                    var gamezId = document.getElementById('gamezId').value;
+                    var selectedPositionz = document.getElementById('selectedPositionz').value;
+                    var totalAmount = document.getElementById('total-contract-money').innerHTML;
+
+                    //console.log(periodz);
+                    //console.log(gamezId);
+                    //console.log(selectedPositionz);
+                    //console.log(totalAmount);
+
+                    if (selectedPositionz == 'green') {
+                        placenumbergame(55, gamezId, periodz, totalAmount);//Green
+                    }
+                    else if (selectedPositionz == 'violet') {
+                        placenumbergame(66, gamezId, periodz, totalAmount);//Violet
+                    }
+                    else if (selectedPositionz == 'red') {
+                        placenumbergame(77, gamezId, periodz, totalAmount);//Red
+                    }
+                    else {
+                        placenumbergame(selectedPositionz, gamezId, periodz, totalAmount);//Green
+                    }
+
+                    $('#greenModal').modal('hide');
+
+                    //this is to reset back all the amount selection
+                    setTimeout(function () {
+                        document.getElementById('total-contract-money').innerHTML = 10;
+                        document.getElementById('qtyNumber').value = 1;
+
+                        var count = 0;
+
+                        $('.money-numbers > h2').each(function (idx, zz) {
+                            var product = $(zz);
+
+                            if (count == 0) {
+                                product.addClass("active-number");
+                            }
+                            else {
+                                product.removeClass();
+                            }
+
+                            count++;
+                        });
+                    }, 200); // executes after 200 miliseconds
+
+                }
+            });
+
+            $(".playPopup").click(function (evt) {
+                var gameid = $(this).attr("gamez");
+                var currentperiod = $(this).attr("periodz");
+                var posiz = $(this).attr("posiz");
+                var posizHeaderTitle = posiz;
+                var addclassHeaderBG = "join-modal-header-primary";
+
+                if (posiz == "green") {
+                    addclassHeaderBG = "join-modal-header";
+                    posizHeaderTitle = '@resSharedPB.lblJoinGreen';
+                }
+                else if (posiz == "violet") {
+                    addclassHeaderBG = "join-modal-header-violate";
+                    posizHeaderTitle = '@resSharedPB.lblJoinViolet';
+                }
+                else if (posiz == "red") {
+                    addclassHeaderBG = "join-modal-header-red";
+                    posizHeaderTitle = '@resSharedPB.lblJoinRed';
+                }
+                else {
+                    posizHeaderTitle = 'Select ' + posizHeaderTitle;
+                }
+
+                $('#playPopupHeaderID').removeClass();
+
+                $('#periodzId').val(currentperiod);
+                $('#gamezId').val(gameid);
+                $('#selectedPositionz').val(posiz);
+
+                $('#modalplaypopTitle').text(posizHeaderTitle);
+                $('#playPopupHeaderID').addClass(addclassHeaderBG);
+            });
+
+            $('.parityRecord').DataTable({
+                responsive: true,
+                order: [[0, 'desc']] // Sort by first column in descending order
+            });
+
+            $('.myRecord').DataTable({
+                responsive: true,
+                order: [[0, 'desc']] // Sort by first column in descending order
+            });
+
+            function placenumbergame(numz, gamez, periodz, amountz) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/User/PlaceNumberGame",
+                    data: { num: numz, amount: amountz, gameid: gamez, period: periodz },
+                    success: function (data) {
+                        Swal.fire({
+                             title: '@resSharedPB.msgOrderPlaceSucessfully',
+                             showDenyButton: false,
+                             showCancelButton: false,
+                             confirmButtonText: 'OK',
+                         }).then((result) => {
+                             /* Read more about isConfirmed, isDenied below */
+                             if (result.isConfirmed) {
+                                var url = '@Html.Raw(@Url.Action("PlayGame", "User", new { gameid = -1 }))';
+                                url = url.replace("-1", gamez);
+                                window.location.href = url;
+                             }
+                         })
+
+
+                    },
+                    error: function (xhr, status, error) {
+                        $('.loader-wrap').hide();
+                        let r = jQuery.parseJSON(xhr.responseText);
+                        var errorM = r.message;
+
+                        Swal.fire({
+                            title: errorM,
+                            showDenyButton: false,
+                            showCancelButton: false,
+                            confirmButtonText: '@resSharedPB.lblOK',
+                        });
+                    }
+                });
+            }
+
         });
+    </script>
+
+    <script>
+        var timerPool;
+            var totalSeconds = '@Model.TimeLeftBasedEndDateTotalSeconds';
+
+            clearInterval(timerPool);
+
+            timerPool = setInterval(function () {
+                var nTotalSeconds = parseInt(totalSeconds);
+                var days = Math.floor(nTotalSeconds / 24 / 60 / 60);
+                var hoursLeft = Math.floor((nTotalSeconds) - (days * 86400));
+                var hours = Math.floor(hoursLeft / 3600);
+
+                var minutesLeft = Math.floor((hoursLeft) - (hours * 3600));
+                var minutes = Math.floor(minutesLeft / 60);
+
+                var remainingSeconds = nTotalSeconds % 60;
+
+                //var xx = days + ":" + hours + ":" + minutes + ":" + remainingSeconds;
+                //console.log(xx);
+
+                //$('#promoDay').html(days);
+                //$('#promoHour').html(hours);
+                $('.promoMinute').html(minutes.toString().padStart(2, '0'));
+                $('.promoSecond').html(remainingSeconds.toString().padStart(2, '0'));
+
+                function pad(n) {
+                    return (n < 10 ? "0" + n : n);
+                }
+
+                //if reach 30 seconds, disable all button
+                if (minutes == 0 && remainingSeconds <= 30) {
+                    $(".playPopup").addClass("allbtndisable");
+                    $(".playPopup").prop('disabled', true);
+                }
+
+
+
+                if (totalSeconds == 0) {
+                    clearInterval(timerPool);
+
+                    //if reach 0 seconds, enable the continue button for customer to click to refresh
+                    $('.continue-btn').toggleClass('continue-enable')
+                    $('.clock-count-down').toggleClass('clock-disable')
+
+                    //else after 4 secs customer did not press, auto refresh
+                    setTimeout(function () {
+                        location.reload();
+                    }, 4000); // executes after 200 miliseconds
+                } else {
+                    totalSeconds--;
+                }
+
+            }, 1000);
     </script>
 </body>
 

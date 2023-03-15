@@ -16,6 +16,11 @@ using Telegram.Bot;
 using Stripe.Checkout;
 using Stripe;
 using Entity.Context.Models;
+using QRCoder;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using System.Drawing.Imaging;
 
 namespace FreshMVC.Controllers
 {
@@ -72,6 +77,7 @@ namespace FreshMVC.Controllers
                     am.ThisYearReceiptCount = dr["CurrentYearCount"].ToString();
                 }
             }
+
             //Get Product Listing
             using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
             {
@@ -98,7 +104,7 @@ namespace FreshMVC.Controllers
                             productModel.Desc = product.CproDesc;
                             productModel.AdditionalDesc = product.CproDescAdd;
                             productModel.Price = product.CproPrice;
-                            productModel.ImagePath = product.CproImages;
+                            productModel.ImagePath = "Uploads/Products/" + product.CproTitle.Replace(" ", "") + "/" + product.CproImages;
                             am.TopProductList.Add(productModel);
                         }
                         else
@@ -111,7 +117,7 @@ namespace FreshMVC.Controllers
                                 productModel.Desc = product.CproDesc;
                                 productModel.AdditionalDesc = product.CproDescAdd;
                                 productModel.Price = product.CproPrice;
-                                productModel.ImagePath = product.CproImages;
+                                productModel.ImagePath = "Uploads/Products/" + product.CproTitle.Replace(" ", "") + "/" + product.CproImages;
                                 productModel.Other = getRandomProductStatus();
                                 am.ActiveProductList.Add(productModel);
                             }
@@ -196,7 +202,7 @@ namespace FreshMVC.Controllers
                 string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
                 usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
             }
-            catch(Exception e)
+            catch (Exception e)
             {
                 return RedirectToAction("ClientLogin", "UserLogin", new
                 {
@@ -221,7 +227,7 @@ namespace FreshMVC.Controllers
                     am.RedPacketBalance = (decimal)foundAgent.CusrRedpacketwlt;
                 }
             }
-            
+
             if (usernameCookie == "" || usernameCookie == null)
             {
                 return RedirectToAction("ClientLogin", "UserLogin", new
@@ -293,10 +299,10 @@ namespace FreshMVC.Controllers
                         am.ClaimedOn = found.CredpClaimedon == null ? "" : found.CredpClaimedon?.ToString("dd/MM/yyyy");
                         am.Status = found.CredpStatus == 0 ? Resources.PackBuddyShared.lblNotUsed : Resources.PackBuddyShared.lblUsed;
                     }
-                }                
+                }
 
                 var foundAgent = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && c.CroleId == 3);
-                if(foundAgent != null)
+                if (foundAgent != null)
                 {
                     am.RedPacketBalance = (decimal)foundAgent.CusrRedpacketwlt;
                 }
@@ -442,7 +448,7 @@ namespace FreshMVC.Controllers
             using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
             {
                 var foundAgent = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && c.CroleId == 3);
-                var foundUpID = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == upID); 
+                var foundUpID = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == upID);
 
                 if (foundAgent == null)
                 {
@@ -456,7 +462,7 @@ namespace FreshMVC.Controllers
                     am.RedPacketBalance = (decimal)foundAgent.CusrRedpacketwlt;
                 }
 
-                if(foundUpID == null)
+                if (foundUpID == null)
                 {
                     upID = "";
                 }
@@ -701,7 +707,7 @@ namespace FreshMVC.Controllers
                     var foundAgent = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && c.CroleId == 3);
                     List<CvdUser> allDirectDownline = new List<CvdUser>();
 
-                    if(level == 1)
+                    if (level == 1)
                     {
                         allDirectDownline = dbContext.CvdUser.Where(c => c.CusrReferralid == upID).ToList();
                     }
@@ -762,7 +768,7 @@ namespace FreshMVC.Controllers
                         MerchantGeneralDB.RedPacketWalletOperation(usernameCookie, "GENERATE_RED_PKG", 0 - amount, upID);
                     }
 
-                    
+
 
                     var result = dbContext.SaveChanges();
                 }
@@ -860,12 +866,12 @@ namespace FreshMVC.Controllers
                         status = false,
                         message = Resources.PackBuddyShared.lblInvalidUsername
                     });
-                }               
+                }
 
                 using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
                 {
                     var found = dbContext.CvdRedPacket.FirstOrDefault(c => c.CusrUsername == usernameCookie && c.CredpId == int.Parse(id));
-                    
+
                     if (found != null)
                     {
                         found.CredpStatus = 1;
@@ -901,7 +907,8 @@ namespace FreshMVC.Controllers
         #endregion
 
         #region PlayGame
-        public ActionResult PlayGame()
+
+        public ActionResult PlayGame(int gameid = 0)
         {
             string usernameCookie = "";
             try
@@ -916,6 +923,8 @@ namespace FreshMVC.Controllers
                     reloadPage = true
                 });
             }
+
+            ViewBag.GameIDTab = gameid;
 
             var am = new MemberGamePageModel();
 
@@ -949,6 +958,84 @@ namespace FreshMVC.Controllers
                     //am.MinuteLeft = (int)ts.Minutes < 0 ? 0 : (int)ts.Minutes;
                     //am.SecondLeft = (int)ts.Seconds < 0 ? 0 : (int)ts.Seconds;
 
+                    #region Get the history from [CVD_GAME_SESSION_DAILY_HISTORY]
+                    var dsHistory = AdminGeneralDB.GetGameSessionHistory(tempo.GameID);
+
+                    foreach (DataRow drr in dsHistory.Tables[0].Rows)
+                    {
+                        string resultz = drr["CGAME_RESULT"].ToString();
+
+                        string[] tempResult = resultz.Split(";");
+
+                        //this is to sort but doesn't seems like need as the table displayed alr got sort [data table]
+                        //Array.Sort(tempResult, new ReverseStringComparer());
+
+                        foreach (var t in tempResult)
+                        {
+                            string[] childResult = t.Split("_");
+                            GameHistoryRecord tmpResult = new GameHistoryRecord();
+                            int zzz = 0;
+
+                            if (childResult.Length == 3)
+                            {
+                                foreach (var tt in childResult)
+                                {
+                                    if (zzz == 0)
+                                    {
+                                        tmpResult.Period = tt;
+                                    }
+                                    else if (zzz == 1)
+                                    {
+                                        tmpResult.Price = tt;
+                                    }
+                                    else if (zzz == 2)
+                                    {
+                                        tmpResult.ResultNumber = int.Parse(tt);
+                                    }
+
+                                    zzz++;
+                                }
+
+                                tempo.HistoryList.Add(tmpResult);
+                            }
+
+                        }
+                    }
+
+                    #endregion
+
+                    #region Get own bet history
+                    var dsBetHistory = AdminGeneralDB.GetBetHistory(tempo.GameID, usernameCookie);
+                    foreach (DataRow drBetHistory in dsBetHistory.Tables[0].Rows)
+                    {
+                        GameHistoryRecord tmpResult = new GameHistoryRecord();
+                        tmpResult.Period = drBetHistory["CGAME_PERIOD"].ToString();
+                        tmpResult.Price = drBetHistory["CGAME_AMOUNT"].ToString();
+                        tmpResult.ResultNumber = int.Parse(drBetHistory["CGAME_NUMBER"].ToString());
+                        
+                        if (tmpResult.ResultNumber == 55)
+                        {
+                            tmpResult.ResultNumberString = Resources.PackBuddyShared.lblJoinGreen;
+                        }
+                        else if (tmpResult.ResultNumber == 66)
+                        {
+                            tmpResult.ResultNumberString = Resources.PackBuddyShared.lblJoinViolet;
+                        }
+                        else if (tmpResult.ResultNumber == 77)
+                        {
+                            tmpResult.ResultNumberString = Resources.PackBuddyShared.lblJoinRed;
+                        }
+                        else
+                        {
+                            tmpResult.ResultNumberString = tmpResult.ResultNumber.ToString();
+                        }
+
+                        tmpResult.Won = drBetHistory["CGAME_WIN_AMOUNT"].ToString();
+
+                        tempo.MyRecordHistoryList.Add(tmpResult);
+                    }
+                    #endregion
+
                     am.GameList.Add(tempo);
                 }
             }
@@ -956,7 +1043,7 @@ namespace FreshMVC.Controllers
             using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
             {
                 var found = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie);
-                if (found == null)
+                if (found != null)
                 {
                     am.Balance = (Decimal)found.CusrCashwlt;
                 }
@@ -997,17 +1084,27 @@ namespace FreshMVC.Controllers
                     });
                 }
 
+                if (amount <= 0)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.msgInvalidAmount
+                    });
+                }
+
                 int ok = 0;
                 string msg = "";
                 AdminGeneralDB.PlaceBet(usernameCookie, num, amount, gameid, period, out ok, out msg);
 
-                if(ok == 1)
+                if (ok == 1)
                 {
 
-                }    
+                }
                 else
                 {
-                    if(ok == -1)
+                    if (ok == -1)
                     {
                         Response.StatusCode = (int)HttpStatusCode.BadRequest;
                         return Json(new
@@ -1048,6 +1145,7 @@ namespace FreshMVC.Controllers
                 });
             }
         }
+
         #endregion
 
         #region Profile
@@ -1067,13 +1165,102 @@ namespace FreshMVC.Controllers
                 });
             }
 
+            if (usernameCookie == "")
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
             var am = new MemberHomeModel();
             ViewBag.HeaderPage = "Profile";
+            ViewBag.Referral = string.Format("https://www.hot-mall.club/UserLogin/SignUp?referral={0}", Authentication.Encrypt(usernameCookie));
+
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeDataAndroid = qrGenerator.CreateQrCode(ViewBag.Referral, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCodeAndroid = new QRCode(qrCodeDataAndroid);
+            Bitmap qrCodeImageAndroid = qrCodeAndroid.GetGraphic(20);
+
+            // Create a rectangle for the entire bitmap
+            RectangleF rectf = new RectangleF(0, 0, qrCodeImageAndroid.Width, qrCodeImageAndroid.Height - 30);
+
+            // Create graphic object that will draw onto the bitmap
+            Graphics g = Graphics.FromImage(qrCodeImageAndroid);
+
+            // ------------------------------------------
+            // Ensure the best possible quality rendering
+            // ------------------------------------------
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // The interpolation mode determines how intermediate values between two endpoints are calculated.
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            // Use this property to specify either higher quality, slower rendering, or lower quality, faster rendering of the contents of this Graphics object.
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            // This one is important
+            g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+
+            // Create string formatting options (used for alignment)
+            StringFormat format = new StringFormat()
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Near
+            };
+
+            // Create string formatting options (used for alignment)
+            StringFormat bottomFormat = new StringFormat()
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Far
+            };
+
+            // Flush all graphics changes to the bitmap
+            g.Flush();
+
+            System.IO.MemoryStream msAndroid = new MemoryStream();
+            qrCodeImageAndroid.Save(msAndroid, ImageFormat.Jpeg);
+            byte[] byteImageAndroid = msAndroid.ToArray();
+
+            ViewBag.QRCodeImage = "data:image/png;base64," + Convert.ToBase64String(byteImageAndroid);
 
             return View("Profile", am);
         }
         #endregion
 
+  		#region MyReferral
+        public ActionResult MyReferral()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            if (usernameCookie == "")
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new MemberHomeModel();
+            ViewBag.HeaderPage = "MyReferral";
+
+            return View("MyReferral", am);
+        }
+        #endregion
+    
         #region ProductListing
         public ActionResult ProductListing(string search)
         {
@@ -1118,7 +1305,7 @@ namespace FreshMVC.Controllers
                     productModel.Desc = product.CproDesc;
                     productModel.AdditionalDesc = product.CproDescAdd;
                     productModel.Price = product.CproPrice;
-                    productModel.ImagePath = product.CproImages;
+                    productModel.ImagePath = "Uploads/Products/" + product.CproTitle.Replace(" ", "") + "/" + product.CproImages;
                     productModel.Other = getRandomProductStatus();
                     am.ProductList.Add(productModel);
                 }
@@ -1128,7 +1315,7 @@ namespace FreshMVC.Controllers
         #endregion
 
         #region ProductDescription
-        public ActionResult ProductDescription(int ID,string search)
+        public ActionResult ProductDescription(int ID, string search)
         {
             string usernameCookie = "";
             try
@@ -1169,7 +1356,7 @@ namespace FreshMVC.Controllers
                 productModel.Desc = product.CproDesc;
                 productModel.AdditionalDesc = product.CproDescAdd;
                 productModel.Price = product.CproPrice;
-                productModel.ImagePath = product.CproImages;
+                productModel.ImagePath = "Uploads/Products/" + product.CproTitle.Replace(" ", "") + "/" + product.CproImages;
                 productModel.Other = getRandomProductStatus();
 
             }
@@ -1207,7 +1394,7 @@ namespace FreshMVC.Controllers
                     productModel.Desc = product.CproDesc;
                     productModel.AdditionalDesc = product.CproDescAdd;
                     productModel.Price = product.CproPrice;
-                    productModel.ImagePath = product.CproImages;
+                    productModel.ImagePath = "Uploads/Products/" + product.CproTitle.Replace(" ", "") + "/" + product.CproImages;
                     productModel.Other = getRandomProductStatus();
                     productListModel.ProductList.Add(productModel);
                 }

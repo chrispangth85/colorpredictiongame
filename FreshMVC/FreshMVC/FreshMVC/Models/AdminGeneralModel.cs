@@ -655,6 +655,9 @@ namespace FreshMVC.Models
     public class PaginationProductModel : PaginationBase
     {
         public IFormFile ExcelFile { get; set; }
+        public IEnumerable<SelectListItem> FilteringCriteria { get; set; }
+        public string SelectedFilteringCriteria { get; set; }
+        public string FilterValue { get; set; }
 
         public List<ProductModel> List
         {
@@ -1489,6 +1492,16 @@ namespace FreshMVC.Models
         public string Period { get; set; }
         public string Price { get; set; }
         public int ResultNumber { get; set; }
+        public string ResultNumberString { get; set; }
+        public string Won { get; set; }
         public string ResultColor { get; set; }
+    }
+
+    public class ReverseStringComparer : IComparer<string>
+    {
+        public int Compare(string x, string y)
+        {
+            return y.CompareTo(x);
+        }
     }
 }
