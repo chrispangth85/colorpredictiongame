@@ -42,7 +42,7 @@ namespace FreshMVC.Controllers
         }
         #endregion
 
-        public ActionResult Home()
+        public ActionResult Home(string search)
         {
             string usernameCookie = "";
             try
@@ -70,6 +70,54 @@ namespace FreshMVC.Controllers
                 foreach (DataRow dr in dsHomeData.Tables[0].Rows)
                 {
                     am.ThisYearReceiptCount = dr["CurrentYearCount"].ToString();
+                }
+            }
+            //Get Product Listing
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                if (!string.IsNullOrEmpty(search))
+                {
+                    var productListModel = getProductListSearch(search);
+                    return View("ProductListing", productListModel);
+                }
+                else
+                {
+
+                    var productList = dbContext.CvdProduct.ToList();
+                    int index = 0;
+                    int maxTopProduct = 5;
+                    int maxActiveProduct = 6;
+                    foreach (var product in productList)
+                    {
+
+                        if (index < maxTopProduct)
+                        {
+                            ProductModel productModel = new ProductModel();
+                            productModel.id = product.CproId;
+                            productModel.Title = product.CproTitle;
+                            productModel.Desc = product.CproDesc;
+                            productModel.AdditionalDesc = product.CproDescAdd;
+                            productModel.Price = product.CproPrice;
+                            productModel.ImagePath = product.CproImages;
+                            am.TopProductList.Add(productModel);
+                        }
+                        else
+                        {
+                            if (index < (maxTopProduct + maxActiveProduct))
+                            {
+                                ProductModel productModel = new ProductModel();
+                                productModel.id = product.CproId;
+                                productModel.Title = product.CproTitle;
+                                productModel.Desc = product.CproDesc;
+                                productModel.AdditionalDesc = product.CproDescAdd;
+                                productModel.Price = product.CproPrice;
+                                productModel.ImagePath = product.CproImages;
+                                productModel.Other = getRandomProductStatus();
+                                am.ActiveProductList.Add(productModel);
+                            }
+                        }
+                        index++;
+                    }
                 }
             }
 
@@ -1025,5 +1073,146 @@ namespace FreshMVC.Controllers
             return View("Profile", am);
         }
         #endregion
+
+        #region ProductListing
+        public ActionResult ProductListing(string search)
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new ProductListModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+            //Get Product Listing
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                if (!string.IsNullOrEmpty(search))
+                {
+                    var productListModel = getProductListSearch(search);
+                    return View("ProductListing", productListModel);
+                }
+
+                var productList = dbContext.CvdProduct.ToList();
+                foreach (var product in productList)
+                {
+                    ProductModel productModel = new ProductModel();
+                    productModel.id = product.CproId;
+                    productModel.Title = product.CproTitle;
+                    productModel.Desc = product.CproDesc;
+                    productModel.AdditionalDesc = product.CproDescAdd;
+                    productModel.Price = product.CproPrice;
+                    productModel.ImagePath = product.CproImages;
+                    productModel.Other = getRandomProductStatus();
+                    am.ProductList.Add(productModel);
+                }
+            }
+            return View("ProductListing", am);
+        }
+        #endregion
+
+        #region ProductDescription
+        public ActionResult ProductDescription(int ID,string search)
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new ProductListModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            ProductModel productModel = new ProductModel();
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                if (!string.IsNullOrEmpty(search))
+                {
+                    var productListModel = getProductListSearch(search);
+                    return View("ProductListing", productListModel);
+                }
+
+                var product = dbContext.CvdProduct.FirstOrDefault(c => c.CproId == ID);
+                productModel.id = product.CproId;
+                productModel.Title = product.CproTitle;
+                productModel.Desc = product.CproDesc;
+                productModel.AdditionalDesc = product.CproDescAdd;
+                productModel.Price = product.CproPrice;
+                productModel.ImagePath = product.CproImages;
+                productModel.Other = getRandomProductStatus();
+
+            }
+
+            return View("ProductDescription", productModel);
+        }
+        #endregion
+
+        private string getRandomProductStatus()
+        {
+            List<string> firstNames = new List<string>();
+            firstNames.Add("SOLD");
+            firstNames.Add("DEAL");
+            firstNames.Add("NEW");
+
+            Random randNum = new Random();
+            int aRandomPos = randNum.Next(firstNames.Count);//Returns a nonnegative random number less than the specified maximum (firstNames.Count).
+
+            return firstNames[aRandomPos];
+        }
+
+        private ProductListModel getProductListSearch(string search)
+        {
+            ProductListModel productListModel = new ProductListModel();
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var productList = (from c in dbContext.CvdProduct where c.CproDesc.Contains(search) select c).ToList();
+
+                foreach (var product in productList)
+                {
+
+                    ProductModel productModel = new ProductModel();
+                    productModel.id = product.CproId;
+                    productModel.Title = product.CproTitle;
+                    productModel.Desc = product.CproDesc;
+                    productModel.AdditionalDesc = product.CproDescAdd;
+                    productModel.Price = product.CproPrice;
+                    productModel.ImagePath = product.CproImages;
+                    productModel.Other = getRandomProductStatus();
+                    productListModel.ProductList.Add(productModel);
+                }
+            }
+            return productListModel;
+        }
     }
 }

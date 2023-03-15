@@ -89,76 +89,24 @@
                             <div class="width-100 width-90-m ">
                                 <div class="pos-rel middle center-block">
                                     <div id="challenge-carousel" class="width-100">
-                                        <div class="challenge-cell overflow-hide border-25 border-dark-s text-left">
-                                            <a href="product-detail.html" class="no-decoration">
-                                                <div class="challenge-cell-text">
-                                                    <div class="description">
-                                                        Ratnavali Jewels American Diamond Traditional Fashion
-                                                        Jewellery Green Necklace Pendant Set with Earring for
-                                                        Women/Girls RV2916G
+                                        @foreach (var product in Model.TopProductList)
+                                        {
+                                            <div class="challenge-cell overflow-hide border-25 border-dark-s text-left">
+                                                <a href="product-detail.html" class="no-decoration">
+                                                    <div class="challenge-cell-text">
+                                                        <div class="description">
+                                                            @product.Desc
+                                                        </div>
+                                                        <div class="price">
+                                                            @product.Price
+                                                        </div>
                                                     </div>
-                                                    <div class="price">
-                                                        ₹ 1599.00
+                                                    <div class="challenge-cell-img">
+                                                        <img src="~/HotMall/@product.ImagePath" alt="" class="">
                                                     </div>
-                                                </div>
-                                                <div class="challenge-cell-img">
-                                                    <img src="~/HotMall/img/images/2.jpg" alt="" class="">
-                                                </div>
-                                            </a>
-                                        </div>
-                                        <div class="challenge-cell overflow-hide border-25 border-dark-s text-left">
-                                            <a href="product-detail.html" class="no-decoration">
-                                                <div class="challenge-cell-text">
-                                                    <div class="description">
-                                                        Om Jewells Rhodium Plated Blue Crystal Jewellery Combo of
-                                                        Designer Drop Pendant Set with Adjustable Bangle Kada and
-                                                        Adjustable Solitaire Finger Ring for Girls and Women
-                                                        CO1000209
-                                                    </div>
-                                                    <div class="price">
-                                                        ₹ 1599.00
-                                                    </div>
-                                                </div>
-                                                <div class="challenge-cell-img">
-                                                    <img src="~/HotMall/img/images/10.jpg" alt="" class="">
-                                                </div>
-                                            </a>
-
-                                        </div>
-                                        <div class="challenge-cell overflow-hide border-25 border-dark-s text-left">
-                                            <a href="product-detail.html" class="no-decoration">
-                                                <div class="challenge-cell-text">
-                                                    <div class="description">
-                                                        Ratnavali Jewels American Diamond Cz Gold Plated Necklace
-                                                        Set Tennis Necklace Single Line Solitaire Set With Chain &
-                                                        Earring For Women
-                                                    </div>
-                                                    <div class="price">
-                                                        ₹ 1599.00
-                                                    </div>
-                                                </div>
-                                                <div class="challenge-cell-img">
-                                                    <img src="~/HotMall/img/images/1.jpg" alt="" class="">
-                                                </div>
-
-                                            </a>
-                                        </div>
-                                        <div class="challenge-cell overflow-hide border-25 border-dark-s text-left">
-                                            <a href="product-detail.html" class="no-decoration">
-                                                <div class="challenge-cell-text">
-                                                    <div class="description">
-                                                        Handicraft Kottage ® 1gm 22Ct Gold Plated Pendant and Chain
-                                                        for Men/Women/Girls
-                                                    </div>
-                                                    <div class="price">
-                                                        ₹ 1599.00
-                                                    </div>
-                                                </div>
-                                                <div class="challenge-cell-img">
-                                                    <img src="~/HotMall/img/images/3.jpg" alt="" class="">
-                                                </div>
-                                            </a>
-                                        </div>
+                                                </a>
+                                            </div>
+                                        }
                                     </div>
                                     <svg class="outside-right-nav" width="28" height="110" viewBox="0 0 70 220"
                                          xmlns="http://www.w3.org/2000/svg">
@@ -177,11 +125,12 @@
 
                     </section>
                 </div>
+
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-lg-12 mx-auto">
                             <div class="width-60 width-100-m center-block mx-auto">
-                                <a href="all-products.html"
+                                <a href="./ProductListing"
                                    class="btn-primary  width-100 border-8 text-bold text-center">
                                     VIEW
                                     ALL
@@ -196,239 +145,64 @@
             <div class="bg-primary pt-3 px-lg-2 px-2">
                 <div class="container-fluid">
                     <div class="row ">
-                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-lg-3 mb-2 p-1 mx-auto">
-                            <div class="mall-product border-12 border-grey overflow-hide daily w-100">
-                                <div class="mall-product-img-p border-bottom">
-                                    <!--If Possible image neeed to be square size all the time-->
-                                    <div class="product-card-img ">
-                                        <a href="product-description.html" class="carousel__slide">
-                                            <figure>
-                                                <div>
-                                                    <img src="~/HotMall/img/images/5.jpg" alt="">
+                        @foreach (var product in Model.ActiveProductList)
+                        {
+                            <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-lg-3 mb-2 p-1 mx-auto">
+                                <div class="mall-product border-12 border-grey overflow-hide daily w-100">
+                                    <div class="mall-product-img-p border-bottom">
+                                        <!--If Possible image neeed to be square size all the time-->
+                                        <div class="product-card-img ">
+                                            <a href="./ProductDescription?ID=@product.id" class="carousel__slide">
+                                                <figure>
+                                                    <div>
+                                                        <img src="~/HotMall/@product.ImagePath" alt="">
+                                                    </div>
+                                                </figure>
+                                            </a>
+                                        </div>
+                                        @switch (@product.Other)
+                                        {
+                                            case "SOLD":
+                                                <div class="promo-top label-sold">Sold</div>
+                                                <div class="out-of-stock middle center">
+                                                    <div class="no-stock-text">OUT OF STOCK</div>
                                                 </div>
-                                            </figure>
-                                        </a>
+                                                break;
+                                            case "DEAL":
+                                                <div class="promo-top label-deal">Deal</div>
+                                                break;
+                                            case "NEW":
+                                                <div class="promo-top label-new">NEW</div>
+                                                break;
+                                        }
                                     </div>
-                                    <div class="promo-top label-new">NEW</div>
-                                </div>
-                                <div class="product-card-padding">
-                                    <div class="name mall-product-name">
-                                        <a href="product-description.html"
-                                           class="mb-0 pb-0">
-                                            Ananth Jewels 925 Silver BIS Hallmark Collection
-                                        </a>
-                                    </div>
-                                    <div class="mall-product-excerpt mrgn-btm-xs text-grey">Ananth Jewels</div>
-                                    <div class="display-flex mt-4">
-                                        <div class="width-100">
-                                            <div class="mall-product-price mb-1">
-                                                <span class="currency">₹</span><span class="price">1599.00</span>
-                                            </div>
-                                            <div class="mall-product-cp text-bold text-link">
-                                                Model&nbsp;No#&nbsp;<span>SLB069</span>
+                                    <div class="product-card-padding">
+                                        <div class="name mall-product-name">
+                                            <a href="./ProductDescription?ID=@product.id"
+                                               class="mb-0 pb-0">
+                                                @product.Title
+                                            </a>
+                                        </div>
+                                        <div class="mall-product-excerpt mrgn-btm-xs text-grey">@product.Title</div>
+                                        <div class="display-flex mt-4">
+                                            <div class="width-100">
+                                                <div class="mall-product-price mb-1">
+                                                    <span class="currency">₹</span><span class="price">@product.Price</span>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="date display-none">13/08/2022</div>
                                     </div>
-                                    <div class="date display-none">13/08/2022</div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-lg-3 mb-2 p-1 mx-auto">
-                            <div class="mall-product border-12 border-grey overflow-hide daily w-100">
-                                <div class="mall-product-img-p border-bottom">
-                                    <!--If Possible image neeed to be square size all the time-->
-                                    <div class="product-card-img ">
-                                        <a href="product-description.html" class="carousel__slide">
-                                            <figure>
-                                                <div>
-                                                    <img src="~/HotMall/img/images/4.jpg" alt="">
-                                                </div>
-                                            </figure>
-                                        </a>
-                                    </div>
-                                    <div class="promo-top label-sold">Sold</div>
-                                    <div class="out-of-stock middle center">
-                                        <div class="no-stock-text">OUT OF STOCK</div>
-                                    </div>
-                                </div>
-                                <div class="product-card-padding">
-                                    <div class="name mall-product-name">
-                                        <a href="product-description.html"
-                                           class="mb-0 pb-0">
-                                            Ananth Jewels 925 Silver BIS Hallmark Collection
-                                        </a>
-                                    </div>
-                                    <div class="mall-product-excerpt mrgn-btm-xs text-grey">Ananth Jewels</div>
-                                    <div class="display-flex mt-4">
-                                        <div class="width-100">
-                                            <div class="mall-product-price mb-1">
-                                                <span class="currency">₹</span><span class="price">1599.00</span>
-                                            </div>
-                                            <div class="mall-product-cp text-bold text-link">
-                                                Model&nbsp;No#&nbsp;<span>SLB069</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="date display-none">13/08/2022</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-lg-3 mb-2 p-1 mx-auto">
-                            <div class="mall-product border-12 border-grey overflow-hide daily w-100">
-                                <div class="mall-product-img-p border-bottom">
-                                    <!--If Possible image neeed to be square size all the time-->
-                                    <div class="product-card-img ">
-                                        <a href="product-description.html" class="carousel__slide">
-                                            <figure>
-                                                <div>
-                                                    <img src="~/HotMall/img/images/1.jpg" alt="">
-                                                </div>
-                                            </figure>
-                                        </a>
-                                    </div>
-                                    <div class="promo-top label-new">NEW</div>
-                                </div>
-                                <div class="product-card-padding">
-                                    <div class="name mall-product-name">
-                                        <a href="product-description.html"
-                                           class="mb-0 pb-0">
-                                            Ananth Jewels 925 Silver BIS Hallmark Collection
-                                        </a>
-                                    </div>
-                                    <div class="mall-product-excerpt mrgn-btm-xs text-grey">Ananth Jewels</div>
-                                    <div class="display-flex mt-4">
-                                        <div class="width-100">
-                                            <div class="mall-product-price mb-1">
-                                                <span class="currency">₹</span><span class="price">1599.00</span>
-                                            </div>
-                                            <div class="mall-product-cp text-bold text-link">
-                                                Model&nbsp;No#&nbsp;<span>SLB069</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="date display-none">13/08/2022</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-lg-3 mb-2 p-1 mx-auto">
-                            <div class="mall-product border-12 border-grey overflow-hide daily w-100">
-                                <div class="mall-product-img-p border-bottom">
-                                    <!--If Possible image neeed to be square size all the time-->
-                                    <div class="product-card-img ">
-                                        <a href="product-description.html" class="carousel__slide">
-                                            <figure>
-                                                <div>
-                                                    <img src="~/HotMall/img/images/2.jpg" alt="">
-                                                </div>
-                                            </figure>
-                                        </a>
-                                    </div>
-                                    <div class="promo-top label-sold">Sold</div>
-                                    <div class="out-of-stock middle center">
-                                        <div class="no-stock-text">OUT OF STOCK</div>
-                                    </div>
-                                </div>
-                                <div class="product-card-padding">
-                                    <div class="name mall-product-name">
-                                        <a href="product-description.html"
-                                           class="mb-0 pb-0">
-                                            Ananth Jewels 925 Silver BIS Hallmark Collection
-                                        </a>
-                                    </div>
-                                    <div class="mall-product-excerpt mrgn-btm-xs text-grey">Ananth Jewels</div>
-                                    <div class="display-flex mt-4">
-                                        <div class="width-100">
-                                            <div class="mall-product-price mb-1">
-                                                <span class="currency">₹</span><span class="price">1599.00</span>
-                                            </div>
-                                            <div class="mall-product-cp text-bold text-link">
-                                                Model&nbsp;No#&nbsp;<span>SLB069</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="date display-none">13/08/2022</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-lg-3 mb-2 p-1 mx-auto">
-                            <div class="mall-product border-12 border-grey overflow-hide daily w-100">
-                                <div class="mall-product-img-p border-bottom">
-                                    <!--If Possible image neeed to be square size all the time-->
-                                    <div class="product-card-img ">
-                                        <a href="product-description.html" class="carousel__slide">
-                                            <figure>
-                                                <div>
-                                                    <img src="~/HotMall/img/images/6.jpg" alt="">
-                                                </div>
-                                            </figure>
-                                        </a>
-                                    </div>
-                                    <div class="promo-top label-new">NEW</div>
-                                </div>
-                                <div class="product-card-padding">
-                                    <div class="name mall-product-name">
-                                        <a href="product-description.html"
-                                           class="mb-0 pb-0">
-                                            Ananth Jewels 925 Silver BIS Hallmark Collection
-                                        </a>
-                                    </div>
-                                    <div class="mall-product-excerpt mrgn-btm-xs text-grey">Ananth Jewels</div>
-                                    <div class="display-flex mt-4">
-                                        <div class="width-100">
-                                            <div class="mall-product-price mb-1">
-                                                <span class="currency">₹</span><span class="price">1599.00</span>
-                                            </div>
-                                            <div class="mall-product-cp text-bold text-link">
-                                                Model&nbsp;No#&nbsp;<span>SLB069</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="date display-none">13/08/2022</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-3 col-sm-4 col-6 mb-lg-3 mb-2 p-1 mx-auto">
-                            <div class="mall-product border-12 border-grey overflow-hide daily w-100">
-                                <div class="mall-product-img-p border-bottom">
-                                    <!--If Possible image neeed to be square size all the time-->
-                                    <div class="product-card-img ">
-                                        <a href="product-description.html" class="carousel__slide">
-                                            <figure>
-                                                <div>
-                                                    <img src="~/HotMall/img/images/7.jpg" alt="">
-                                                </div>
-                                            </figure>
-                                        </a>
-                                    </div>
-                                    <div class="promo-top label-new">NEW</div>
-                                </div>
-                                <div class="product-card-padding">
-                                    <div class="name mall-product-name">
-                                        <a href="product-description.html"
-                                           class="mb-0 pb-0">
-                                            Ananth Jewels 925 Silver BIS Hallmark Collection
-                                        </a>
-                                    </div>
-                                    <div class="mall-product-excerpt mrgn-btm-xs text-grey">Ananth Jewels</div>
-                                    <div class="display-flex mt-4">
-                                        <div class="width-100">
-                                            <div class="mall-product-price mb-1">
-                                                <span class="currency">₹</span><span class="price">1599.00</span>
-                                            </div>
-                                            <div class="mall-product-cp text-bold text-link">
-                                                Model&nbsp;No#&nbsp;<span>SLB069</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="date display-none">13/08/2022</div>
-                                </div>
-                            </div>
-                        </div>
+                        }
                     </div>
                 </div>
             </div>
         </section>
     </main>
+
+
 
     @Html.Partial("FooterMenu")
 

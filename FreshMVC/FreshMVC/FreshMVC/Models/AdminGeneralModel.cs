@@ -673,6 +673,7 @@ namespace FreshMVC.Models
         public int id { get; set; }
         public string Title { get; set; }
         public string Desc { get; set; }
+        public string AdditionalDesc { get; set; }
         public string Other { get; set; }
         public string ImagePath { get; set; }
         public IFormFile ImagePhoto { get; set; }
@@ -941,6 +942,23 @@ namespace FreshMVC.Models
         public string ThisYearReceiptCount { get; set; }
         public string Username { get; set; }
         public bool IsUserLoggedIn { get; set; }
+        public List<ProductModel> TopProductList { get; set; }
+        public List<ProductModel> ActiveProductList { get; set; }
+
+        public MemberHomeModel()
+        {
+            TopProductList = new List<ProductModel>();
+            ActiveProductList = new List<ProductModel>();
+        }
+    }
+
+    public class ProductListModel
+    {
+        public List<ProductModel> ProductList { get; set; }
+        public ProductListModel()
+        {
+            ProductList = new List<ProductModel>();
+        }
     }
 
     public class CategoryProduct
