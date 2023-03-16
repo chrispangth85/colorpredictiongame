@@ -1033,6 +1033,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Banners.
+        /// </summary>
+        public static string mnuBanner {
+            get {
+                return ResourceManager.GetString("mnuBanner", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Game.
         /// </summary>
         public static string mnuGame {

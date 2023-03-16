@@ -947,11 +947,13 @@ namespace FreshMVC.Models
         public bool IsUserLoggedIn { get; set; }
         public List<ProductModel> TopProductList { get; set; }
         public List<ProductModel> ActiveProductList { get; set; }
+        public List<BannerModel> BannerList { get; set; }
 
         public MemberHomeModel()
         {
             TopProductList = new List<ProductModel>();
             ActiveProductList = new List<ProductModel>();
+            BannerList = new List<BannerModel>();
         }
     }
 

@@ -1,0 +1,133 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared;
+@using FreshMVC.Models
+@model BannerModel
+
+<link rel="stylesheet" href="~/Lucid/assets/vendor/dropify/css/dropify.min.css">
+<link rel="stylesheet" href="~/Lucid/assets/css/jquery.fileupload.css">
+
+<script type="text/javascript">
+
+    $("#btnBack").click(function (evt) {
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/BannerListing",
+            data: {
+            },
+            success: function (data) {
+                $("#main-content").html(data);
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+            }
+        });
+    });
+
+    $("#btnSaveAd").click(function (evt) {
+        $('.page-loader-wrapper').show();
+
+        for (instance in CKEDITOR.instances)
+            CKEDITOR.instances[instance].updateElement();
+
+        let formData = new FormData($("#editAdForm")[0]);
+
+        var productFileINput = $('#BannerImage')[0];
+        var productFile = productFileINput.files[0];
+        formData.append("ProtraitPhoto", productFile);
+        formData.append("Title", $("#Title").val());
+
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/ModalEditBannerDataMethod",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('.page-loader-wrapper').hide();
+                $("#main-content").html(data);
+                alert("@resShared.msgSaveSuccessfully");
+            },
+            error: function (xhr, status, error) {
+                $('.page-loader-wrapper').hide();
+                let r = jQuery.parseJSON(xhr.responseText);
+                var errorM = r.message;
+                alert(errorM);
+            }
+        });
+     });
+
+</script>
+
+<script>
+    //to support multiple ckeditor in one page
+    $('.ckeditor').each(function () {
+        CKEDITOR.replace($(this).prop('id'));
+
+    });
+</script>
+
+<style>
+    .cke_contents {
+        height: 400px !important;
+    }
+</style>
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <h2>@resShared.mnuBanner</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                    <li class="breadcrumb-item active">@resShared.lblUpdate</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    @using (Html.BeginForm("EditAdminPermissionMethod", "AdminGeneral", FormMethod.Post, new { name = "editAdForm", id = "editAdForm" }))
+    {
+        <div class="page-content p-6">
+            <div class="content container">
+                @Html.HiddenFor(model => model.id)
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <div class="example">
+                            <div class="description">
+                                <div class="description-text">
+                                </div>
+                            </div>
+                            <div class="source-preview-wrapper">
+                                <div class="preview">
+                                    <div class="preview-elements">
+                                        <div class="panel panel-transparent" style="margin-bottom:15px;">
+                                            <strong>@resShared.lblImage</strong>
+                                            <div class="form-group">
+                                                @Html.HiddenFor(x => x.ProtraitPhotoPath)
+                                                <input type="file" id="BannerImage" class="dropify" data-default-file="@Model.ProtraitPhotoPath">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <strong>@resShared.lblName <span style="color: Red">*</span></strong>
+                                            @Html.TextBoxFor(model => model.Title, new { @class = "form-control" })
+                                        </div>
+                                        <div class="form-group">
+                                        </div>
+                                                  
+                                        <input id="btnSaveAd" type="button" class="btn btn-sm btn-primary" style="width:180px; height:35px" value="@resShared.btnSave" />
+                                        <input id="btnBack" type="button" class="btn btn-sm btn-primary" style="width:180px; height:35px" value="@resShared.btnBack" />
+                                        <br /><br />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+<script src="~/Lucid/assets/vendor/dropify/js/dropify.min.js"></script>
+<script src="~/Lucid/assets/js/pages/forms/dropify.js"></script>
+<script src="~/Lucid/assets/vendor/ckeditor/ckeditor.js"></script> <!-- Ckeditor -->
+<script src="~/Lucid/assets/js/pages/forms/editors.js"></script> <!-- Ckeditor style -->

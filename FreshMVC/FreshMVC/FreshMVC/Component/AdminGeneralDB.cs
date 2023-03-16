@@ -3599,5 +3599,42 @@ namespace FreshMVC.Component
             return ds;
         }
         #endregion
+
+        #region GetAllBanner
+        public static DataSet GetAllBanners(int viewPage, out int pages, out int ok, out string msg)
+        {
+            SqlConnection sqlConn = DBConn.GetConnection();
+            SqlDataAdapter da = new SqlDataAdapter();
+
+            SqlCommand sqlComm = new SqlCommand("SP_GetAllBanners", sqlConn);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter pViewPage = sqlComm.Parameters.Add("@viewPage", SqlDbType.Int);
+            pViewPage.Direction = ParameterDirection.Input;
+            pViewPage.Value = viewPage;
+
+            SqlParameter pPages = sqlComm.Parameters.Add("@pages", SqlDbType.Int);
+            pPages.Direction = ParameterDirection.Output;
+
+            SqlParameter pOk = sqlComm.Parameters.Add("@ok", SqlDbType.Int);
+            pOk.Direction = ParameterDirection.Output;
+
+            SqlParameter pMessage = sqlComm.Parameters.Add("@msg", SqlDbType.VarChar, 50);
+            pMessage.Direction = ParameterDirection.Output;
+
+            da.SelectCommand = sqlComm;
+            DataSet ds = new DataSet();
+
+            sqlConn.Open();
+            da.Fill(ds);
+
+            ok = (int)pOk.Value;
+            msg = pMessage.Value.ToString();
+            pages = (int)pPages.Value;
+            sqlConn.Close();
+
+            return ds;
+        }
+        #endregion
     }
 }

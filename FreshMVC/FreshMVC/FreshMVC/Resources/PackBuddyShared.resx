@@ -441,6 +441,9 @@
   <data name="mnuAdminListing" xml:space="preserve">
     <value>Admin Listing</value>
   </data>
+  <data name="mnuBanner" xml:space="preserve">
+    <value>Banners</value>
+  </data>
   <data name="mnuGame" xml:space="preserve">
     <value>Game</value>
   </data>

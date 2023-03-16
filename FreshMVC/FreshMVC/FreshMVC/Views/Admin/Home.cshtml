@@ -110,6 +110,26 @@
                 });
             });
 
+            $("#bannerListing").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/BannerListing",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
             
             $("#userListing").click(function (evt) {
                 $('.page-loader-wrapper').show();
@@ -243,6 +263,12 @@
                                     <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuRedPacket</span></a>
                                     <ul class="mainMenuKH">
                                         <li id="redpacketListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuBanner</span></a>
+                                    <ul class="mainMenuKH">
+                                        <li id="bannerListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
                                     </ul>
                                 </li>
                             </ul>
