@@ -16,6 +16,7 @@ namespace Entity.Context
             this.OnModelCreatingCvdRedPacketContext(modelBuilder);
             this.OnModelCreatingCvdGameContext(modelBuilder);
             this.OnModelCreatingCvdProductContext(modelBuilder);
+            this.OnModelCreatingCvdBannerContext(modelBuilder);
 
             OnModelCreatingPartial(modelBuilder);
         }
