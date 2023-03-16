@@ -1365,6 +1365,49 @@ namespace FreshMVC.Controllers
         }
         #endregion
 
+
+        #region Recharge
+        public ActionResult Recharge(string search)
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new ProductListModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            ProductModel productModel = new ProductModel();
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                if (!string.IsNullOrEmpty(search))
+                {
+                    var productListModel = getProductListSearch(search);
+                    return View("ProductListing", productListModel);
+                }
+
+            }
+
+            return View("Recharge", productModel);
+        }
+        #endregion
+
         private string getRandomProductStatus()
         {
             List<string> firstNames = new List<string>();
