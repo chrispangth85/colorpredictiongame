@@ -1415,6 +1415,37 @@ namespace FreshMVC.Controllers
         }
         #endregion
 
+        #region Withdrawal
+        public ActionResult Withdrawal()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            ProductModel productModel = new ProductModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            return View("Withdrawal", productModel);
+        }
+        #endregion
+
         private string getRandomProductStatus()
         {
             List<string> firstNames = new List<string>();
