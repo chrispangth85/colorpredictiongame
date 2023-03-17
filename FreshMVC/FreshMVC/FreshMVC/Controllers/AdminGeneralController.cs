@@ -1261,5 +1261,201 @@ namespace FreshMVC.Controllers
         }
 
         #endregion
+
+        #region BannerListing
+        public IActionResult BannerListing(int selectedPage = 1)
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+         
+            int ok;
+            string msg;
+            int pages = 0;
+            var model = new PaginationBannerModel();
+            var dsAdmin = AdminGeneralDB.GetAllBanners(selectedPage, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new BannerModel();
+                am.Number = int.Parse(dr["rownumber"].ToString());
+                am.id = int.Parse(dr["CBANNER_ID"].ToString());
+                am.Title = dr["CBANNER_TITLE"].ToString();
+
+                string basePath = dr["CBANNER_IMAGES"] == DBNull.Value ? "" : "/Uploads/Banners/" + dr["CBANNER_IMAGES"].ToString();
+                am.ProtraitPhotoPath = basePath;
+                model.BannerList.Add(am);
+            }
+
+            return PartialView("BannerListing", model);
+        }
+
+        public ActionResult ModalEditBannerData(int id = 0)
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new BannerModel();
+
+            if (id != 0)
+            {
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var bannerFound = dbContext.CvdBanner.FirstOrDefault(c => c.CbannerId == id);
+                    am.Title = bannerFound.CbannerTitle;
+                    am.ProtraitPhotoPath = string.Format("{0}/{1}", Misc._baseUrl, bannerFound.CbannerImages);
+                }
+            }
+            return PartialView("ModalEditBannerData", am);
+        }
+
+        [HttpPost]
+        public IActionResult ModalEditBannerDataMethod(BannerModel am)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                if (string.IsNullOrEmpty(am.Title))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidTitle
+                    });
+                }
+
+                string directoryBasePath = Path.Combine(Path.Combine("Uploads", "Banners"));
+                string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, directoryBasePath);
+
+                if (am.ProtraitPhoto != null && am.ProtraitPhoto.FileName != string.Empty)
+                {
+                    if (Directory.Exists(basePath) == false)
+                    {
+                        Directory.CreateDirectory(basePath);
+                    }
+
+                    string path = Path.Combine(basePath, am.ProtraitPhoto.FileName);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        am.ProtraitPhoto.CopyTo(stream);
+                    }
+
+                    am.ProtraitPhotoPath = am.ProtraitPhoto.FileName;
+                }
+                else if (am.ProtraitPhoto != null)
+                {
+                    am.ProtraitPhotoPath = am.ProtraitPhoto.FileName;
+                }
+                else if ((am.ProtraitPhotoPath == "" || am.ProtraitPhotoPath == null) && am.Number == 0)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidImage
+                    });
+                }
+
+                if (am.id == 0)
+                {
+                    using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                    {
+                        var banner = new CvdBanner();
+                        banner.CbannerTitle = am.Title;
+                        banner.CbannerImages = am.ProtraitPhotoPath;
+                      
+                        dbContext.CvdBanner.Add(banner);
+                        dbContext.SaveChanges();
+                    }
+                }
+                else
+                {
+                    using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                    {
+                        var banner = dbContext.CvdBanner.FirstOrDefault(c => c.CbannerId == am.id);
+                        if (banner != null)
+                        {
+                            banner.CbannerTitle = am.Title;
+                            banner.CbannerImages = am.ProtraitPhotoPath;
+                            dbContext.SaveChanges();
+                        }
+                    }
+                }
+
+                return BannerListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult DeleteBanner(int idz = 0)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var banner = dbContext.CvdBanner.FirstOrDefault(c => c.CbannerId == idz);
+                    if (banner != null)
+                    {
+                        dbContext.CvdBanner.Remove(banner);
+                        dbContext.SaveChanges();
+                    }
+                }
+                return BannerListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+        #endregion
     }
 }

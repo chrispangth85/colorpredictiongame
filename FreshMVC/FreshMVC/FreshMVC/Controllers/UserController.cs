@@ -89,13 +89,12 @@ namespace FreshMVC.Controllers
                 else
                 {
 
-                    var productList = dbContext.CvdProduct.ToList();
+                    var productList = dbContext.CvdProduct.Where(p => p.CproDeletionstate == false).ToList();
                     int index = 0;
                     int maxTopProduct = 5;
                     int maxActiveProduct = 6;
                     foreach (var product in productList)
                     {
-
                         if (index < maxTopProduct)
                         {
                             ProductModel productModel = new ProductModel();
@@ -123,6 +122,14 @@ namespace FreshMVC.Controllers
                             }
                         }
                         index++;
+                    }
+
+                    var bannerList = dbContext.CvdBanner.Where(p => p.CbannerDeletionstate == false).ToList();
+                    foreach (var banner in bannerList)
+                    {
+                        BannerModel bannerModel = new BannerModel();
+                        bannerModel.ProtraitPhotoPath = "Uploads/Banners/" + banner.CbannerImages;
+                        am.BannerList.Add(bannerModel);
                     }
                 }
             }
@@ -1296,7 +1303,7 @@ namespace FreshMVC.Controllers
                     return View("ProductListing", productListModel);
                 }
 
-                var productList = dbContext.CvdProduct.ToList();
+                var productList = dbContext.CvdProduct.Where(p => p.CproDeletionstate == false).ToList();
                 foreach (var product in productList)
                 {
                     ProductModel productModel = new ProductModel();
