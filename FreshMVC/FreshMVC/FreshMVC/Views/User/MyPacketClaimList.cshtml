@@ -1,0 +1,86 @@
+﻿@using FreshMVC.Models
+@using resSharedPB = FreshMVC.Resources.PackBuddyShared;
+@model PaginationRedPacketModel
+@inject IJsonHelper Json;
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+            $('.loader-wrap').hide();
+
+            $("#backToMerchant").click(function (evt) {
+                location.href = "/User/Home";
+            });
+
+
+            $(".claimLink").click(function (evt) {
+                $('.loader-wrap').show();
+
+                $.ajax({
+                    type: "POST",
+                    url: "/User/ClaimRedPacket",
+                    data: { idz: $(this).attr("idz") },
+                    success: function (data) {
+                        Swal.fire({
+                            title: '@resSharedPB.msgClaimSuccessfully',
+                            showDenyButton: false,
+                            showCancelButton: false,
+                            confirmButtonText: 'OK',
+                        }).then((result1) => {
+                            /* Read more about isConfirmed, isDenied below */
+                            if (result1.isConfirmed) {
+                                $("#main-content").html(data);
+                            }
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        $('.loader-wrap').hide();
+                        let r = jQuery.parseJSON(xhr.responseText);
+                        var errorM = r.message;
+                        alert(errorM);
+                    }
+                });
+            });
+        });
+
+</script>
+
+<div class="section-inner-wrapper padding-s" style="overflow: visible;">
+    <div class="display-space">
+        <div class="middle">
+        </div>
+        <div>
+            <div class="d-flex flex-column ">
+                <h2 class="text-m">@resSharedPB.mnuRedPacket</h2>
+            </div>
+        </div>
+        <div class="recharge-history">
+            <button type="button" class="btn btn-link menu-btn">
+            </button>
+        </div>
+    </div>
+</div>
+<div class="col-lg-8 mx-auto">
+    @foreach (var itemz in @Model.List)
+    {
+        <div class="record-card mt-3">
+            <p class="record-text">@resSharedPB.lblReferenceID : <span>@itemz.ReferenceID</span></p>
+            <p class="record-text">@resSharedPB.lblUsername : <span>@itemz.Username</span></p>
+            <p class="record-text">@resSharedPB.lblCreatedOn : <span>@itemz.CreatedOn</span></p>
+            <p class="record-text">@resSharedPB.lblAmount: <span>@itemz.Amount</span></p>
+
+            @if (itemz.StatusInt == 0)
+            {
+                <a class="record-text claimLink" href="#" idz="@itemz.IDEncrypted" style="color:white; text-decoration:underline;">Claim Now</a>
+            }
+            else
+            {
+                <small class="record-text" style="color:white;">@resSharedPB.lblClaimedOn: @itemz.ClaimedOn </small>
+            }
+
+            <div class="currency-icon">
+                <i class="bi bi-currency-rupee"></i>
+            </div>
+        </div>
+    }
+</div>

@@ -643,6 +643,37 @@ namespace FreshMVC.Models
         }
     }
 
+    public class PaginationBankModelModel : PaginationBase
+    {
+        public IEnumerable<SelectListItem> FilteringCriteria { get; set; }
+        public string SelectedFilteringCriteria { get; set; }
+        public string FilterValue { get; set; }
+
+        public List<BankModel> List
+        {
+            get; set;
+        }
+
+        public PaginationBankModelModel()
+        {
+            List = new List<BankModel>();
+        }
+    }
+
+    public class BankModel
+    {        
+        public int Id { get; set; }
+        public string ActualName { get; set; }
+        public string IFSCCode { get; set; }
+        public string BankName { get; set; }
+        public string BankAccount { get; set; }
+        public string State { get; set; }
+        public string City { get; set; }
+        public string Address { get; set; }
+        public string MobileNumber { get; set; }
+        public string Email { get; set; }        
+    }
+
     public class PaymentModel
     {
         public int Number { get; set; }
@@ -1534,10 +1565,10 @@ namespace FreshMVC.Models
     public class GameHistoryRecord
     {
         public string Period { get; set; }
-        public string Price { get; set; }
+        public decimal Price { get; set; }
         public int ResultNumber { get; set; }
         public string ResultNumberString { get; set; }
-        public string Won { get; set; }
+        public decimal Won { get; set; }
         public string ResultColor { get; set; }
     }
 

@@ -907,7 +907,7 @@ namespace FreshMVC.Controllers
                     }
                 }
 
-                return RedPacketClaimListing();
+                return MyPacketClaimList();
             }
             catch (Exception e)
             {
@@ -1001,7 +1001,7 @@ namespace FreshMVC.Controllers
                                     }
                                     else if (zzz == 1)
                                     {
-                                        tmpResult.Price = tt;
+                                        tmpResult.Price = decimal.Parse(tt);
                                     }
                                     else if (zzz == 2)
                                     {
@@ -1025,7 +1025,7 @@ namespace FreshMVC.Controllers
                     {
                         GameHistoryRecord tmpResult = new GameHistoryRecord();
                         tmpResult.Period = drBetHistory["CGAME_PERIOD"].ToString();
-                        tmpResult.Price = drBetHistory["CGAME_AMOUNT"].ToString();
+                        tmpResult.Price = decimal.Parse(drBetHistory["CGAME_AMOUNT"].ToString());
                         tmpResult.ResultNumber = int.Parse(drBetHistory["CGAME_NUMBER"].ToString());
 
                         if (tmpResult.ResultNumber == 55)
@@ -1045,7 +1045,12 @@ namespace FreshMVC.Controllers
                             tmpResult.ResultNumberString = tmpResult.ResultNumber.ToString();
                         }
 
-                        tmpResult.Won = drBetHistory["CGAME_WIN_AMOUNT"].ToString();
+                        tmpResult.Won = decimal.Parse(drBetHistory["CGAME_WIN_AMOUNT"].ToString());
+
+                        if (tmpResult.Price > tmpResult.Won)
+                        {
+                            tmpResult.Won = 0 - tmpResult.Price;
+                        }
 
                         tempo.MyRecordHistoryList.Add(tmpResult);
                     }
@@ -1190,6 +1195,16 @@ namespace FreshMVC.Controllers
 
             var am = new MemberHomeModel();
             ViewBag.HeaderPage = "Profile";
+            ViewBag.IsAgent = false;
+
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var foundAgent = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && c.CroleId == 3);
+                if (foundAgent != null)
+                {
+                    ViewBag.IsAgent = true;
+                }
+            }
 
             return View("Profile", am);
         }
@@ -1598,6 +1613,235 @@ namespace FreshMVC.Controllers
         }
         #endregion
 
+        #region MyPacketClaimList
+        public ActionResult MyPacketClaimList(int selectedPage = 1)
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new PaginationRedPacketModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var dsAdmin = MerchantGeneralDB.GetRedPacketClaimListingByUsername(usernameCookie);
+
+            //Not completed task
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                RedPacketModel temp = new RedPacketModel();
+                temp.ID = int.Parse(dr["CREDP_ID"].ToString());
+                temp.IDEncrypted = Authentication.MD5Encrypt(dr["CREDP_ID"].ToString());
+                temp.ReferenceID = dr["CREDP_REFERENCE_ID"].ToString();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.Amount = decimal.Parse(dr["CREDP_AMOUNT"].ToString());
+                temp.CreatedOn = DateTime.Parse(dr["CREDP_CREATEDON"].ToString()).ToString("dd/MM/yyyy");
+                temp.ClaimedOn = dr["CREDP_CLAIMEDON"] == DBNull.Value ? "" : DateTime.Parse(dr["CREDP_CLAIMEDON"].ToString()).ToString("dd/MM/yyyy");
+                temp.Status = dr["CREDP_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblNotUsed : Resources.PackBuddyShared.lblUsed;
+                temp.StatusInt = int.Parse(dr["CREDP_STATUS"].ToString());
+
+                am.List.Add(temp);
+            }
+
+            return View("MyPacketClaimList", am);
+        }
+
+        #endregion
+
+        #region BankCard
+
+        public ActionResult BankCard()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new PaginationBankModelModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            // for record
+            am.List = new List<BankModel>();
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                foreach( var item in dbContext.CvdMemberBank.Where(c => c.CusrUsername.ToLower() == usernameCookie.ToLower()))
+                {
+                    var bankModel = new BankModel();
+                    bankModel.Id = item.CbankId;
+                    bankModel.ActualName = item.CbankName;
+                    bankModel.BankName = item.CbankBankaccountname;
+                    bankModel.Email = item.CbankEmail;
+                    am.List.Add(bankModel);
+                }                
+            }
+
+            return View("BankCard", am);
+        }
+
+        public ActionResult AddBankCard(int id)
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new BankModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            // for record
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var bankFound = dbContext.CvdMemberBank.FirstOrDefault(c => c.CbankId == id && c.CusrUsername.ToLower() == usernameCookie.ToLower());
+                if (bankFound != null)
+                {
+                    am.Id = id;
+                    am.ActualName = bankFound.CbankName;
+                    am.IFSCCode = bankFound.CbankIfsccode;
+                    am.BankName = bankFound.CbankBankaccountname;
+                    am.BankAccount = bankFound.CbankBankaccount;
+                    am.State = bankFound.CbankState;
+                    am.City = bankFound.CbankCity;
+                    am.Address = bankFound.CbankAddress;
+                    am.MobileNumber = bankFound.CbankMobile;
+                    am.Email = bankFound.CbankEmail;
+                }
+            }
+
+            return View("BankCardInfo", am);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateBankInfo(int id, string actualname, string ifsccode, string bankname, string state, string bankaccount, string city, string address, string mobile, string email)
+        {
+            try
+            {
+                string usernameCookie = "";
+                try
+                {
+                    string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                    usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+                }
+                catch (Exception e)
+                {
+                    return RedirectToAction("ClientLogin", "UserLogin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                if (usernameCookie == "")
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidUsername
+                    });
+                }
+
+                if (id == 0)
+                {
+                    // for record
+                    using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                    {                        
+                        var memberBank = new CvdMemberBank();
+                        memberBank.CusrUsername = usernameCookie;
+                        memberBank.CbankIfsccode = ifsccode;
+                        memberBank.CbankName = actualname;
+                        memberBank.CbankState = state;
+                        memberBank.CbankBankaccountname = bankname;
+                        memberBank.CbankBankaccount = bankaccount;
+                        memberBank.CbankCity = city;
+                        memberBank.CbankAddress = address;
+                        memberBank.CbankMobile = mobile;
+                        memberBank.CbankEmail = email;                        
+                        memberBank.CbankCreatedby = usernameCookie;
+                        memberBank.CbankCreatedon = DateTime.Now;
+
+                        dbContext.CvdMemberBank.Add(memberBank);
+                        dbContext.SaveChanges();
+                    }
+                }
+                else
+                {
+                    // for record
+                    using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                    {
+                        var memberBank = dbContext.CvdMemberBank.FirstOrDefault(c => c.CusrUsername.ToLower() == usernameCookie.ToLower() && c.CbankId == id);                        
+                        memberBank.CbankIfsccode = ifsccode;
+                        memberBank.CbankName = actualname;
+                        memberBank.CbankState = state;
+                        memberBank.CbankBankaccountname = bankname;
+                        memberBank.CbankBankaccount = bankaccount;
+                        memberBank.CbankCity = city;
+                        memberBank.CbankAddress = address;
+                        memberBank.CbankMobile = mobile;
+                        memberBank.CbankEmail = email;
+                        memberBank.CbankCreatedby = usernameCookie;
+
+                        dbContext.CvdMemberBank.Update(memberBank);
+                        dbContext.SaveChanges();
+                    }
+                }    
+            }
+            catch (Exception ex)
+            {
+
+            }
+
+            return BankCard();
+        }
+
+        #endregion
+
         #region Recharge
         public ActionResult Recharge(string search)
         {
@@ -1637,6 +1881,7 @@ namespace FreshMVC.Controllers
 
             return View("Recharge", am);
         }
+
         #endregion
 
         #region Withdrawal
@@ -1747,10 +1992,10 @@ namespace FreshMVC.Controllers
                     postUrl = Misc.depositUrl;
                 }
 
-                var dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");             
+                var dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 var dataSign = string.Format("pay_amount={0}&pay_applydate={1}&pay_bankcode={2}&pay_callbackurl={3}&pay_memberid={4}&pay_notifyurl={5}&pay_orderid={6}&key={7}",
                     amount.ToString("#0.00"), dateTime, Misc.bankCode, Misc._baseUrl + "/Payment/CallBackUrl", Misc.merchantCode, Misc._baseUrl + "/User/ReturnUrl", paymentId, Misc.merchantKey);
-                
+
                 var dataMd5 = Misc.MD5(dataSign).ToUpper();
 
                 payment.MerchantCode = Misc.merchantCode;
@@ -1832,7 +2077,7 @@ namespace FreshMVC.Controllers
                     paymentInfo.CpaymentReturnsign = sign;
                     paymentInfo.CpaymentReturncode = returncode;
                     paymentInfo.CpaymentCreatedon = DateTime.Now;
-                    
+
                     dbContext.Update(paymentInfo);
                     dbContext.SaveChanges();
 
@@ -1841,7 +2086,7 @@ namespace FreshMVC.Controllers
                     {
                         // deposit to user account
                         AdminDB.CashWalletOperation(paymentLog.CusrUsername, paymentLog.CcashCashin, "Recharge", 0, "", orderid, "1");
-                        
+
                         // update payment log
                         paymentLog.CcashStatus = 1;
                         dbContext.CvdCashwalletlogtemp.Update(paymentLog);

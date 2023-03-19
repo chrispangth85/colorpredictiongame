@@ -53,6 +53,21 @@
                 });
             });
 
+            $(".myredpacketclaimz").click(function (evt) {
+                $.ajax({
+                    type: "POST",
+                    url: "/User/MyPacketClaimList",
+                    data: {},
+                    success: function (data) {
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        let r = JSON.parse(xhr.responseText);
+                        alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
+                    }
+                });
+            });
+
             $(".orderz").click(function (evt) {
                 $.ajax({
                     type: "POST",
@@ -147,6 +162,7 @@
                             <div class="profile-menu-panel">
                                 <a class="profile-menus width-100 padding-s" href="./Recharge">@resSharedPB.lblRecharge</a>
                                 <a class="profile-menus width-100 padding-s" href="./Withdrawal">@resSharedPB.lblWithdrawal</a>
+                                <a class="profile-menus width-100 padding-s" href="./BankCard">@resSharedPB.lblBankcard</a>
                                 <a class="profile-menus width-100 padding-s" href="">@resSharedPB.lblTransaction</a>
                             </div>
 
@@ -163,18 +179,35 @@
                             </div>
 
                         </div>
-                        <div class="profile-p myredpacketz">
-                            <div class="profile-menu-accordion padding-s pointer">
-                                <a href="#" class="" style="color:black;">
-                                    <div class="middle left heading-bold">
-                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
-                                        <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
-                                        @resSharedPB.lblRedPacket
-                                    </div>
-                                </a>
-                            </div>
+                        @if (ViewBag.IsAgent)
+                        {
+                            <div class="profile-p myredpacketz">
+                                <div class="profile-menu-accordion padding-s pointer">
+                                    <a href="#" class="" style="color:black;">
+                                        <div class="middle left heading-bold">
+                                            <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
+                                            @resSharedPB.lblRedPacket (@resSharedPB.lblAgent)
+                                        </div>
+                                    </a>
+                                </div>
 
-                        </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="profile-p myredpacketclaimz">
+                                <div class="profile-menu-accordion padding-s pointer">
+                                    <a href="#" class="" style="color:black;">
+                                        <div class="middle left heading-bold">
+                                            <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
+                                            @resSharedPB.lblRedPacket
+                                        </div>
+                                    </a>
+                                </div>
+
+                            </div>
+                        }
+
                         <div class="profile-p referralz">
                             <div class="profile-menu-accordion padding-s pointer">
                                 <a href="#" class="" style="color:black;">

@@ -31,6 +31,10 @@
 
         $(document).ready(function () {
 
+            $("#backToMerchant").click(function (evt) {
+                history.back();
+            });
+
             $(".redpacketSendByLevel").click(function (evt) {
                 var level = $(this).attr("levelz");
                 var upIDEnc = document.getElementById("UpIDEnc").value;
@@ -142,9 +146,12 @@
     @Html.Partial("HeaderMenu")
     @Html.HiddenFor(m => m.UpIDEnc)
     <main>
-        <div class="section-inner-wrapper padding-s" style="overflow: visible;">
+        <div class="section-inner-wrapper padding-xs" style="overflow: visible;">
             <div class="display-space">
                 <div class="middle">
+                    <button type="button" class="btn btn-link menu-btn">
+                        <i id="backToMerchant" class="bi bi-arrow-left" style="font-size:25px; padding:5px; color:white; background-color:red; border-radius:10px;"></i>
+                    </button>
                 </div>
                 <div>
                     <div class="d-flex flex-column ">
@@ -158,7 +165,7 @@
                 </div>
             </div>
         </div>
-        <div class="section-inner-wrapper padding-s" style="overflow: visible;">
+        <div class="section-inner-wrapper padding-xs" style="overflow: visible;">
             <div class="display-space">
                 <div class="middle">
                 </div>
@@ -174,135 +181,145 @@
                 </div>
             </div>
         </div>
-        <div class="section-inner-wrapper padding-s" style="overflow: visible;">
-            <div class="display-space">
-                <div class="middle">
-                </div>
-                <div>
-                    <div class="d-flex flex-column ">
-                        <h2 class="text-m">First Level</h2>
+        <section class="section-inner-wrapper p-lg-0 px-3 py-0 overflow-hidden mb-4">
+            <div class="container-fluid p-0">
+                <div class="row">
+                    <div class="col-lg-8 mx-auto mt-3">
+                        <div class="record-card mb-3">
+                            <div class="d-flex">
+                                <div class="ms-3">
+                                    <h1 class="record-heading mb-2" style="color:white;">@resSharedPB.lblFirstLevel</h1>
+                                    <a href="#" class="record-text border-bottom record-link redpacketSendByLevel" levelz="1">@resSharedPB.lblGiveAllThisLevel</a>
+                                </div>
+                            </div>
+                            <hr class="white-line">
+                            @foreach (var itemz in Model.FirstLevel)
+                            {
+                                <div class="d-flex flex-md-row flex-column justify-content-between align-items-center ">
+                                    <div>
+                                        <p class="record-text mb-0 pb-0">Username: <span>@itemz.Username</span></p>
+                                    </div>
+                                    <div class="d-flex mt-lg-0 mt-3">
+                                        <div>
+                                            <a href="#" class="no-decoration record-tag redpacketIndividual" encryUserz="@itemz.EncryptedUsername">@resSharedPB.lblGiveRedPacket</a>
+                                        </div>
+                                        <div class="ms-2">
+                                            <a href="/User/MyPacketSponsorTreeListing?upIDEnc=@itemz.EncryptedUsername" class="no-decoration record-tag ">@resSharedPB.lblNavigate</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            }
+                        </div>
+                        <div class="record-card mb-3">
+                            <div class="d-flex">
+                                <div class="ms-3">
+                                    <h1 class="record-heading mb-2" style="color:white;">@resSharedPB.lblSecondLevel</h1>
+                                    <a href="#" class="record-text border-bottom record-link redpacketSendByLevel" levelz="2">@resSharedPB.lblGiveAllThisLevel</a>
+                                </div>
+                            </div>
+                            <hr class="white-line">
+                            @foreach (var itemz in Model.SecondLevel)
+                            {
+                                <div class="d-flex flex-md-row flex-column justify-content-between align-items-center ">
+                                    <div>
+                                        <p class="record-text mb-0 pb-0">Username: <span>@itemz.Username</span></p>
+                                    </div>
+                                    <div class="d-flex mt-lg-0 mt-3">
+                                        <div>
+                                            <a href="#" class="no-decoration record-tag redpacketIndividual" encryUserz="@itemz.EncryptedUsername">@resSharedPB.lblGiveRedPacket</a>
+                                        </div>
+                                        <div class="ms-2">
+                                            <a href="/User/MyPacketSponsorTreeListing?upIDEnc=@itemz.EncryptedUsername" class="no-decoration record-tag ">@resSharedPB.lblNavigate</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            }
+                        </div>
+                        <div class="record-card mb-3">
+                            <div class="d-flex">
+                                <div class="ms-3">
+                                    <h1 class="record-heading mb-2" style="color:white;">@resSharedPB.lblThirdLevel</h1>
+                                    <a href="#" class="record-text border-bottom record-link redpacketSendByLevel" levelz="3">@resSharedPB.lblGiveAllThisLevel</a>
+                                </div>
+                            </div>
+                            <hr class="white-line">
+                            @foreach (var itemz in Model.ThirdLevel)
+                            {
+                                <div class="d-flex flex-md-row flex-column justify-content-between align-items-center ">
+                                    <div>
+                                        <p class="record-text mb-0 pb-0">Username: <span>@itemz.Username</span></p>
+                                    </div>
+                                    <div class="d-flex mt-lg-0 mt-3">
+                                        <div>
+                                            <a href="#" class="no-decoration record-tag redpacketIndividual" encryUserz="@itemz.EncryptedUsername">@resSharedPB.lblGiveRedPacket</a>
+                                        </div>
+                                        <div class="ms-2">
+                                            <a href="/User/MyPacketSponsorTreeListing?upIDEnc=@itemz.EncryptedUsername" class="no-decoration record-tag ">@resSharedPB.lblNavigate</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            }
+                        </div>
+                        <div class="record-card mb-3">
+                            <div class="d-flex">
+                                <div class="ms-3">
+                                    <h1 class="record-heading mb-2" style="color:white;">@resSharedPB.lblFourthLevel</h1>
+                                    <a href="#" class="record-text border-bottom record-link redpacketSendByLevel" levelz="4">@resSharedPB.lblGiveAllThisLevel</a>
+                                </div>
+                            </div>
+                            <hr class="white-line">
+                            @foreach (var itemz in Model.FourthLevel)
+                            {
+                                <div class="d-flex flex-md-row flex-column justify-content-between align-items-center ">
+                                    <div>
+                                        <p class="record-text mb-0 pb-0">Username: <span>@itemz.Username</span></p>
+                                    </div>
+                                    <div class="d-flex mt-lg-0 mt-3">
+                                        <div>
+                                            <a href="#" class="no-decoration record-tag redpacketIndividual" encryUserz="@itemz.EncryptedUsername">@resSharedPB.lblGiveRedPacket</a>
+                                        </div>
+                                        <div class="ms-2">
+                                            <a href="/User/MyPacketSponsorTreeListing?upIDEnc=@itemz.EncryptedUsername" class="no-decoration record-tag ">@resSharedPB.lblNavigate</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            }
+                        </div>
+                        <div class="record-card mb-3">
+                            <div class="d-flex">
+                                <div class="ms-3">
+                                    <h1 class="record-heading mb-2" style="color:white;">@resSharedPB.lblFifthLevel</h1>
+                                    <a href="#" class="record-text border-bottom record-link redpacketSendByLevel" levelz="5">@resSharedPB.lblGiveAllThisLevel</a>
+                                </div>
+                            </div>
+                            <hr class="white-line">
+                            @foreach (var itemz in Model.FifthLevel)
+                            {
+                                <div class="d-flex flex-md-row flex-column justify-content-between align-items-center ">
+                                    <div>
+                                        <p class="record-text mb-0 pb-0">Username: <span>@itemz.Username</span></p>
+                                    </div>
+                                    <div class="d-flex mt-lg-0 mt-3">
+                                        <div>
+                                            <a href="#" class="no-decoration record-tag redpacketIndividual" encryUserz="@itemz.EncryptedUsername">@resSharedPB.lblGiveRedPacket</a>
+                                        </div>
+                                        <div class="ms-2">
+                                            <a href="/User/MyPacketSponsorTreeListing?upIDEnc=@itemz.EncryptedUsername" class="no-decoration record-tag ">@resSharedPB.lblNavigate</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <br />
+                            }
+                        </div>
                     </div>
                 </div>
-                <div class="recharge-history">
-                    <a class="redpacketSendByLevel" levelz="1">Give all this level</a>
-                </div>
             </div>
-        </div>
-        <div class="col-lg-8 mx-auto">
-            @foreach (var itemz in Model.FirstLevel)
-            {
-                <div class="record-card mt-3">
-                    <p class="record-text">@resSharedPB.lblUsername : <span>@itemz.Username</span></p>
-                    <a class="redpacketIndividual" encryUserz="@itemz.EncryptedUsername">Give Packet</a>
-                    <br />
-                    <a href="/User/MyPacketSponsorTreeListing?upIDEnc=@itemz.EncryptedUsername">Navigate</a>
-                </div>
-            }
-        </div>
-        <br />
-        <div class="section-inner-wrapper padding-s" style="overflow: visible;">
-            <div class="display-space">
-                <div class="middle">
-                </div>
-                <div>
-                    <div class="d-flex flex-column ">
-                        <h2 class="text-m">Second Level</h2>
-                    </div>
-                </div>
-                <div class="recharge-history">
-                    <a class="redpacketSendByLevel" levelz="2">Give all this level</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-8 mx-auto">
-            @foreach (var itemz in Model.SecondLevel)
-            {
-                <div class="record-card mt-3">
-                    <p class="record-text">@resSharedPB.lblUsername : <span>@itemz.Username</span></p>
-                    <a class="redpacketIndividual" encryUserz="@itemz.EncryptedUsername">Give Packet</a>
-                    <br />
-                    <a href="/User/MyPacketSponsorTreeListing?upIDEnc=@itemz.EncryptedUsername">Navigate</a>
-                </div>
-            }
-        </div>
-        <br />
-        <div class="section-inner-wrapper padding-s" style="overflow: visible;">
-            <div class="display-space">
-                <div class="middle">
-                </div>
-                <div>
-                    <div class="d-flex flex-column ">
-                        <h2 class="text-m">Third Level</h2>
-                    </div>
-                </div>
-                <div class="recharge-history">
-                    <a class="redpacketSendByLevel" levelz="3">Give all this level</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-8 mx-auto">
-            @foreach (var itemz in Model.ThirdLevel)
-            {
-                <div class="record-card mt-3">
-                    <p class="record-text">@resSharedPB.lblUsername : <span>@itemz.Username</span></p>
-                    <a class="redpacketIndividual" encryUserz="@itemz.EncryptedUsername">Give Packet</a>
-                    <br />
-                    <a href="/User/MyPacketSponsorTreeListing?upIDEnc=@itemz.EncryptedUsername">Navigate</a>
-                </div>
-            }
-        </div>
-        <br />
-        <div class="section-inner-wrapper padding-s" style="overflow: visible;">
-            <div class="display-space">
-                <div class="middle">
-                </div>
-                <div>
-                    <div class="d-flex flex-column ">
-                        <h2 class="text-m">Fourth Level</h2>
-                    </div>
-                </div>
-                <div class="recharge-history">
-                    <a class="redpacketSendByLevel" levelz="4">Give all this level</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-8 mx-auto">
-            @foreach (var itemz in Model.FourthLevel)
-            {
-                <div class="record-card mt-3">
-                    <p class="record-text">@resSharedPB.lblUsername : <span>@itemz.Username</span></p>
-                    <a class="redpacketIndividual" encryUserz="@itemz.EncryptedUsername">Give Packet</a>
-                    <br />
-                    <a href="/User/MyPacketSponsorTreeListing?upIDEnc=@itemz.EncryptedUsername">Navigate</a>
-                </div>
-            }
-        </div>
-        <br />
-        <div class="section-inner-wrapper padding-s" style="overflow: visible;">
-            <div class="display-space">
-                <div class="middle">
-                </div>
-                <div>
-                    <div class="d-flex flex-column ">
-                        <h2 class="text-m">Fifth Level</h2>
-                    </div>
-                </div>
-                <div class="recharge-history">
-                    <a class="redpacketSendByLevel" levelz="5">Give all this level</a>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-8 mx-auto">
-            @foreach (var itemz in Model.FifthLevel)
-            {
-                <div class="record-card mt-3">
-                    <p class="record-text">@resSharedPB.lblUsername : <span>@itemz.Username</span></p>
-                    <a class="redpacketIndividual" encryUserz="@itemz.EncryptedUsername">Give Packet</a>
-                    <br />
-                    <a href="/User/MyPacketSponsorTreeListing?upIDEnc=@itemz.EncryptedUsername">Navigate</a>
-                </div>
-            }
-        </div>
+
+        </section>
         <br />
     </main>
 

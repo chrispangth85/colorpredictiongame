@@ -17,13 +17,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="~/HotMall/css/style.css">
     <link rel="stylesheet" href="~/HotMall/css/product.css">
-
-    <!-- Sweet Alert 2 -->
-<script src="~/Lucid/assets/vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
-    <link rel="stylesheet" href="~/Lucid/assets/vendor/sweetalert2/dist/sweetalert2.min.css">
 </head>
 <body>
-    <form name="frmPayment" method="post" action="@Model.PaymentUrl" style="display:block">
+    <form name="frmPayment" method="post" action="@Model.PaymentUrl" style="display:none">
         <input type="text" name="pay_memberid" value="@Model.MerchantCode">
         <input type="text" name="pay_orderid" value="@Model.RefNo">
         <input type="text" name="pay_applydate" value="@Model.Created">
@@ -47,9 +43,9 @@
     <script src="~/HotMall/js/product.js"></script>
     <script src="~/HotMall/js/customAjax.js"></script>
 
-    @*<script>
+    <script>
         $('#btnSubmit').click();
-    </script>*@
+    </script>
 </body>
 </html>
 

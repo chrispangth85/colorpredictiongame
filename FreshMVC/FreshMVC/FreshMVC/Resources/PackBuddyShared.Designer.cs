@@ -160,6 +160,33 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Actual Name.
+        /// </summary>
+        public static string lblActualName {
+            get {
+                return ResourceManager.GetString("lblActualName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Bank Card.
+        /// </summary>
+        public static string lblAddBankCard {
+            get {
+                return ResourceManager.GetString("lblAddBankCard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Address.
+        /// </summary>
+        public static string lblAddress {
+            get {
+                return ResourceManager.GetString("lblAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Admin account exists.
         /// </summary>
         public static string lblAdminAccExists {
@@ -241,11 +268,38 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bank Account.
+        /// </summary>
+        public static string lblBankAccount {
+            get {
+                return ResourceManager.GetString("lblBankAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bank card.
         /// </summary>
         public static string lblBankcard {
             get {
                 return ResourceManager.GetString("lblBankcard", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bank Info - HotMall.
+        /// </summary>
+        public static string lblBankInfoHotmall {
+            get {
+                return ResourceManager.GetString("lblBankInfoHotmall", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bank Name.
+        /// </summary>
+        public static string lblBankName {
+            get {
+                return ResourceManager.GetString("lblBankName", resourceCulture);
             }
         }
         
@@ -309,6 +363,15 @@ namespace FreshMVC.Resources {
         public static string lblChangePassword {
             get {
                 return ResourceManager.GetString("lblChangePassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to City.
+        /// </summary>
+        public static string lblCity {
+            get {
+                return ResourceManager.GetString("lblCity", resourceCulture);
             }
         }
         
@@ -457,6 +520,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Email.
+        /// </summary>
+        public static string lblEmail {
+            get {
+                return ResourceManager.GetString("lblEmail", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to End.
         /// </summary>
         public static string lblEnd {
@@ -484,11 +556,29 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fifth Level.
+        /// </summary>
+        public static string lblFifthLevel {
+            get {
+                return ResourceManager.GetString("lblFifthLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Final Amount.
         /// </summary>
         public static string lblFinalAmount {
             get {
                 return ResourceManager.GetString("lblFinalAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First Level.
+        /// </summary>
+        public static string lblFirstLevel {
+            get {
+                return ResourceManager.GetString("lblFirstLevel", resourceCulture);
             }
         }
         
@@ -511,6 +601,33 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Fourth Level.
+        /// </summary>
+        public static string lblFourthLevel {
+            get {
+                return ResourceManager.GetString("lblFourthLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Give All This Level.
+        /// </summary>
+        public static string lblGiveAllThisLevel {
+            get {
+                return ResourceManager.GetString("lblGiveAllThisLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Give red packet.
+        /// </summary>
+        public static string lblGiveRedPacket {
+            get {
+                return ResourceManager.GetString("lblGiveRedPacket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Green 5 return rate.
         /// </summary>
         public static string lblGreen5Return {
@@ -525,6 +642,15 @@ namespace FreshMVC.Resources {
         public static string lblGreenReturn {
             get {
                 return ResourceManager.GetString("lblGreenReturn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to IFSC Code.
+        /// </summary>
+        public static string lblIFSCCode {
+            get {
+                return ResourceManager.GetString("lblIFSCCode", resourceCulture);
             }
         }
         
@@ -673,6 +799,24 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Mobile.
+        /// </summary>
+        public static string lblMobile {
+            get {
+                return ResourceManager.GetString("lblMobile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to My Record.
+        /// </summary>
+        public static string lblMyRecord {
+            get {
+                return ResourceManager.GetString("lblMyRecord", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Name.
         /// </summary>
         public static string lblName {
@@ -687,6 +831,15 @@ namespace FreshMVC.Resources {
         public static string lblNameIsRequired {
             get {
                 return ResourceManager.GetString("lblNameIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Navigate.
+        /// </summary>
+        public static string lblNavigate {
+            get {
+                return ResourceManager.GetString("lblNavigate", resourceCulture);
             }
         }
         
@@ -867,6 +1020,15 @@ namespace FreshMVC.Resources {
         public static string lblOutOfStock {
             get {
                 return ResourceManager.GetString("lblOutOfStock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Parity Record.
+        /// </summary>
+        public static string lblParityRecord {
+            get {
+                return ResourceManager.GetString("lblParityRecord", resourceCulture);
             }
         }
         
@@ -1069,6 +1231,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Second Level.
+        /// </summary>
+        public static string lblSecondLevel {
+            get {
+                return ResourceManager.GetString("lblSecondLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select Bank Card.
         /// </summary>
         public static string lblSelectBankCard {
@@ -1114,6 +1285,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to State / Territory.
+        /// </summary>
+        public static string lblState {
+            get {
+                return ResourceManager.GetString("lblState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Status.
         /// </summary>
         public static string lblStatus {
@@ -1128,6 +1308,15 @@ namespace FreshMVC.Resources {
         public static string lblSuccess {
             get {
                 return ResourceManager.GetString("lblSuccess", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Third Level.
+        /// </summary>
+        public static string lblThirdLevel {
+            get {
+                return ResourceManager.GetString("lblThirdLevel", resourceCulture);
             }
         }
         

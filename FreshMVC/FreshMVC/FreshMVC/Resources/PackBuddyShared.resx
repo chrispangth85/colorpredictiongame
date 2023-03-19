@@ -150,6 +150,15 @@
   <data name="lblActive" xml:space="preserve">
     <value>Active</value>
   </data>
+  <data name="lblActualName" xml:space="preserve">
+    <value>Actual Name</value>
+  </data>
+  <data name="lblAddBankCard" xml:space="preserve">
+    <value>Add Bank Card</value>
+  </data>
+  <data name="lblAddress" xml:space="preserve">
+    <value>Address</value>
+  </data>
   <data name="lblAdminAccExists" xml:space="preserve">
     <value>Admin account exists</value>
   </data>
@@ -177,8 +186,17 @@
   <data name="lblBalanceBeforeWith" xml:space="preserve">
     <value>Balance before withdrawal</value>
   </data>
+  <data name="lblBankAccount" xml:space="preserve">
+    <value>Bank Account</value>
+  </data>
   <data name="lblBankcard" xml:space="preserve">
     <value>Bank card</value>
+  </data>
+  <data name="lblBankInfoHotmall" xml:space="preserve">
+    <value>Bank Info - HotMall</value>
+  </data>
+  <data name="lblBankName" xml:space="preserve">
+    <value>Bank Name</value>
   </data>
   <data name="lblBeast" xml:space="preserve">
     <value>Beast</value>
@@ -200,6 +218,9 @@
   </data>
   <data name="lblChangePassword" xml:space="preserve">
     <value>Change password</value>
+  </data>
+  <data name="lblCity" xml:space="preserve">
+    <value>City</value>
   </data>
   <data name="lblClaimedOn" xml:space="preserve">
     <value>Claimed On</value>
@@ -249,6 +270,9 @@
   <data name="lblEdit" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="lblEmail" xml:space="preserve">
+    <value>Email</value>
+  </data>
   <data name="lblEnd" xml:space="preserve">
     <value>End</value>
   </data>
@@ -258,8 +282,14 @@
   <data name="lblFailed" xml:space="preserve">
     <value>Failed</value>
   </data>
+  <data name="lblFifthLevel" xml:space="preserve">
+    <value>Fifth Level</value>
+  </data>
   <data name="lblFinalAmount" xml:space="preserve">
     <value>Final Amount</value>
+  </data>
+  <data name="lblFirstLevel" xml:space="preserve">
+    <value>First Level</value>
   </data>
   <data name="lblFirstName" xml:space="preserve">
     <value>First Name</value>
@@ -267,11 +297,23 @@
   <data name="lblForgetPassword" xml:space="preserve">
     <value>Forget Password</value>
   </data>
+  <data name="lblFourthLevel" xml:space="preserve">
+    <value>Fourth Level</value>
+  </data>
+  <data name="lblGiveAllThisLevel" xml:space="preserve">
+    <value>Give All This Level</value>
+  </data>
+  <data name="lblGiveRedPacket" xml:space="preserve">
+    <value>Give red packet</value>
+  </data>
   <data name="lblGreen5Return" xml:space="preserve">
     <value>Green 5 return rate</value>
   </data>
   <data name="lblGreenReturn" xml:space="preserve">
     <value>Green return rate</value>
+  </data>
+  <data name="lblIFSCCode" xml:space="preserve">
+    <value>IFSC Code</value>
   </data>
   <data name="lblImage" xml:space="preserve">
     <value>Image</value>
@@ -321,11 +363,20 @@
   <data name="lblMemberType" xml:space="preserve">
     <value>Member Type</value>
   </data>
+  <data name="lblMobile" xml:space="preserve">
+    <value>Mobile</value>
+  </data>
+  <data name="lblMyRecord" xml:space="preserve">
+    <value>My Record</value>
+  </data>
   <data name="lblName" xml:space="preserve">
     <value>Name</value>
   </data>
   <data name="lblNameIsRequired" xml:space="preserve">
     <value>Name is required</value>
+  </data>
+  <data name="lblNavigate" xml:space="preserve">
+    <value>Navigate</value>
   </data>
   <data name="lblNew" xml:space="preserve">
     <value>New</value>
@@ -386,6 +437,9 @@
   </data>
   <data name="lblOutOfStock" xml:space="preserve">
     <value>OUT OF STOCK</value>
+  </data>
+  <data name="lblParityRecord" xml:space="preserve">
+    <value>Parity Record</value>
   </data>
   <data name="lblPassNotMatch" xml:space="preserve">
     <value>Password does not match</value>
@@ -453,6 +507,9 @@
   <data name="lblResult" xml:space="preserve">
     <value>Result</value>
   </data>
+  <data name="lblSecondLevel" xml:space="preserve">
+    <value>Second Level</value>
+  </data>
   <data name="lblSelectBankCard" xml:space="preserve">
     <value>Select Bank Card</value>
   </data>
@@ -468,11 +525,17 @@
   <data name="lblStart" xml:space="preserve">
     <value>Start</value>
   </data>
+  <data name="lblState" xml:space="preserve">
+    <value>State / Territory</value>
+  </data>
   <data name="lblStatus" xml:space="preserve">
     <value>Status</value>
   </data>
   <data name="lblSuccess" xml:space="preserve">
     <value>Success</value>
+  </data>
+  <data name="lblThirdLevel" xml:space="preserve">
+    <value>Third Level</value>
   </data>
   <data name="lblTransaction" xml:space="preserve">
     <value>Transaction</value>

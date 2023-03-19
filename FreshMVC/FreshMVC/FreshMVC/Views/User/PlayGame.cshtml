@@ -28,6 +28,9 @@
     <link rel="apple-touch-icon" href="~/HotMall/img/logosmall.png" sizes="180x180">
     <link rel="icon" href="~/HotMall/img/logosmall.png" sizes="32x32" type="image/png">
     <link rel="icon" href="~/HotMall/img/logosmall.png" sizes="16x16" type="image/png">
+
+    <style>
+    </style>
 </head>
 
 <body>
@@ -48,7 +51,7 @@
                             </div>
                             <div class="d-flex align-items-center mt-lg-0 mt-md-0 mt-3">
                                 <div>
-                                    <a href="recharge.html" class="blue-btn-recharge">Recharge</a>
+                                    <a href="./Recharge" class="blue-btn-recharge">Recharge</a>
                                 </div>
                                 @*Hide*@
                                 @*<div class="ms-3">
@@ -133,31 +136,31 @@
                                     <div class="row justify-content-between">
                                         <div class="col-2 p-0">
                                             <button class="number-btn allbtnable playPopup" posiz="0" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#greenModal">
+                                                    data-bs-target="#greenModal" style="background: linear-gradient(-180deg, #9c27b0 50%, #f44336 50%); ">
                                                 0
                                             </button>
                                         </div>
                                         <div class="col-2 p-0">
                                             <button class="number-btn allbtnable playPopup" posiz="1" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#greenModal">
+                                                    data-bs-target="#greenModal" style="background: #00c853; ">
                                                 1
                                             </button>
                                         </div>
                                         <div class="col-2 p-0">
                                             <button class="number-btn allbtnable playPopup" posiz="2" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#greenModal">
+                                                    data-bs-target="#greenModal" style="background: #f44336; ">
                                                 2
                                             </button>
                                         </div>
                                         <div class="col-2 p-0">
                                             <button class="number-btn allbtnable playPopup" posiz="3" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#greenModal">
+                                                    data-bs-target="#greenModal" style="background: #00c853; ">
                                                 3
                                             </button>
                                         </div>
                                         <div class="col-2 p-0">
                                             <button class="number-btn allbtnable playPopup" posiz="4" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#greenModal">
+                                                    data-bs-target="#greenModal" style="background: #f44336; ">
                                                 4
                                             </button>
                                         </div>
@@ -165,31 +168,31 @@
                                     <div class="row justify-content-between">
                                         <div class="col-2 p-0">
                                             <button class="number-btn allbtnable playPopup" posiz="5" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#greenModal">
+                                                    data-bs-target="#greenModal" style="background: linear-gradient(-180deg, #9c27b0 50%, #00c853 50%); ">
                                                 5
                                             </button>
                                         </div>
                                         <div class="col-2 p-0">
                                             <button class="number-btn allbtnable playPopup" posiz="6" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#greenModal">
+                                                    data-bs-target="#greenModal" style="background: #f44336; ">
                                                 6
                                             </button>
                                         </div>
                                         <div class="col-2 p-0">
                                             <button class="number-btn allbtnable playPopup" posiz="7" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#greenModal">
+                                                    data-bs-target="#greenModal" style="background: #00c853; ">
                                                 7
                                             </button>
                                         </div>
                                         <div class="col-2 p-0">
                                             <button class="number-btn allbtnable playPopup" posiz="8" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#greenModal">
+                                                    data-bs-target="#greenModal" style="background: #f44336; ">
                                                 8
                                             </button>
                                         </div>
                                         <div class="col-2 p-0">
                                             <button class="number-btn allbtnable playPopup" posiz="9" periodz="@Model.GameList[z].CurrentPeriod" gamez="@Model.GameList[z].GameID" type="button" data-bs-toggle="modal"
-                                                    data-bs-target="#greenModal">
+                                                    data-bs-target="#greenModal" style="background: #00c853; ">
                                                 9
                                             </button>
                                         </div>
@@ -197,7 +200,7 @@
                                     <div class="row">
                                         <div class="col-lg-12 p-0 mt-3">
                                             <h1 class="main-heading-3">
-                                                <i class="bi bi-trophy"></i> Parity Record
+                                                <i class="bi bi-trophy"></i> @resSharedPB.lblParityRecord
                                             </h1>
 
                                             <table id="" class="display mt-2 parityRecord">
@@ -243,7 +246,7 @@
                                     <div class="row mb-3">
                                         <div class="col-lg-12 p-0 mt-3">
                                             <h1 class="main-heading-3">
-                                                <i class="bi bi-bar-chart-line"></i> My Record
+                                                <i class="bi bi-bar-chart-line"></i> @resSharedPB.lblMyRecord
                                             </h1>
 
                                             <table id="" class="display mt-2 myRecord">
@@ -258,12 +261,70 @@
                                                 <tbody class="record-table-body">
                                                     @foreach (var x in @Model.GameList[z].MyRecordHistoryList)
                                                     {
-                                                        <tr>
-                                                            <td class="text-center">@x.Period</td>
-                                                            <td class="text-center">@x.Price</td>
-                                                            <td class="green-number text-center">@x.ResultNumberString</td>
+                                                        var colorz = "black";
+
+                                                        if (x.ResultNumber == 2 || x.ResultNumber == 4 || x.ResultNumber == 6 || x.ResultNumber == 8)
+                                                        {
+                                                            colorz = "red";
+                                                        }
+                                                        else if (x.ResultNumber == 1 || x.ResultNumber == 3 || x.ResultNumber == 7 || x.ResultNumber == 9)
+                                                        {
+                                                            colorz = "green";
+                                                        }
+                                                        else if (x.ResultNumber == 55)
+                                                        {
+                                                            colorz = "green";
+                                                        }
+                                                        else if (x.ResultNumber == 66)
+                                                        {
+                                                            colorz = "violet";
+                                                        }
+                                                        else if (x.ResultNumber == 77)
+                                                        {
+                                                            colorz = "red";
+                                                        }
+                                                        else if (x.ResultNumber == 0)
+                                                        {
+                                                            colorz = "linear-gradient(-180deg, #9c27b0 50%, #f44336 50%);";
+                                                        }
+                                                        else if (x.ResultNumber == 5)
+                                                        {
+                                                            colorz = "linear-gradient(-180deg, #9c27b0 50%, #00c853 50%)";
+                                                        }
+
+                                                    <tr>
+                                                        <td class="text-center">@x.Period</td>
+                                                        <td class="text-center">@x.Price</td>
+                                                        <td class="green-number text-center" style="color: @colorz;">
+
+                                                            <div class="d-flex justify-content-center">
+                                                                @x.ResultNumberString
+                                                                @if (x.ResultNumber == 0 || x.ResultNumber == 5 || x.ResultNumber == 66)
+                                                                {
+                                                                    <div class="violate-result"></div>
+                                                                }
+
+                                                                @if (x.ResultNumber == 5 || x.ResultNumber == 1 || x.ResultNumber == 3 || x.ResultNumber == 7 || x.ResultNumber == 9 || x.ResultNumber == 55)
+                                                                {
+                                                                    <div class="green-result"></div>
+                                                                }
+
+                                                                @if (x.ResultNumber == 0 || x.ResultNumber == 2 || x.ResultNumber == 4 || x.ResultNumber == 6 || x.ResultNumber == 8 || x.ResultNumber == 77)
+                                                                {
+                                                                    <div class="red-result"></div>
+                                                                }
+                                                            </div>
+                                                        </td>
+                                                        @if (@x.Won < 0)
+                                                        {
+                                                            <td class="red-number text-center">@x.Won</td>
+                                                        }
+                                                        else
+                                                        {
                                                             <td class="green-number text-center">@x.Won</td>
-                                                        </tr>
+                                                        }
+
+                                                    </tr>
                                                     }
                                                 </tbody>
                                             </table>
@@ -579,7 +640,7 @@
 
                     if (tabz.attr("gameidzzz") == '@ViewBag.GameIDTab') {
 
-                        setTimeout(function () {                            
+                        setTimeout(function () {
                             tabz.click();
                         }, 500); // executes after 200 miliseconds
 

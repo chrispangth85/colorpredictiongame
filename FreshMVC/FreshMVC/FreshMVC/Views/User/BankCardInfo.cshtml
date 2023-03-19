@@ -1,0 +1,198 @@
+﻿<!DOCTYPE html>
+@using resSharedPB = FreshMVC.Resources.PackBuddyShared;
+@using FreshMVC.Models
+@model BankModel
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@resSharedPB.lblBankInfoHotmall</title>
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"
+            integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
+          integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
+          crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+
+<body>
+    @Html.Partial("HeaderMenu")
+
+        <main>           
+            <section class="section-wrap mb-4">
+                <section class="section-wrap bg-peach px-lg-4 px-1">
+                    <div class="section-inner-wrapper padding-s" style="overflow: visible;">
+                        <div class="display-space">
+                            <div class="middle">
+                                <img class="mall-icon-top pointer" src="~/HotMall/img/back-arrow.svg" alt=""
+                                     onclick="history.back();">
+                            </div>
+                            <div>
+                                <div class="d-flex flex-column ">
+                                    <div class="text-bold text-s text-white"></div>
+                                    <h2 class="text-m text-white">@resSharedPB.lblBankcard</h2>
+                                </div>
+                            </div>                            
+                        </div>
+                    </div>
+
+                </section>
+                <div class="section-inner-wrapper">
+                    <div id="profile-content width-100 padding-s">
+                        <div class="col-lg-6 mx-auto my-lg-3 my-3">
+                            <div class="my-4">
+                                <div class="input-custom max-width-800">
+                                    <label class="text-grey to-top" for="referral-code">@resSharedPB.lblActualName</label>
+                                    <input class="width-100 " type="text" name="actualname" id="actualname" value="@Model.ActualName"
+                                           placeholder="@resSharedPB.lblActualName">
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <div class="input-custom max-width-800">
+                                    <label class="text-grey to-top" for="referral-code">@resSharedPB.lblIFSCCode</label>
+                                    <input class="width-100 " type="text" name="ifsccode" id="ifsccode" value="@Model.IFSCCode"
+                                           placeholder="@resSharedPB.lblIFSCCode">
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <div class="input-custom max-width-800">
+                                    <label class="text-grey to-top" for="referral-code">@resSharedPB.lblBankName</label>
+                                    <input class="width-100 " type="text" name="bankname" id="bankname" value="@Model.BankName"
+                                           placeholder="@resSharedPB.lblBankName">
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <div class="input-custom max-width-800">
+                                    <label class="text-grey to-top" for="referral-code">@resSharedPB.lblBankAccount</label>
+                                    <input class="width-100 " type="text" name="bankaccount" id="bankaccount" value="@Model.BankAccount"
+                                           placeholder="@resSharedPB.lblBankAccount">
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <div class="input-custom max-width-800">
+                                    <label class="text-grey to-top" for="referral-code">@resSharedPB.lblState</label>
+                                    <input class="width-100 " type="text" name="state" id="state" value="@Model.State"
+                                           placeholder="@resSharedPB.lblState">
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <div class="input-custom max-width-800">
+                                    <label class="text-grey to-top" for="referral-code">@resSharedPB.lblCity</label>
+                                    <input class="width-100 " type="text" name="city" id="city" value="@Model.City"
+                                           placeholder="@resSharedPB.lblCity">
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <div class="input-custom max-width-800">
+                                    <label class="text-grey to-top" for="referral-code">@resSharedPB.lblAddress</label>
+                                    <input class="width-100 " type="text" name="address" id="address" value="@Model.Address"
+                                           placeholder="@resSharedPB.lblAddress">
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <div class="input-custom max-width-800">
+                                    <label class="text-grey to-top" for="referral-code">@resSharedPB.lblMobile</label>
+                                    <input class="width-100 " type="text" name="mobile" id="mobile" value="@Model.MobileNumber"
+                                           placeholder="@resSharedPB.lblMobile">
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <div class="input-custom max-width-800">
+                                    <label class="text-grey to-top" for="referral-code">@resSharedPB.lblEmail</label>
+                                    <input class="width-100 " type="text" name="email" id="email" value="@Model.Email"
+                                           placeholder="@resSharedPB.lblEmail">
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <a href="#" id="btnUpdate"
+                                   class="blue-btn-recharge w-100 text-center">@resSharedPB.lblUpdate</a>
+                            </div>
+                        </div>
+                      
+                    </div>
+                </div>
+
+
+            </section>
+        </main>
+
+    @Html.Partial("FooterMenu")
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+            crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="~/HotMall/flickity/flickity.css">
+    <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+    <script src="~/HotMall/flickity/flickity.pkgd.min.js"></script>
+    <script src="~/HotMall/main.js" type="text/javascript"></script>
+    <script src="~/HotMall/win.js" type="text/javascript"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#parityRecord').DataTable({
+                responsive: true
+            });
+
+        });
+
+    </script>
+    <script>
+        $('#loader-wrapper').hide();
+
+        $(document).ready(function () {
+             $('#btnUpdate').click(function (evt) {
+                 $.ajax({
+                    type: "POST",
+                    url: "/User/UpdateBankInfo",
+                     data: {
+                         id : @Model.Id,
+                         actualname: $("#actualname").val(),
+                         ifsccode: $("#ifsccode").val(),
+                         bankname: $("#bankname").val(), state: $("#state").val(), bankaccount: $("#bankaccount").val(),
+                         city: $("#city").val(), address: $("#address").val(), mobile: $("#mobile").val(), email: $("#email").val()
+                     },
+                    success: function (data) {
+                         Swal.fire({
+                             title: '@resSharedPB.lblUpdateSuccessfully',
+                             showDenyButton: false,
+                             showCancelButton: false,
+                             confirmButtonText: 'OK',
+                         }).then((result) => {
+                             /* Read more about isConfirmed, isDenied below */
+                             if (result.isConfirmed) {
+                                var url = '@Html.Raw(@Url.Action("BankCard", "User"))';
+                                window.location.href = url;
+                             }
+                         })
+                    },
+                    error: function (xhr, status, error) {
+                        $('.loader-wrap').hide();
+                        let r = jQuery.parseJSON(xhr.responseText);
+                        var errorM = r.message;
+
+                        Swal.fire({
+                            title: errorM,
+                            showDenyButton: false,
+                            showCancelButton: false,
+                            confirmButtonText: '@resSharedPB.lblOK',
+                        });
+                    }
+                });
+            });
+         });
+
+    </script>
+</body>
+
+</html>
