@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 @using resSharedPB = FreshMVC.Resources.PackBuddyShared;
 @using FreshMVC.Models
-@model ProductModel
+@model PaymentModel
 <html lang="en">
 
 <head>
@@ -20,7 +20,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css"
           integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g=="
           crossorigin="anonymous" referrerpolicy="no-referrer" />
-    
 </head>
 
 <body>
@@ -37,8 +36,8 @@
                         </div>
                         <div>
                             <div class="d-flex flex-column ">
-                                <div class="text-bold text-s text-white">Available Balance:</div>
-                                <h2 class="text-m text-white">₹ 67.00</h2>
+                                <div class="text-bold text-s text-white">@resSharedPB.lblAvailableBalance:</div>
+                                <h2 class="text-m text-white">₹ @Model.Amount</h2>
                             </div>
                         </div>
                         <div class="recharge-history">
@@ -69,17 +68,17 @@
 
                     <div class="row justify-content-center">
                         <div class="col-lg-2 col-md-3 col-4 ">
-                            <button class="amount-btn" type="button">
+                            <button class="amount-btn" type="button" value="500">
                                 ₹500
                             </button>
                         </div>
                         <div class="col-lg-2 col-md-3 col-4 ">
-                            <button class="amount-btn" type="button">
+                            <button class="amount-btn" type="button" value="1000">
                                 ₹1000
                             </button>
                         </div>
                         <div class="col-lg-2 col-md-3 col-4 ">
-                            <button class="amount-btn" type="button">
+                            <button class="amount-btn" type="button" value="2000">
                                 ₹2000
                             </button>
                         </div>
@@ -87,17 +86,17 @@
                     </div>
                     <div class="row justify-content-center">
                         <div class="col-lg-2 col-md-3 col-4 ">
-                            <button class="amount-btn" type="button">
+                            <button class="amount-btn" type="button" value="5000">
                                 ₹5000
                             </button>
                         </div>
                         <div class="col-lg-2 col-md-3 col-4 ">
-                            <button class="amount-btn" type="button">
+                            <button class="amount-btn" type="button" value="10000">
                                 ₹10000
                             </button>
                         </div>
                         <div class="col-lg-2 col-md-3 col-4 ">
-                            <button class="amount-btn" type="button">
+                            <button class="amount-btn" type="button" value="49999">
                                 ₹49999
                             </button>
                         </div>
@@ -107,7 +106,7 @@
                     <div class="row">
                         <div class="col-lg-6 mx-auto my-lg-3 my-3">
                             <h1 class="main-heading-3 text-dark">
-                                Payment
+                                @resSharedPB.lblPayment
                             </h1>
                             <form action="">
                                 <div class="form-check d-flex align-items-center  mt-3">
@@ -135,19 +134,15 @@
                                 </div>
 
                                 <div class="my-4">
-                                    <a href="https://bigwinner-1.live/api/money/winpay/money/10000/user_id/85695.html"
-                                       class="blue-btn-recharge w-100 text-center">Recharge</a>
+                                    <a href="#" id="btnSaveAd"
+                                       class="blue-btn-recharge w-100 text-center">@resSharedPB.lblRecharge</a>
                                 </div>
                             </form>
-
                         </div>
                     </div>
                 </div>
             </section>
     </main>
-
-
-
     @Html.Partial("FooterMenu")
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
@@ -196,6 +191,38 @@
             });
         });
     </script>
+    <script>
+        $('#loader-wrapper').hide();
+    </script>
+
+    <script>
+        $(document).ready(function () {
+
+
+            $(".amount-btn").click(function (evt) {
+                document.getElementById("search").value = this.value;
+            });
+
+            $("#btnSaveAd").click(function (evt) {
+                //location.href = "/User/RechargeMethod?rechargeAmount=" + document.getElementById("search").value;
+
+                 $.ajax({
+                     type: "POST",
+                     url: "/User/RechargeMethod",
+                     data: { rechargeAmount: document.getElementById("search").value },
+                        success: function (data) {
+                           // do nothing bah
+                            location.href = "/User/CreatePaymentTwo?amount=" + document.getElementById("search").value;
+                        },
+                        error: function (xhr, status, error) {
+                            let r = JSON.parse(xhr.responseText);
+                            alert(r.message);
+                        }
+                    });
+            });
+        });
+    </script>
+
 </body>
 
 </html>

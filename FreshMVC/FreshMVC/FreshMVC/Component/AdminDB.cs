@@ -246,15 +246,47 @@ namespace FreshMVC.Component
             pOthers.Direction = ParameterDirection.Input;
             pOthers.Value = orderId;
 
-            SqlParameter pPaymentType = sqlComm.Parameters.Add("@paymentMethod", SqlDbType.NVarChar);
-            pPaymentType.Direction = ParameterDirection.Input;
-            pPaymentType.Value = paymentType;
+            //SqlParameter pPaymentType = sqlComm.Parameters.Add("@paymentMethod", SqlDbType.NVarChar);
+            //pPaymentType.Direction = ParameterDirection.Input;
+            //pPaymentType.Value = paymentType;
 
-            SqlParameter pReferenceNo = sqlComm.Parameters.Add("@refenceNo", SqlDbType.NVarChar);
-            pReferenceNo.Direction = ParameterDirection.Input;
-            pReferenceNo.Value = referenceNo;
+            //SqlParameter pReferenceNo = sqlComm.Parameters.Add("@refenceNo", SqlDbType.NVarChar);
+            //pReferenceNo.Direction = ParameterDirection.Input;
+            //pReferenceNo.Value = referenceNo;
 
             SqlParameter pStatus = sqlComm.Parameters.Add("@status", SqlDbType.NVarChar);
+            pStatus.Direction = ParameterDirection.Input;
+            pStatus.Value = status;
+
+            sqlComm.ExecuteNonQuery();
+            sqlConn.Close();
+        }
+
+        public static void CashWalletOperationTemp(string username, decimal netAmount, string type, string referenceNo, int status)
+        {
+            SqlConnection sqlConn = DBConn.GetConnection();
+            sqlConn.Open();
+
+            SqlCommand sqlComm = new SqlCommand("SP_CashWalletOperationTemp", sqlConn);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter pUser = sqlComm.Parameters.Add("@username", SqlDbType.NVarChar);
+            pUser.Direction = ParameterDirection.Input;
+            pUser.Value = username;
+
+            SqlParameter pCharge = sqlComm.Parameters.Add("@cashNum", SqlDbType.Decimal);
+            pCharge.Direction = ParameterDirection.Input;
+            pCharge.Value = netAmount;
+
+            SqlParameter pType = sqlComm.Parameters.Add("@cashName", SqlDbType.NVarChar);
+            pType.Direction = ParameterDirection.Input;
+            pType.Value = type;
+
+            SqlParameter pOthers = sqlComm.Parameters.Add("@appother", SqlDbType.NVarChar);
+            pOthers.Direction = ParameterDirection.Input;
+            pOthers.Value = referenceNo;
+
+            SqlParameter pStatus = sqlComm.Parameters.Add("@status", SqlDbType.Int);
             pStatus.Direction = ParameterDirection.Input;
             pStatus.Value = status;
 

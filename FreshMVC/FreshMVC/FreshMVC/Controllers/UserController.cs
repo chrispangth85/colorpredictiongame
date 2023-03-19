@@ -21,6 +21,9 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Drawing.Imaging;
+using RestSharp;
+using System.Text;
+using System.Web;
 
 namespace FreshMVC.Controllers
 {
@@ -47,6 +50,7 @@ namespace FreshMVC.Controllers
         }
         #endregion
 
+        #region Home
         public ActionResult Home(string search)
         {
             string usernameCookie = "";
@@ -88,6 +92,7 @@ namespace FreshMVC.Controllers
                 }
                 else
                 {
+
 
                     var productList = dbContext.CvdProduct.Where(p => p.CproDeletionstate == false).ToList();
                     int index = 0;
@@ -139,11 +144,14 @@ namespace FreshMVC.Controllers
 
             return View("Home", am);
         }
+        #endregion
 
+        #region DoNothing
         public ActionResult DoNothing()
         {
             return View("DoNothing");
         }
+        #endregion
 
         #region AboutUs
         public ActionResult AboutUs()
@@ -1019,7 +1027,7 @@ namespace FreshMVC.Controllers
                         tmpResult.Period = drBetHistory["CGAME_PERIOD"].ToString();
                         tmpResult.Price = drBetHistory["CGAME_AMOUNT"].ToString();
                         tmpResult.ResultNumber = int.Parse(drBetHistory["CGAME_NUMBER"].ToString());
-                        
+
                         if (tmpResult.ResultNumber == 55)
                         {
                             tmpResult.ResultNumberString = Resources.PackBuddyShared.lblJoinGreen;
@@ -1182,6 +1190,38 @@ namespace FreshMVC.Controllers
 
             var am = new MemberHomeModel();
             ViewBag.HeaderPage = "Profile";
+
+            return View("Profile", am);
+        }
+        #endregion
+
+        #region MyReferral
+        public ActionResult MyReferral()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            if (usernameCookie == "")
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new MemberHomeModel();
+
             ViewBag.Referral = string.Format("https://www.hot-mall.club/UserLogin/SignUp?referral={0}", Authentication.Encrypt(usernameCookie));
 
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
@@ -1232,42 +1272,12 @@ namespace FreshMVC.Controllers
 
             ViewBag.QRCodeImage = "data:image/png;base64," + Convert.ToBase64String(byteImageAndroid);
 
-            return View("Profile", am);
-        }
-        #endregion
-
-  		#region MyReferral
-        public ActionResult MyReferral()
-        {
-            string usernameCookie = "";
-            try
-            {
-                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
-                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
-            }
-            catch (Exception e)
-            {
-                return RedirectToAction("ClientLogin", "UserLogin", new
-                {
-                    reloadPage = true
-                });
-            }
-
-            if (usernameCookie == "")
-            {
-                return RedirectToAction("ClientLogin", "UserLogin", new
-                {
-                    reloadPage = true
-                });
-            }
-
-            var am = new MemberHomeModel();
             ViewBag.HeaderPage = "MyReferral";
 
             return View("MyReferral", am);
         }
         #endregion
-    
+
         #region ProductListing
         public ActionResult ProductListing(string search)
         {
@@ -1294,7 +1304,7 @@ namespace FreshMVC.Controllers
                     reloadPage = true
                 });
             }
-            //Get Product Listing
+
             using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
             {
                 if (!string.IsNullOrEmpty(search))
@@ -1317,6 +1327,7 @@ namespace FreshMVC.Controllers
                     am.ProductList.Add(productModel);
                 }
             }
+
             return View("ProductListing", am);
         }
         #endregion
@@ -1372,80 +1383,7 @@ namespace FreshMVC.Controllers
         }
         #endregion
 
-
-        #region Recharge
-        public ActionResult Recharge(string search)
-        {
-            string usernameCookie = "";
-            try
-            {
-                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
-                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
-            }
-            catch (Exception e)
-            {
-                return RedirectToAction("ClientLogin", "UserLogin", new
-                {
-                    reloadPage = true
-                });
-            }
-
-            var am = new ProductListModel();
-
-            if (usernameCookie == "" || usernameCookie == null)
-            {
-                return RedirectToAction("ClientLogin", "UserLogin", new
-                {
-                    reloadPage = true
-                });
-            }
-
-            ProductModel productModel = new ProductModel();
-            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
-            {
-                if (!string.IsNullOrEmpty(search))
-                {
-                    var productListModel = getProductListSearch(search);
-                    return View("ProductListing", productListModel);
-                }
-
-            }
-
-            return View("Recharge", productModel);
-        }
-        #endregion
-
-        #region Withdrawal
-        public ActionResult Withdrawal()
-        {
-            string usernameCookie = "";
-            try
-            {
-                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
-                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
-            }
-            catch (Exception e)
-            {
-                return RedirectToAction("ClientLogin", "UserLogin", new
-                {
-                    reloadPage = true
-                });
-            }
-
-            ProductModel productModel = new ProductModel();
-
-            if (usernameCookie == "" || usernameCookie == null)
-            {
-                return RedirectToAction("ClientLogin", "UserLogin", new
-                {
-                    reloadPage = true
-                });
-            }
-
-            return View("Withdrawal", productModel);
-        }
-        #endregion
-
+        #region ProductStatus + Search
         private string getRandomProductStatus()
         {
             List<string> firstNames = new List<string>();
@@ -1481,6 +1419,438 @@ namespace FreshMVC.Controllers
                 }
             }
             return productListModel;
+        }
+        #endregion
+
+        #region MyPacketList
+        public ActionResult MyPacketList()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new PaginationRedPacketModel();
+
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var foundAgent = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && c.CroleId == 3);
+                if (foundAgent == null)
+                {
+                    return RedirectToAction("ClientLogin", "UserLogin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+                else
+                {
+                    am.RedPacketBalance = (decimal)foundAgent.CusrRedpacketwlt;
+                }
+            }
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var dsAdmin = MerchantGeneralDB.GetRedPacketListingByUsername(usernameCookie);
+
+            //Not completed task
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                RedPacketModel temp = new RedPacketModel();
+                temp.ID = int.Parse(dr["CREDP_ID"].ToString());
+                temp.IDEncrypted = Authentication.MD5Encrypt(dr["CREDP_ID"].ToString());
+                temp.ReferenceID = dr["CREDP_REFERENCE_ID"].ToString();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.Amount = decimal.Parse(dr["CREDP_AMOUNT"].ToString());
+                temp.CreatedOn = DateTime.Parse(dr["CREDP_CREATEDON"].ToString()).ToString("dd/MM/yyyy");
+                temp.ClaimedOn = dr["CREDP_CLAIMEDON"] == DBNull.Value ? "" : DateTime.Parse(dr["CREDP_CLAIMEDON"].ToString()).ToString("dd/MM/yyyy");
+                temp.Status = dr["CREDP_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblNotUsed : Resources.PackBuddyShared.lblUsed;
+
+                am.List.Add(temp);
+            }
+
+            return PartialView("MyPacketList", am);
+        }
+
+        public ActionResult MyPacketSponsorTreeListing(string upIDEnc)
+        {
+            string usernameCookie = "";
+            string upID = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+                upID = Authentication.MD5Decrypt(upIDEnc);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new SponsorChartModel();
+
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var foundAgent = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && c.CroleId == 3);
+                var foundUpID = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == upID);
+
+                if (foundAgent == null)
+                {
+                    return RedirectToAction("ClientLogin", "UserLogin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+                else
+                {
+                    am.RedPacketBalance = (decimal)foundAgent.CusrRedpacketwlt;
+                }
+
+                if (foundUpID == null)
+                {
+                    upID = "";
+                }
+            }
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            //if upID is not empty string, means we want to view upID sponsor chart. Else we view the logged in account sponsor chart
+            if (upID == "")
+            {
+                upID = usernameCookie;
+            }
+
+            am.Upline = upID;
+            am.UpIDEnc = upIDEnc;
+
+            var dsAdmin = MerchantGeneralDB.GetSponsorTreeByUsername(upID);
+
+            //First level
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                SponsorModel temp = new SponsorModel();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.EncryptedUsername = Authentication.MD5Encrypt(temp.Username);
+
+                am.FirstLevel.Add(temp);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[1].Rows)
+            {
+                SponsorModel temp = new SponsorModel();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.EncryptedUsername = Authentication.MD5Encrypt(temp.Username);
+
+                am.SecondLevel.Add(temp);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[2].Rows)
+            {
+                SponsorModel temp = new SponsorModel();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.EncryptedUsername = Authentication.MD5Encrypt(temp.Username);
+
+                am.ThirdLevel.Add(temp);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[3].Rows)
+            {
+                SponsorModel temp = new SponsorModel();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.EncryptedUsername = Authentication.MD5Encrypt(temp.Username);
+
+                am.FourthLevel.Add(temp);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[4].Rows)
+            {
+                SponsorModel temp = new SponsorModel();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.EncryptedUsername = Authentication.MD5Encrypt(temp.Username);
+
+                am.FifthLevel.Add(temp);
+            }
+
+            return View("MyPacketSponsorTreeListing", am);
+        }
+        #endregion
+
+        #region Recharge
+        public ActionResult Recharge(string search)
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new PaymentModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            // for record
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var userFound = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie);
+                if (userFound != null)
+                {
+                    am.Amount = userFound.CusrCashwlt.Value.ToString("0.00");
+                }
+            }
+
+            return View("Recharge", am);
+        }
+        #endregion
+
+        #region Withdrawal
+        public ActionResult Withdrawal()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            ProductModel productModel = new ProductModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            return View("Withdrawal", productModel);
+        }
+        #endregion
+
+
+        public IActionResult RechargeMethod(string rechargeAmount)
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            if (!decimal.TryParse(rechargeAmount, out decimal recharge) || recharge < 100)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = Resources.PackBuddyShared.lblInvalidAmount
+                });
+            }
+
+            return StatusCode((int)HttpStatusCode.OK);
+        }
+
+        public IActionResult CreatePaymentTwo(decimal amount, string bankName, string accountName, string cardNo, string branch, string province, string city)
+        {
+            string username = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                username = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            if (username == "" || username == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var payment = new PaymentModel();
+            var host = Dns.GetHostEntry(Dns.GetHostName());
+            var paymentId = string.Format("{0}{1}{2}", DateTime.Today.ToString("yyyyMMdd"), "MY", DateTime.Now.ToString("HHmmss"));
+
+            var url = this.Request.Host.Host.ToLower();
+
+            try
+            {
+                var postUrl = Misc.depositUrl;
+
+                if (url == "localhost" || url.Contains("h2init.com"))
+                {
+                    postUrl = Misc.depositUrl;
+                }
+
+                var dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");             
+                var dataSign = string.Format("pay_amount={0}&pay_applydate={1}&pay_bankcode={2}&pay_callbackurl={3}&pay_memberid={4}&pay_notifyurl={5}&pay_orderid={6}&key={7}",
+                    amount.ToString("#0.00"), dateTime, Misc.bankCode, Misc._baseUrl + "/Payment/CallBackUrl", Misc.merchantCode, Misc._baseUrl + "/User/ReturnUrl", paymentId, Misc.merchantKey);
+                
+                var dataMd5 = Misc.MD5(dataSign).ToUpper();
+
+                payment.MerchantCode = Misc.merchantCode;
+                payment.RefNo = paymentId;
+                payment.Amount = amount.ToString("#0.00");
+                payment.BankName = bankName;
+                payment.Created = dateTime;
+                payment.AccountName = accountName;
+                payment.CardNo = cardNo;
+                payment.Bankcode = Misc.bankCode;
+                payment.SubBranch = branch;
+                payment.NotifyUrl = Misc._baseUrl + "/User/ReturnUrl";
+                payment.CallbackUrl = Misc._baseUrl + "/Payment/CallBackUrl";
+                payment.Province = province;
+                payment.City = city;
+                payment.PayMd5 = dataMd5;
+                payment.PaymentUrl = postUrl;
+                payment.ProductDesc = "Reload";
+
+                // for record
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var paymentInfo = new CvdPaymentinfo();
+                    paymentInfo.CpaymentTranspaymentid = paymentId;
+                    paymentInfo.CusrUsername = username ?? "";
+                    paymentInfo.CpaymentTransid = string.Empty;
+                    paymentInfo.CpaymentAmount = decimal.Parse(payment.Amount);
+                    paymentInfo.CpaymentCreatedon = DateTime.Now;
+
+                    dbContext.CvdPaymentinfo.Add(paymentInfo);
+                    dbContext.SaveChanges();
+
+                    AdminDB.CashWalletOperationTemp(username, amount, "Recharge", paymentId, 0);
+                }
+            }
+            catch (Exception ex)
+            {
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var err = new CvdSystemerror();
+                    err.CerrorInfo = ex.ToString();
+                    err.CerrorAppother = "CreatePayment";
+                    err.CerrorAppother2 = paymentId;
+                    err.CerrorAppother3 = string.Empty;
+                    err.CerrorCreatedon = DateTime.Now;
+
+                    dbContext.CvdSystemerror.Add(err);
+                    dbContext.SaveChanges();
+                }
+            }
+
+            return View("CreatePaymentTwo", payment);
+        }
+
+        public IActionResult ReturnUrl()
+        {
+            // handle all the transaction successfull or failure at callback better
+            var memberid = HttpUtility.UrlDecode(Request.Form["memberid"]);
+            var orderid = HttpUtility.UrlDecode(Request.Form["orderid"]);
+            var amount = HttpUtility.UrlDecode(Request.Form["amount"]);
+            var datetime = HttpUtility.UrlDecode(Request.Form["datetime"]);
+            var returncode = HttpUtility.UrlDecode(Request.Form["returncode"]);
+            var transaction_id = HttpUtility.UrlDecode(Request.Form["transaction_id"]);
+            var attach = HttpUtility.UrlDecode(Request.Form["attach"]);
+            var sign = HttpUtility.UrlDecode(Request.Form["sign"]);
+            var merchantKey = Misc.merchantKey;
+
+            var SignTemp = string.Format("amount={0}&datetime={1}&memberid={2}&orderid={3}&returncode={4}&transaction_id={5}&key={6}",
+                amount, datetime, memberid, orderid, returncode, transaction_id, merchantKey);
+
+            String md5sign = Misc.MD5(SignTemp).ToUpper();
+            if (sign == md5sign)
+            {
+                // for record
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var paymentInfo = dbContext.CvdPaymentinfo.FirstOrDefault(c => c.CpaymentTranspaymentid == orderid);
+                    paymentInfo.CpaymentTransid = transaction_id;
+                    paymentInfo.CpaymentReturnsign = sign;
+                    paymentInfo.CpaymentReturncode = returncode;
+                    paymentInfo.CpaymentCreatedon = DateTime.Now;
+                    
+                    dbContext.Update(paymentInfo);
+                    dbContext.SaveChanges();
+
+                    var paymentLog = dbContext.CvdCashwalletlogtemp.FirstOrDefault(c => c.CcashAppother == orderid);
+                    if (paymentLog != null && paymentLog.CcashStatus.Value == 0)
+                    {
+                        // deposit to user account
+                        AdminDB.CashWalletOperation(paymentLog.CusrUsername, paymentLog.CcashCashin, "Recharge", 0, "", orderid, "1");
+                        
+                        // update payment log
+                        paymentLog.CcashStatus = 1;
+                        dbContext.CvdCashwalletlogtemp.Update(paymentLog);
+                        dbContext.SaveChanges();
+                    }
+                }
+            }
+
+            return View("ReturnUrl");
         }
     }
 }

@@ -15,8 +15,14 @@ namespace Entity.Context
             this.OnModelCreatingCvdReceiptContext(modelBuilder);
             this.OnModelCreatingCvdRedPacketContext(modelBuilder);
             this.OnModelCreatingCvdGameContext(modelBuilder);
+            this.OnModelCreatingCvdGameSessionBetContext(modelBuilder);
             this.OnModelCreatingCvdProductContext(modelBuilder);
+            this.OnModelCreatingCvdGameSessionContext(modelBuilder);
             this.OnModelCreatingCvdBannerContext(modelBuilder);
+            this.OnModelCreatingCvdPaymentinfoContext(modelBuilder);
+            this.OnModelCreatingCvdSystemerrorContext(modelBuilder);
+            this.OnModelCreatingCvdCashwalletlogtempContext(modelBuilder);
+            this.OnModelCreatingCvdCashwalletlogContext(modelBuilder);
 
             OnModelCreatingPartial(modelBuilder);
         }

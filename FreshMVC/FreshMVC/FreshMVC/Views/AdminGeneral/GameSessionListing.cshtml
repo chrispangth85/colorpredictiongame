@@ -1,0 +1,176 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared;
+@using FreshMVC.Models
+@model AdminGameMainModel
+
+<script>
+
+
+    $(".EditData").click(function (evt) {
+        $('.loader-wrap').show();
+
+        var periodz = $(this).attr("periodz");
+        var gameidz = $(this).attr("gameidz");
+        var numberz = $(this).attr("numberz");
+
+        Swal.fire({
+                    title: "@resShared.lblAmount",
+                    input: 'number',
+                    inputValue: numberz,
+                    inputAttributes: {
+                        autocapitalize: 'off'
+                    },
+                    showCancelButton: true,
+                    //confirmButtonText: 'Look up',
+                    //showLoaderOnConfirm: true,
+                    allowOutsideClick: () => !Swal.isLoading()
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $.ajax({
+                            type: "POST",
+                            url: "/AdminGeneral/ModelEditRedPacketMethod",
+                            data: { gameid: gameidz, period: periodz, number: result.value },
+                            success: function (data) {
+                                Swal.fire({
+                                    title: '@resShared.msgSaveSuccessfully',
+                                    showDenyButton: false,
+                                    showCancelButton: false,
+                                    confirmButtonText: 'OK',
+                                }).then((result1) => {
+                                    /* Read more about isConfirmed, isDenied below */
+                                    if (result1.isConfirmed) {
+                                        $("#main-content").html(data);
+                                    }
+                                });
+                            },
+                            error: function (xhr, status, error) {
+                                $('.loader-wrap').hide();
+                                let r = jQuery.parseJSON(xhr.responseText);
+                                var errorM = r.message;
+                                Swal.fire(
+                                    '',
+                                    errorM,
+                                    'info'
+                                )
+                            }
+                        });
+
+                    }
+                });
+
+        //$.ajax({
+        //    type: "POST",
+        //    url: "/User/ModelEditRedPacketMethod",
+        //    data: formData,
+        //    success: function (data) {
+        //        alertify.alert('Hot Mall', 'Upload sucessfully', function () {
+        //            location.href = "/User/RedPacketListing";
+        //        });
+        //    },
+        //    error: function (xhr, status, error) {
+        //        $('.loader-wrap').hide();
+        //        let r = jQuery.parseJSON(xhr.responseText);
+        //        var errorM = r.message;
+        //        alert(errorM);
+        //    }
+        //});
+    });
+</script>
+
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <h2>@resShared.mnuGame</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                    <li class="breadcrumb-item active">@resShared.mnuSessionListing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="grid" style="margin-left: 10px; margin-right: 10px" id="grid">
+        <input type="hidden" id="eliminateId" />
+        <div class="table-responsive">
+            <ul class="nav nav-tabs">
+                @foreach (var gamez in Model.GameList)
+                {
+                    <li class="nav-item"><a class="nav-link tabSelectedClass @gamez.GameID" tabz="@gamez.GameName" data-toggle="tab" href="#@gamez.GameName">@gamez.GameName</a></li>
+                }
+            </ul>
+            <div class="tab-content">
+                @foreach (var gamez in Model.GameList)
+                {
+                    <div class="tab-pane @gamez.GameID" id="@gamez.GameName">
+                        <div class="table-responsive">
+                            <table id="tablestyle" width="100%" class="table table-bordered table-hover table-striped">
+                                <thead>
+                                    <tr style="background-color: #414558;color:white">
+                                        <th>#</th>
+                                        <th>
+                                            @resShared.lblPeriod
+                                        </th>
+                                        <th>
+                                            @resShared.lblResult
+                                        </th>
+                                        <th>
+                                            @resShared.lblStart
+                                        </th>
+                                        <th>
+                                            @resShared.lblEnd
+                                        </th>
+                                        <th style="width: 5%; color: White; ">
+                                            @resShared.lblEdit
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @if (gamez.SessionList.Count == 0)
+                                    {
+                                        <tr style="height: 25px; border-top: 1px solid white;">
+                                            <td style="padding: 5px;" colspan="10">
+                                                @resShared.lblNoRecFound
+                                            </td>
+                                        </tr>
+                                    }
+                                    @foreach (var sessionz in gamez.SessionList)
+                                    {
+                                        <tr style="height: 25px; border-top: 1px solid white;">
+                                            <td>
+                                                @Html.DisplayFor(modelItem => sessionz.Number)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => sessionz.Period)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => sessionz.Result)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => sessionz.Start)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => sessionz.End)
+                                            </td>
+                                            <td>
+                                                @if (sessionz.GameState == 1)
+                                                {
+                                                    <a class="EditData" href="#" periodz="@sessionz.Period" gameidz="@gamez.GameID" numberz="@sessionz.Result"><i class="fa fa-edit"></i></a>
+                                                }
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                }
+
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+
+    $('.@Model.GameList[0].GameID').addClass("active");
+
+</script>

@@ -42,9 +42,9 @@ namespace Entity.Context
                     .HasMaxLength(200)
                     .HasColumnName("CBANNER_TITLE");
             });
-
+            
             OnModelCreatingPartial(modelBuilder);
         }
-
+    
     }
 }

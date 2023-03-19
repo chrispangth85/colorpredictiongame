@@ -626,11 +626,36 @@ namespace FreshMVC.Models
 
     }
 
+    public class PaginationPaymentModel : PaginationBase
+    { 
+        public IEnumerable<SelectListItem> FilteringCriteria { get; set; }
+        public string SelectedFilteringCriteria { get; set; }
+        public string FilterValue { get; set; }
+
+        public List<PaymentModel> List
+        {
+            get; set;
+        }
+
+        public PaginationPaymentModel()
+        {
+            List = new List<PaymentModel>();
+        }
+    }
+
     public class PaymentModel
     {
+        public int Number { get; set; }
+
+        public string BalanceAfterWdr { get; set; }
+        public string BalanceBeforeWdr { get; set; }
+        public string ServiceFee { get; set; }
+        public string PhoneNumber { get; set; }
         public string MerchantCode { get; set; }
         public string id { get; set; }
+        public string Status { get; set; }
         public string Amount { get; set; }
+        public string FinalAmount { get; set; }
         public string Currency { get; set; }
         public string ProductDesc { get; set; }
         public string Username { get; set; }
@@ -638,8 +663,19 @@ namespace FreshMVC.Models
         public string Email { get; set; }
         public string Remark { get; set; }
         public string Signature { get; set; }
-
+        public string BankName { get; set; }
+        public string Bankcode { get; set; }
         public string RefNo { get; set; }
+        public string Created { get; set; }
+        public string AccountName { get; set; }
+        public string CardNo { get; set; }
+        public string SubBranch { get; set; }
+        public string NotifyUrl { get; set; }
+        public string CallbackUrl { get; set; }
+        public string Province { get; set; }
+        public string City { get; set; }
+        public string PayMd5 { get; set; }
+        public string PaymentUrl { get; set; }
     }
 
     public class AdminAccessRightModel
@@ -947,6 +983,7 @@ namespace FreshMVC.Models
         public bool IsUserLoggedIn { get; set; }
         public List<ProductModel> TopProductList { get; set; }
         public List<ProductModel> ActiveProductList { get; set; }
+
         public List<BannerModel> BannerList { get; set; }
 
         public MemberHomeModel()
@@ -1453,6 +1490,11 @@ namespace FreshMVC.Models
         public IEnumerable<SelectListItem> StatusList { get; set; }
         public string SelectedStatus { get; set; }
         public IFormFile ProductImage { get; set; }
+        public string Username { get; set; }
+        public string Period { get; set; }
+        public decimal BetAmount { get; set; }
+        public decimal WinAmount { get; set; }
+        public string NumberString { get; set; }
         public GameModel()
         {
         }
@@ -1504,6 +1546,40 @@ namespace FreshMVC.Models
         public int Compare(string x, string y)
         {
             return y.CompareTo(x);
+        }
+    }
+
+    public class AdminGameMainModel
+    {
+        public List<AdminGameModel> GameList { get; set; }
+        public AdminGameMainModel()
+        {
+            GameList = new List<AdminGameModel>();
+        }
+    }
+
+    public class AdminGameModel
+    {
+        public List<SessionGameModel> SessionList { get; set; }
+        public string GameName { get; set; }
+        public string GameType { get; set; }
+        public int GameID { get; set; }
+        public AdminGameModel()
+        {
+            SessionList = new List<SessionGameModel>();
+        }
+    }
+    public class SessionGameModel
+    {
+        public int Number { get; set; }
+        public string Period { get; set; }
+        public string Result { get; set; }
+        public string Start { get; set; }
+        public string End { get; set; }
+        public int GameState { get; set; }
+        public SessionGameModel()
+        {
+
         }
     }
 }

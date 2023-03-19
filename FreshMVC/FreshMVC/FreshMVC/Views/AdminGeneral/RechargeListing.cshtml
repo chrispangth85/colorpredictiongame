@@ -1,0 +1,236 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared;
+@using FreshMVC.Models
+@model PaginationPaymentModel
+
+<script type="text/javascript">
+
+    $("#btnSearch, #btnPage").click(function (evt) {
+        var filterValue = $("#FilterValue").val();
+        var e = document.getElementById("page")
+        var page = "1";
+        if (e != null) {
+            page = e.options[e.selectedIndex].value;
+        }
+        var selectedOption = $("#SelectedFilteringCriteria").val();
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/RechargeListing",
+            data: {
+                selectedPage: page,
+                filterType: selectedOption,
+                filterValue: filterValue, },
+            success: function (data) {
+                $("#main-content").html(data);
+                event.stopPropagation();
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+            }
+        });
+    });
+
+     $(".DeleteData").click(function (e) {
+        deleteProduct(this.id);
+    });
+
+    function deleteProduct(id) {
+        if (confirm("@resShared.msgConfirmToReject")) {
+            $.ajax({
+                url: "/AdminGeneral/RejectTransaction",
+                type: "POST",
+                data: { idz: id },
+                success: function (data) {
+                    alert("@resShared.lblUpdateSuccessfully");
+                    $("#main-content").html(data);
+                    event.stopPropagation();
+                },
+                error: function (xhr, status, error) {
+             	    var errorM = xhr.responseText;
+                    errorM = errorM.replace('""', '');
+
+                    alert(errorM);
+                    $('#Loading').hide();
+                }
+            });
+        }
+    };
+
+    $(".EditData").click(function (e) {
+        manualApprove(this.id);
+    });
+
+    function manualApprove(id) {
+        if (confirm("@resShared.msgConfirmToApprove")) {
+            $.ajax({
+                url: "/AdminGeneral/ApproveTransaction",
+                type: "POST",
+                data: { idz: id },
+                success: function (data) {
+                    alert("@resShared.lblUpdateSuccessfully");
+                    $("#main-content").html(data);
+                    event.stopPropagation();
+                },
+                error: function (xhr, status, error) {
+             	    var errorM = xhr.responseText;
+                    errorM = errorM.replace('""', '');
+
+                    alert(errorM);
+                    $('#Loading').hide();
+                }
+            });
+        }
+    };
+</script>
+
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <h2>@resShared.mnuRechargeListing</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                    <li class="breadcrumb-item active">@resShared.mnuListing</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="grid" style="margin-left: 10px; margin-right: 10px" id="grid">
+        <input type="hidden" id="eliminateId" />
+        <div class="table-responsive">
+            <div class="row">
+
+                <div class="grid" style="margin-left: 15px;" id="grid">
+                    <strong>Filter option</strong>
+                    @Html.DropDownListFor(model => model.SelectedFilteringCriteria, @Model.FilteringCriteria, new { @id = "SelectedFilteringCriteria", @class = "form-control", @style = "width:150px; height:34px" })
+
+                </div>
+
+                <div class="grid" style="margin-left: 5px;" id="gridFilterValue">
+                    <strong id="optionText">Value</strong>
+                    @Html.TextBoxFor(model => model.FilterValue, new { @class = "form-control", @id = "FilterValue" })
+                </div>
+
+
+                <div class="grid" style="margin-left: 5px;" id="grid">
+                    <br />
+                    <button id="btnSearch" type="button" class="btn btn-primary" style="width: 100px;">@resShared.btnSearch</button>
+
+                </div>
+            </div>
+            <br /><br />
+            <table id="tablestyle" width="100%" class="table table-bordered table-hover table-striped" border="1px solid #414558;">
+                <thead>
+                    <tr style="background-color: #414558;color:white">
+                        <th>#</th>
+                        <th>
+                            @resShared.lblReferenceID
+                        </th>
+                        <th>
+                            @resShared.lblUsername
+                        </th>
+                        <th>
+                            @resShared.lblName
+                        </th>
+                        <th>
+                            @resShared.lblPhone
+                        </th>
+                        <th>
+                            @resShared.lblRecharge
+                        </th>
+                        <th>
+                            @resShared.lblRechargeTime
+                        </th>
+                        <th>
+                            @resShared.lblAgent
+                        </th>
+                        <th>
+                            @resShared.lblStatus
+                        </th>
+                        <th style="width: 5%; color: White; ">
+                            @resShared.lblEdit
+                        </th>
+                        <th style="width: 5%; color: White; ">
+                            @resShared.lblDelete
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.List.Count == 0)
+                    {
+                        <tr style="height: 25px; border-top: 1px solid white;">
+                            <td style="padding: 5px;" colspan="10">
+                                @resShared.lblNoRecFound
+                            </td>
+                        </tr>
+                    }
+                    @foreach (var item in Model.List)
+                    {
+                        <tr style="height: 25px; border-top: 1px solid white;">
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Number)
+                            </td>
+                              <td>
+                                @Html.DisplayFor(modelItem => item.RefNo)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </td>
+                             <td>
+                                @Html.DisplayFor(modelItem => item.AccountName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Username)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Amount)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Created)
+                            </td>
+                             <td>
+                                @Html.DisplayFor(modelItem => item.MerchantCode)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Status)
+                            </td>
+                            <td>
+                                @if (item.Status == @resShared.lblInProgress)
+                                {
+                                    <a class="EditData" href="#" id="@item.id"><i class="fa fa-check"></i></a>
+                                }
+                            </td>
+                            <td>
+                                @if (item.Status == @resShared.lblInProgress)
+                                {
+                                    <a class="DeleteData" href="#" id="@item.id"><i class="fa fa-remove"></i></a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        @if (Model.List.Count != 0)
+        {
+            <table width="auto" style="text-align:right; margin-right:0px; margin-left:auto;margin-bottom:30px">
+                <tr style="text-align: right">
+                    <td style="text-align: right">
+                        <div class="BtnClass" style="float: right;">
+                            @Html.DropDownList("page", @Model.Pages, new
+                            {
+                                style = "width:80px;",
+                                @class = "form-control"
+                            })
+
+                        </div>
+                    </td>
+                    <td style="text-align: right">
+                        <button id="btnPage" type="button" class="btn btn-primary" style="width:100px">@resShared.btnView</button>
+                    </td>
+                </tr>
+            </table>
+        }
+    </div>
+</div>

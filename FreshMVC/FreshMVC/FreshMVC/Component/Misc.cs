@@ -14,9 +14,26 @@ namespace FreshMVC.Component
 {
     public static class Misc
     {
-        public const string _baseUrl = "https://receiptracker.commitzsolution.com";
+        public const string _baseUrl = "https://hot-mall.club";
         //public const string _baseUrl = "https://localhost:44354";
+
+        public const string depositUrl = "https://cspay.link/Pay_Index.html";
+        public const string merchantCode = "10306";
+        public const string merchantKey = "usi5iboe5ep6ozz7tpeahsfxo8xc4sz8";
+        public const string bankCode = "902";
+        
         private static string _numbers = "0123456789";
+
+        public static string MD5(string s)
+        {
+            var provider = System.Security.Cryptography.MD5.Create();
+            StringBuilder builder = new StringBuilder();
+
+            foreach (byte b in provider.ComputeHash(Encoding.UTF8.GetBytes(s)))
+                builder.Append(b.ToString("x2").ToLower());
+
+            return builder.ToString();
+        }
 
         public static IEnumerable<SelectListItem> ConstructsRiderAccountStatus()
         {

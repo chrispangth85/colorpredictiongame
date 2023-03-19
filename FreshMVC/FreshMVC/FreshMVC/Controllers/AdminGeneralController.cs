@@ -1262,6 +1262,198 @@ namespace FreshMVC.Controllers
 
         #endregion
 
+        #region GameSessionListing
+        public IActionResult GameSessionListing(int selectedPage = 1)
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            int ok;
+            string msg;
+            int pages = 0;
+            AdminGameMainModel model = new AdminGameMainModel();
+
+            var dsAdmin = AdminGeneralDB.GetAllGame(selectedPage, "", "", out pages, out ok, out msg);
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                AdminGameModel gameModel = new AdminGameModel();
+                gameModel.GameID = int.Parse(dr["CGAME_ID"].ToString());
+                gameModel.GameName = dr["CGAME_NAME"].ToString();
+
+                var dsGameSession = AdminGeneralDB.GetAllGameSessionListingByID(selectedPage, gameModel.GameID, out pages, out ok, out msg);
+
+                //multiple tab lets not do the fucking pagination ba
+                //Misc.ConstructPageList(selectedPage, pages, model);
+
+                //if the selected page is -1, then set the last selected page
+                //if (model.Pages.Count() != 0 && selectedPage == -1)
+                //{
+                //    model.Pages.Last().Selected = true;
+                //    selectedPage = int.Parse(model.Pages.Last().Value);
+                //}
+
+                foreach (DataRow drSession in dsGameSession.Tables[0].Rows)
+                {
+                    var sessionModel = new SessionGameModel();
+                    sessionModel.Number = int.Parse(drSession["rownumber"].ToString());
+                    sessionModel.Period = drSession["CGAME_PERIOD"].ToString();
+                    sessionModel.Result = drSession["CGAME_RESULT"].ToString();
+                    sessionModel.Start = DateTime.Parse(drSession["CGAME_START"].ToString()).ToString("dd/MM/yyyy HH:mm");
+                    sessionModel.End = DateTime.Parse(drSession["CGAME_END"].ToString()).ToString("dd/MM/yyyy HH:mm");
+                    sessionModel.GameState = int.Parse(drSession["CGAME_STATUS"].ToString());
+
+                    gameModel.SessionList.Add(sessionModel);
+                }
+
+                model.GameList.Add(gameModel);
+            }
+
+            return PartialView("GameSessionListing", model);
+        }
+
+        [HttpPost]
+        public IActionResult ModelEditRedPacketMethod(int gameid, string period, int number)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                if (number >= 0 && number <= 9)
+                {
+                    using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                    {
+                        //we only allow admin to update the game where it's running now
+                        var found = dbContext.CvdGameSession.FirstOrDefault(c => c.CgameId == gameid && c.CgamePeriod == period && c.CgameStatus == 1);
+                        if (found != null)
+                        {
+                            found.CgameResult = number;
+                            dbContext.SaveChanges();
+                        }
+                    }
+                }              
+                else
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.msgInvalidResultNumber
+                    });
+                }
+
+                return GameSessionListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        #endregion
+
+        #region LotteryBetListing
+        public IActionResult LotteryBetListing(int selectedPage = 1, string filterType = "", string filterValue = "")
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            filterValue = Helper.NVL(filterValue);
+
+            int ok;
+            string msg;
+            int pages = 0;
+            PaginationGameModel model = new PaginationGameModel();
+            var dsAdmin = AdminGeneralDB.GetLotteryBetListing(selectedPage, filterType, filterValue, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new GameModel();
+                am.Number = int.Parse(dr["rownumber"].ToString());
+                am.Name = dr["CGAME_NAME"].ToString();
+                am.Period = dr["CGAME_PERIOD"].ToString();
+                am.Username = dr["CUSR_USERNAME"].ToString();
+                am.Number = int.Parse(dr["CGAME_NUMBER"].ToString());
+
+                am.NumberString = am.Number.ToString();
+
+                if (am.Number == 55)
+                {
+                    am.NumberString = Resources.PackBuddyShared.lblJoinGreen;
+                }
+                else if (am.Number == 66)
+                {
+                    am.NumberString = Resources.PackBuddyShared.lblJoinViolet;
+                }
+                else if (am.Number == 77)
+                {
+                    am.NumberString = Resources.PackBuddyShared.lblJoinRed;
+                }
+
+                am.BetAmount = decimal.Parse(dr["CGAME_AMOUNT"].ToString());
+                am.WinAmount = decimal.Parse(dr["CGAME_WIN_AMOUNT"].ToString());
+
+                model.List.Add(am);
+            }
+
+            #region filtering
+            List<SelectListItem> filterOptionList = new List<SelectListItem>();
+            List<String> filterList = new List<string> { "Username" };
+
+
+            foreach (var value in filterList)
+            {
+                filterOptionList.Add(new SelectListItem() { Text = value, Value = value });
+            }
+
+            if (filterType == null || filterType == "")
+            {
+                model.SelectedFilteringCriteria = filterOptionList.First().Value;
+
+            }
+            else
+            {
+                model.SelectedFilteringCriteria = filterType;
+            }
+            model.FilterValue = Helper.NVL(filterValue);
+
+            model.FilteringCriteria = filterOptionList;
+            #endregion
+
+            return PartialView("LotteryBetListing", model);
+        }
+        #endregion
+
         #region BannerListing
         public IActionResult BannerListing(int selectedPage = 1)
         {
@@ -1272,7 +1464,7 @@ namespace FreshMVC.Controllers
                     reloadPage = true
                 });
             }
-         
+
             int ok;
             string msg;
             int pages = 0;
@@ -1390,7 +1582,7 @@ namespace FreshMVC.Controllers
                         var banner = new CvdBanner();
                         banner.CbannerTitle = am.Title;
                         banner.CbannerImages = am.ProtraitPhotoPath;
-                      
+
                         dbContext.CvdBanner.Add(banner);
                         dbContext.SaveChanges();
                     }
@@ -1445,6 +1637,303 @@ namespace FreshMVC.Controllers
                     }
                 }
                 return BannerListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+        #endregion
+
+        #region RechargeListing
+        public IActionResult RechargeListing(int selectedPage = 1, string filterType = "", string filterValue = "")
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            filterValue = Helper.NVL(filterValue);
+
+            int ok;
+            string msg;
+            int pages = 0;
+            var model = new PaginationPaymentModel();
+            var dsAdmin = AdminGeneralDB.GetAllRechargeList(selectedPage, filterType, filterValue, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new PaymentModel();
+                am.Number = int.Parse(dr["rownumber"].ToString());
+                am.id = dr["CCASH_ID"].ToString();
+                am.Username = dr["CUSR_USERNAME"].ToString();
+                am.RefNo = dr["CCASH_APPOTHER"].ToString();
+                am.Amount = dr["CCASH_CASHIN"].ToString();
+                am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                am.AccountName = dr["CUSR_FIRSTNAME"].ToString();
+                am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
+                am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblInProgress : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+                model.List.Add(am);
+            }
+
+            #region filtering
+            List<SelectListItem> filterOptionList = new List<SelectListItem>();
+            List<String> filterList = new List<string> { "Name" };
+
+
+            foreach (var value in filterList)
+            {
+                filterOptionList.Add(new SelectListItem() { Text = value, Value = value });
+            }
+
+            if (filterType == null || filterType == "")
+            {
+                model.SelectedFilteringCriteria = filterOptionList.First().Value;
+
+            }
+            else
+            {
+                model.SelectedFilteringCriteria = filterType;
+            }
+            model.FilterValue = Helper.NVL(filterValue);
+
+            model.FilteringCriteria = filterOptionList;
+            #endregion
+
+            return PartialView("RechargeListing", model);
+        }
+
+        [HttpPost]
+        public IActionResult ApproveTransaction(int idz = 0)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var product = dbContext.CvdCashwalletlogtemp.FirstOrDefault(c => c.CcashId == idz);
+                    if (product != null)
+                    {
+                        product.CcashStatus = 1;
+                        dbContext.CvdCashwalletlogtemp.Update(product);
+                        dbContext.SaveChanges();
+
+                        AdminDB.CashWalletOperation(product.CusrUsername, product.CcashCashin, "Recharge", 0, "", product.CcashAppother, "1");
+
+                    }
+                }
+
+                return RechargeListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult RejectTransaction(int idz = 0)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var product = dbContext.CvdCashwalletlogtemp.FirstOrDefault(c => c.CcashId == idz);
+                    if (product != null)
+                    {
+                        product.CcashStatus = -1;
+                        dbContext.CvdCashwalletlogtemp.Update(product);
+                        dbContext.SaveChanges();
+                    }
+                }
+
+                return RechargeListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+        #endregion
+
+        #region WithdrawalListing
+        public IActionResult WithdrawalListing(int selectedPage = 1, string filterType = "", string filterValue = "")
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            filterValue = Helper.NVL(filterValue);
+
+            int ok;
+            string msg;
+            int pages = 0;
+            var model = new PaginationPaymentModel();
+            var dsAdmin = AdminGeneralDB.GetAllWithdrawalList(selectedPage, filterType, filterValue, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new PaymentModel();
+                am.Number = int.Parse(dr["rownumber"].ToString());
+                am.id = dr["CCASH_ID"].ToString();
+                am.Username = dr["CUSR_USERNAME"].ToString();
+                am.RefNo = dr["CCASH_APPOTHER"].ToString();
+                am.Amount = dr["CCASH_CASHOUT"].ToString();
+                am.ServiceFee = dr["CCASH_APPRATE"].ToString();
+                am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - decimal.Parse(dr["CCASH_APPRATE"].ToString())).ToString("#0.00");
+                am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                am.BalanceBeforeWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString()) + decimal.Parse(dr["CCASH_CASHOUT"].ToString())).ToString("#0.00");
+                am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00");
+                am.AccountName = dr["CUSR_FIRSTNAME"].ToString();
+                am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
+                am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblInProgress : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+                model.List.Add(am);
+            }
+
+            #region filtering
+            List<SelectListItem> filterOptionList = new List<SelectListItem>();
+            List<String> filterList = new List<string> { "Name" };
+
+
+            foreach (var value in filterList)
+            {
+                filterOptionList.Add(new SelectListItem() { Text = value, Value = value });
+            }
+
+            if (filterType == null || filterType == "")
+            {
+                model.SelectedFilteringCriteria = filterOptionList.First().Value;
+
+            }
+            else
+            {
+                model.SelectedFilteringCriteria = filterType;
+            }
+            model.FilterValue = Helper.NVL(filterValue);
+
+            model.FilteringCriteria = filterOptionList;
+            #endregion
+
+            return PartialView("WithdrawalListing", model);
+        }
+
+        [HttpPost]
+        public IActionResult ApproveWithdrawal(int idz = 0)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var product = dbContext.CvdCashwalletlog.FirstOrDefault(c => c.CcashId == idz);
+                    if (product != null)
+                    {
+                        product.CcashStatus = 1;
+                        dbContext.CvdCashwalletlog.Update(product);
+                        dbContext.SaveChanges();
+                    }
+                }
+
+                return WithdrawalListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult RejectWithdrawal(int idz = 0)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var product = dbContext.CvdCashwalletlog.FirstOrDefault(c => c.CcashId == idz);
+                    if (product != null)
+                    {
+                        product.CcashStatus = -1;
+                        dbContext.CvdCashwalletlog.Update(product);
+                        dbContext.SaveChanges();
+                    }
+                }
+
+                return WithdrawalListing();
             }
             catch (Exception e)
             {

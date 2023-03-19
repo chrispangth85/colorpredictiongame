@@ -1,0 +1,122 @@
+﻿<@using FreshMVC.Models
+@model PaymentModel
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta property="og:title" content="Hotmall" />
+    <meta property="og:description" content="" />
+    <meta property="og:type" content="website">
+
+    <title>HotMall</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js" integrity="sha512-894YE6QWD5I59HgZOGReFYm4dnWc1Qt5NtvYSaNcOP+u1T9qYdvdihz0PPSiiqn/+/3e7Jo4EaG7TubfWGUrMQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="~/HotMall/css/style.css">
+    <link rel="stylesheet" href="~/HotMall/css/product.css">
+
+    <!-- Sweet Alert 2 -->
+<script src="~/Lucid/assets/vendor/sweetalert2/dist/sweetalert2.all.min.js"></script>
+    <link rel="stylesheet" href="~/Lucid/assets/vendor/sweetalert2/dist/sweetalert2.min.css">
+</head>
+<body>
+    <form name="frmPayment" method="post" action="@Model.PaymentUrl" style="display:block">
+        <input type="text" name="pay_memberid" value="@Model.MerchantCode">
+        <input type="text" name="pay_orderid" value="@Model.RefNo">
+        <input type="text" name="pay_applydate" value="@Model.Created">
+        <input type="text" name="pay_bankcode" value="@Model.Bankcode">
+        <input type="text" name="pay_notifyurl" value="@Model.NotifyUrl">
+        <input type="text" name="pay_callbackurl" value="@Model.CallbackUrl">
+        <input type="text" name="pay_amount" value="@Model.Amount">
+        <input type="text" name="pay_md5sign" value="@Model.PayMd5">
+        <input type="text" name="pay_reserved1" value="">
+        <input type="text" name="pay_reserved2" value="">
+        <input type="text" name="pay_reserved3" value="">
+        <input type="text" name="pay_productname" value="@Model.ProductDesc">
+        <input type="text" name="pay_productnum" value="">
+        <input type="text" name="pay_productdesc" value="">
+        <input type="text" name="pay_producturl" value="">
+        <input type="text" name="banktype " value="2">
+        <input type="submit" value="Submit" style="width:100px; height:100px" id="btnSubmit" />
+    </form>
+
+    <script src="~/HotMall/js/main.js" type="text/javascript"></script>
+    <script src="~/HotMall/js/product.js"></script>
+    <script src="~/HotMall/js/customAjax.js"></script>
+
+    @*<script>
+        $('#btnSubmit').click();
+    </script>*@
+</body>
+</html>
+
+
+<!-- #include file="Config.asp" -->
+<!-- #include file="Md5.asp" -->
+
+
+<!--<script>
+    var Moneys = "100.00"
+    var pay_bankcode = "902"  
+    var pay_memberid = merchantId
+    var pay_orderid = GetNewNumb()
+    var pay_applydate = Timepp()
+    var pay_notifyurl = notifyurl
+    var pay_callbackurl = CallbackURL
+    var pay_amount = Moneys
+    var pay_attach = ""
+    var pay_productname = "100话费充值"
+    var pay_productnum = ""
+    var pay_productdesc = ""
+    var pay_producturl = ""
+    var stringSignTemp = "pay_amount=" & pay_amount & "&pay_applydate=" & pay_applydate & "&pay_bankcode=" & pay_bankcode & "&pay_callbackurl=" & pay_callbackurl & "&pay_memberid=" & pay_memberid & "&pay_notifyurl=" & pay_notifyurl & "&pay_orderid=" & pay_orderid & "&key=" & keyValue & ""
+    var pay_md5sign = MD5(stringSignTemp, 32, 1)
+</script>
+<html>
+<head>
+    <title>To Pay</title>
+    <script>
+        self.moveTo(0, 0);
+        self.resizeTo(screen.availWidth, screen.availHeight);
+    </script>
+    <style>
+        .tabPages {
+            margin-top: 150px;
+            text-align: center;
+            display: block;
+            border: 3px solid #d9d9de;
+            padding: 30px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body onLoad="document.uncome.submit()">
+    <div id="Content">
+        <div class="tabPages">我们正在为您连接银行，请稍等......</div>
+    </div>-->
+    <!--
+    <iframe src="about:blank" id="kaixin" name="kaixin" align="center" width="960"  height="301" marginwidth="1" marginheight="1" frameborder="0" scrolling="no"> </iframe>
+        <form name="uncome" action="<%=AuthorizationURL%>" method="post" target="kaixin">
+     -->
+    <!--<form name="uncome" action="https://cspay.link/Pay_Index.html" method="post">
+        <input type="hidden" name="pay_memberid" value="<%=pay_memberid%>">
+        <input type="hidden" name="pay_orderid" value="<%=pay_orderid%>">
+        <input type="hidden" name="pay_applydate" value="<%=pay_applydate%>">
+        <input type="hidden" name="pay_bankcode" value="<%=pay_bankcode%>">
+        <input type="hidden" name="pay_notifyurl" value="<%=pay_notifyurl%>">
+        <input type="hidden" name="pay_callbackurl" value="<%=pay_callbackurl%>">
+        <input type="hidden" name="pay_amount" value="<%=pay_amount%>">
+        <input type="hidden" name="pay_reserved1" value="<%=pay_reserved1%>">
+        <input type="hidden" name="pay_reserved2" value="<%=pay_reserved2%>">
+        <input type="hidden" name="pay_reserved3" value="<%=pay_reserved3%>">
+        <input type="hidden" name="pay_productname" value="<%=pay_productname%>">
+        <input type="hidden" name="pay_productnum" value="<%=pay_productnum%>">
+        <input type="hidden" name="pay_productdesc" value="<%=pay_productdesc%>">
+        <input type="hidden" name="pay_producturl" value="<%=pay_producturl%>">
+        <input type="hidden" name="pay_md5sign" value="<%=pay_md5sign%>">
+    </form>
+</body>
+</html>-->

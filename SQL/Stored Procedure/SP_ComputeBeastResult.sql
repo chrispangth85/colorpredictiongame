@@ -48,6 +48,7 @@ AS
 		@totalBetReturnRed = [CGAME_RED_RETURN], @totalBetReturnRedZero = CGAME_RED0_RETURN, @totalBetReturnGreenFive = CGAME_GREEN5_RETURN
 		FROM [dbo].[CVD_GAME]
 		WHERE [CGAME_TYPE] = 1--Beast mode
+		AND [CGAME_ID] = @gameID
 		
 		--if it is beast mode > we compute the result from here
 		IF @exists = 1

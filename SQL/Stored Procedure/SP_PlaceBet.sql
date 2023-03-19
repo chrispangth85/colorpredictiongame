@@ -76,8 +76,8 @@ AS
 	END
 
 	--Place bet
-	INSERT INTO [dbo].[CVD_GAME_SESSION_BET] ([CGAMESES_ID], [CGAME_NUMBER], [CUSR_USERNAME], [CGAME_AMOUNT], [CGAME_WIN_AMOUNT], [CBET_DELETIONSTATE])
-	VALUES (@gameSessionID, @number, @username, @amount, 0, 0)
+	INSERT INTO [dbo].[CVD_GAME_SESSION_BET] ([CGAMESES_ID], [CGAME_ID], [CGAME_PERIOD], [CGAME_NUMBER], [CUSR_USERNAME], [CGAME_AMOUNT], [CGAME_WIN_AMOUNT], [CBET_DELETIONSTATE])
+	VALUES (@gameSessionID, @gameid, @period, @number, @username, @amount, 0, 0)
 
 	--Deduct the Cash Wallet for betting
 	DECLARE @bet DECIMAL(15,2) = 0 - @amount

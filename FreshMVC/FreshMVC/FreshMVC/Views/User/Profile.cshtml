@@ -25,6 +25,12 @@
     <link rel="stylesheet" href="~/HotMall/css/product.css">
     <link rel="stylesheet" href="~/HotMall/css/custome.css">
     <link rel="stylesheet" href="~/HotMall/css/custome-responsive.css">
+
+    <!-- Favicons -->
+    <link rel="apple-touch-icon" href="~/HotMall/img/logosmall.png" sizes="180x180">
+    <link rel="icon" href="~/HotMall/img/logosmall.png" sizes="32x32" type="image/png">
+    <link rel="icon" href="~/HotMall/img/logosmall.png" sizes="16x16" type="image/png">
+
     <script>
 
         $(document).ready(function () {
@@ -35,7 +41,7 @@
             $(".myredpacketz").click(function (evt) {
                 $.ajax({
                     type: "POST",
-                    url: "/User/MyOrders",
+                    url: "/User/MyPacketList",
                     data: {},
                     success: function (data) {
                         $("#main-content").html(data);
@@ -124,7 +130,7 @@
                                         <div class="middle left heading-bold">
                                             <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/invite-friends.jpeg" alt="">
                                             <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
-                                            Profile
+                                            @resSharedPB.lblProfile
                                         </div>
                                     </a>
                                 </div>
@@ -132,16 +138,16 @@
                             <div class="profile-menu-accordion padding-s pointer">
                                 <div class="middle left heading-bold">
                                     <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/c-wallet_icon.png" alt="">
-                                    <!-- <a href="./Recharge" class="text-dark">Balance</a> -->
-                                    Balance
+                                    <!-- <a href="recharge.html" class="text-dark">Balance</a> -->
+                                    @resSharedPB.lblBalance
                                 </div>
                                 <i class="fa-solid fa-angle-down"></i>
                             </div>
 
                             <div class="profile-menu-panel">
-                                <a class="profile-menus width-100 padding-s" href="./Recharge">Recharge</a>
-                                <a class="profile-menus width-100 padding-s" href="./Withdrawal">Withdrawal</a>
-                                <a class="profile-menus width-100 padding-s" href="">Transaction</a>
+                                <a class="profile-menus width-100 padding-s" href="./Recharge">@resSharedPB.lblRecharge</a>
+                                <a class="profile-menus width-100 padding-s" href="./Withdrawal">@resSharedPB.lblWithdrawal</a>
+                                <a class="profile-menus width-100 padding-s" href="">@resSharedPB.lblTransaction</a>
                             </div>
 
                         </div>
@@ -151,7 +157,7 @@
                                     <div class="middle left heading-bold">
                                         <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/myorder.png" alt="">
                                         <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
-                                        Orders
+                                        @resSharedPB.lblOrders
                                     </div>
                                 </a>
                             </div>
@@ -163,7 +169,7 @@
                                     <div class="middle left heading-bold">
                                         <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
                                         <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
-                                        Red Packet
+                                        @resSharedPB.lblRedPacket
                                     </div>
                                 </a>
                             </div>
@@ -175,7 +181,7 @@
                                     <div class="middle left heading-bold">
                                         <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/myreferral.png" alt="">
                                         <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
-                                        Referrals
+                                        @resSharedPB.lblReferrals
                                     </div>
                                 </a>
                             </div>
@@ -188,7 +194,7 @@
                                     <div class="middle left heading-bold">
                                         <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/logout.png" alt="">
                                         <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
-                                        Log Out
+                                        @resSharedPB.lblLogOut
                                     </div>
                                 </a>
                             </div>
@@ -222,7 +228,7 @@
                                                     <div class="middle left heading-bold">
                                                         <img class="profile-menu-img mrgn-right-s"
                                                              src="~/HotMall/img/c-wallet_icon.png" alt="">
-                                                        <!-- <a href="./Recharge" class="text-dark">Balance</a> -->
+                                                        <!-- <a href="recharge.html" class="text-dark">Balance</a> -->
                                                         Balance
                                                     </div>
                                                     <i class="fa-solid fa-angle-down"></i>
@@ -230,7 +236,7 @@
 
                                                 <div class="profile-menu-panel">
                                                     <a class="profile-menus width-100 padding-s"
-                                                       href="./Recharge">Recharge</a>
+                                                       href="recharge.html">Recharge</a>
                                                     <a class="profile-menus width-100 padding-s" href="">Page 1</a>
                                                     <a class="profile-menus width-100 padding-s" href="">Page 2</a>
                                                 </div>
@@ -323,7 +329,7 @@
 
                                 <div class="profile-point-info-grid border-12 bg-dark display-wrap overflow-hide w-100 mx-auto">
                                     <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
-                                       href="./Recharge">
+                                       href="recharge.html">
                                         <div class="coin-p mrgn-right-xs">
                                             <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
                                         </div>

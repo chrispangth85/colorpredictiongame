@@ -31,7 +31,7 @@ namespace FreshMVC.Controllers
     {
         private DbContextOptionsBuilder<DbContext> optionBuilder;
         public UserLoginController()
-        {
+        {  
             optionBuilder = new DbContextOptionsBuilder<DbContext>();
             optionBuilder.UseSqlServer(DBConn.connString);
         }

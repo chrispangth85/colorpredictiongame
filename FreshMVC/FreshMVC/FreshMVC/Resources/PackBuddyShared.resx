@@ -144,6 +144,9 @@
   <data name="lblAboutPackBuddy" xml:space="preserve">
     <value>About Us</value>
   </data>
+  <data name="lblAction" xml:space="preserve">
+    <value>Action</value>
+  </data>
   <data name="lblActive" xml:space="preserve">
     <value>Active</value>
   </data>
@@ -156,11 +159,35 @@
   <data name="lblAmount" xml:space="preserve">
     <value>Amount</value>
   </data>
+  <data name="lblApplicationTime" xml:space="preserve">
+    <value>Application Time</value>
+  </data>
+  <data name="lblAvailableBalance" xml:space="preserve">
+    <value>Available Balance</value>
+  </data>
+  <data name="lblAvailRedPacketBalance" xml:space="preserve">
+    <value>Available Red Packet Balance</value>
+  </data>
+  <data name="lblBalance" xml:space="preserve">
+    <value>Balance</value>
+  </data>
+  <data name="lblBalanceAfterWith" xml:space="preserve">
+    <value>Balance after withdrawal</value>
+  </data>
+  <data name="lblBalanceBeforeWith" xml:space="preserve">
+    <value>Balance before withdrawal</value>
+  </data>
+  <data name="lblBankcard" xml:space="preserve">
+    <value>Bank card</value>
+  </data>
   <data name="lblBeast" xml:space="preserve">
     <value>Beast</value>
   </data>
   <data name="lblBeauty" xml:space="preserve">
     <value>Beauty</value>
+  </data>
+  <data name="lblBetAmount" xml:space="preserve">
+    <value>Bet Amount</value>
   </data>
   <data name="lblBlock" xml:space="preserve">
     <value>Block</value>
@@ -222,11 +249,17 @@
   <data name="lblEdit" xml:space="preserve">
     <value>Edit</value>
   </data>
+  <data name="lblEnd" xml:space="preserve">
+    <value>End</value>
+  </data>
   <data name="lblExtraInfo" xml:space="preserve">
     <value>Extra Info</value>
   </data>
   <data name="lblFailed" xml:space="preserve">
     <value>Failed</value>
+  </data>
+  <data name="lblFinalAmount" xml:space="preserve">
+    <value>Final Amount</value>
   </data>
   <data name="lblFirstName" xml:space="preserve">
     <value>First Name</value>
@@ -246,11 +279,17 @@
   <data name="lblInActive" xml:space="preserve">
     <value>Inactive</value>
   </data>
+  <data name="lblInProgress" xml:space="preserve">
+    <value>In Progress</value>
+  </data>
   <data name="lblIntro" xml:space="preserve">
     <value>Intro</value>
   </data>
   <data name="lblIntroCode" xml:space="preserve">
     <value>Intro Code</value>
+  </data>
+  <data name="lblInvalidAmount" xml:space="preserve">
+    <value>Invalid Amount</value>
   </data>
   <data name="lblInvalidImage" xml:space="preserve">
     <value>Invalid Picture</value>
@@ -342,6 +381,9 @@
   <data name="lblOK" xml:space="preserve">
     <value>Ok</value>
   </data>
+  <data name="lblOrders" xml:space="preserve">
+    <value>Orders</value>
+  </data>
   <data name="lblOutOfStock" xml:space="preserve">
     <value>OUT OF STOCK</value>
   </data>
@@ -353,6 +395,12 @@
   </data>
   <data name="lblPasswordIsRequired" xml:space="preserve">
     <value>Password is required</value>
+  </data>
+  <data name="lblPayment" xml:space="preserve">
+    <value>Payment</value>
+  </data>
+  <data name="lblPayout" xml:space="preserve">
+    <value>Payout</value>
   </data>
   <data name="lblPeriod" xml:space="preserve">
     <value>Period</value>
@@ -369,8 +417,17 @@
   <data name="lblPrice" xml:space="preserve">
     <value>Price</value>
   </data>
+  <data name="lblProfile" xml:space="preserve">
+    <value>Profile</value>
+  </data>
   <data name="lblQualityGuarantee" xml:space="preserve">
     <value>Quality Guarantee</value>
+  </data>
+  <data name="lblRecharge" xml:space="preserve">
+    <value>Recharge</value>
+  </data>
+  <data name="lblRechargeTime" xml:space="preserve">
+    <value>Recharge Time</value>
   </data>
   <data name="lblRechargeWallet" xml:space="preserve">
     <value>Recharge Wallet</value>
@@ -378,11 +435,17 @@
   <data name="lblRed0Return" xml:space="preserve">
     <value>Red 0 return rate</value>
   </data>
+  <data name="lblRedPacket" xml:space="preserve">
+    <value>Red Packet</value>
+  </data>
   <data name="lblRedReturn" xml:space="preserve">
     <value>Red return rate</value>
   </data>
   <data name="lblReferenceID" xml:space="preserve">
     <value>Reference ID</value>
+  </data>
+  <data name="lblReferrals" xml:space="preserve">
+    <value>Referrals</value>
   </data>
   <data name="lblRememberMe" xml:space="preserve">
     <value>Remember Me</value>
@@ -390,20 +453,38 @@
   <data name="lblResult" xml:space="preserve">
     <value>Result</value>
   </data>
+  <data name="lblSelectBankCard" xml:space="preserve">
+    <value>Select Bank Card</value>
+  </data>
+  <data name="lblServiceFee" xml:space="preserve">
+    <value>Service Fee</value>
+  </data>
   <data name="lblShowPassword" xml:space="preserve">
     <value>Show Password</value>
   </data>
   <data name="lblSoldOut" xml:space="preserve">
     <value>SOLD OUT</value>
   </data>
+  <data name="lblStart" xml:space="preserve">
+    <value>Start</value>
+  </data>
   <data name="lblStatus" xml:space="preserve">
     <value>Status</value>
+  </data>
+  <data name="lblSuccess" xml:space="preserve">
+    <value>Success</value>
+  </data>
+  <data name="lblTransaction" xml:space="preserve">
+    <value>Transaction</value>
   </data>
   <data name="lblType" xml:space="preserve">
     <value>Type</value>
   </data>
   <data name="lblUpdate" xml:space="preserve">
     <value>Update</value>
+  </data>
+  <data name="lblUpdateSuccessfully" xml:space="preserve">
+    <value>Update Successfully</value>
   </data>
   <data name="lblUsed" xml:space="preserve">
     <value>Used</value>
@@ -435,6 +516,12 @@
   <data name="lblWin" xml:space="preserve">
     <value>Win</value>
   </data>
+  <data name="lblWithdrawal" xml:space="preserve">
+    <value>Withdrawal</value>
+  </data>
+  <data name="lblWithdrawalAmount" xml:space="preserve">
+    <value>Withdrawal Amount</value>
+  </data>
   <data name="mnuAdmin" xml:space="preserve">
     <value>Admin</value>
   </data>
@@ -450,11 +537,23 @@
   <data name="mnuListing" xml:space="preserve">
     <value>Listing</value>
   </data>
+  <data name="mnuLotteryBetListing" xml:space="preserve">
+    <value>Lottery Bet Listing</value>
+  </data>
   <data name="mnuProduct" xml:space="preserve">
     <value>Products</value>
   </data>
+  <data name="mnuRechargeListing" xml:space="preserve">
+    <value>Recharge Listing</value>
+  </data>
   <data name="mnuRedPacket" xml:space="preserve">
     <value>Red Packet</value>
+  </data>
+  <data name="mnuSessionListing" xml:space="preserve">
+    <value>Session Listing</value>
+  </data>
+  <data name="mnuTransaction" xml:space="preserve">
+    <value>Transaction</value>
   </data>
   <data name="mnuUser" xml:space="preserve">
     <value>User</value>
@@ -462,14 +561,23 @@
   <data name="mnuUserListing" xml:space="preserve">
     <value>User Listing</value>
   </data>
+  <data name="mnuWithdrawalListing" xml:space="preserve">
+    <value>Withdrawal Listing</value>
+  </data>
   <data name="msgClaimSuccessfully" xml:space="preserve">
     <value>Claimed successfully</value>
   </data>
   <data name="msgConfirmDelete" xml:space="preserve">
     <value>Are you sure you want to delete?</value>
   </data>
+  <data name="msgConfirmToApprove" xml:space="preserve">
+    <value>Are you sure you want to approve this transaction ?</value>
+  </data>
   <data name="msgConfirmToDelete" xml:space="preserve">
     <value>Are you sure you want to delete this ?</value>
+  </data>
+  <data name="msgConfirmToReject" xml:space="preserve">
+    <value>Are you sure you want to reject this transaction ?</value>
   </data>
   <data name="msgDurationMustBeLongerThan60Seconds" xml:space="preserve">
     <value>Duration must be longer than 60 seconds</value>
@@ -510,6 +618,9 @@
   <data name="msgInvalidReferral" xml:space="preserve">
     <value>Invalid referral</value>
   </data>
+  <data name="msgInvalidResultNumber" xml:space="preserve">
+    <value>Invalid result number</value>
+  </data>
   <data name="msgOrderPlaceSucessfully" xml:space="preserve">
     <value>Order placed successfully</value>
   </data>
@@ -527,6 +638,9 @@
   </data>
   <data name="msgSessionExpired" xml:space="preserve">
     <value>Session Expired</value>
+  </data>
+  <data name="msgSuccesfullySent" xml:space="preserve">
+    <value>Successfully sent</value>
   </data>
   <data name="msgUserExisted" xml:space="preserve">
     <value>User Existed</value>

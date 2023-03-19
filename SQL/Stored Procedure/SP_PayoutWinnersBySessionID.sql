@@ -27,6 +27,10 @@ AS
 	DECLARE @gmt_date DATETIME = SWITCHOFFSET(CONVERT(VARCHAR(20),@utc_date,100), '+08:00')
 	SET @gmt_date = DATEADD(SECOND, DATEPART(SECOND, @utc_date), @gmt_date)
 	DECLARE @commission DECIMAL(15,2) = 0
+	DECLARE @gameSessionStartDT DATETIME
+	DECLARE @totalPayout DECIMAL(15,2) = 0
+	DECLARE @gameID INT = 0
+	DECLARE @period NVARCHAR(200) = ''
 
 	SELECT @commission = [CPARA_DECIMALVALUE]
 	FROM [dbo].[CVD_PARAMETER]
@@ -38,7 +42,9 @@ AS
 	DECLARE @winningNumber2 INT = -1
 	DECLARE @winningNumber3 INT = -1
 
-	SELECT @exists = 1, @winningNumberMain = [CGAME_RESULT]
+	SELECT @exists = 1, @winningNumberMain = [CGAME_RESULT], 
+	@gameSessionStartDT = CGAME_START, @gameID = [CGAME_ID],
+	@period = [CGAME_PERIOD]
 	FROM [dbo].[CVD_GAME_SESSION]
 	WHERE [CGAMESES_ID] = @SessionID
 	AND [CGAME_STATUS] = 1
@@ -136,16 +142,37 @@ AS
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturn0
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturn0, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 0
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 66
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnViolet
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnViolet, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 66
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 77
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnRedZero
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnRedZero, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 77
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 		END
 		ELSE IF @winningNumberMain = 1
@@ -154,11 +181,25 @@ AS
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturn1
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturn1, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 1
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 55
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnGreen
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnGreen, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 55
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 		END
 		ELSE IF @winningNumberMain = 2
@@ -167,11 +208,25 @@ AS
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturn8
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturn8, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 2
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 77
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnRed
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnRed, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 77
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 		END
 		ELSE IF @winningNumberMain = 3
@@ -180,11 +235,25 @@ AS
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturn3
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturn3, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 3
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 55
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnGreen
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnGreen, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 55
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 		END
 		ELSE IF @winningNumberMain = 4
@@ -193,11 +262,25 @@ AS
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturn8
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturn8, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 4
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 77
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnRed
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnRed, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 77
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 		END
 		ELSE IF @winningNumberMain = 5
@@ -206,16 +289,37 @@ AS
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturn5
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturn5, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 5
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 66
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnViolet
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnViolet, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 66
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 55
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnGreenFive
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnGreenFive, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 55
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 		END
 		ELSE IF @winningNumberMain = 6
@@ -224,11 +328,25 @@ AS
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturn8
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturn8, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 6
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 77
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnRed
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnRed, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 77
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 		END
 		ELSE IF @winningNumberMain = 7
@@ -237,11 +355,25 @@ AS
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturn7
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturn7, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 7
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 55
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnGreen
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnGreen, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 55
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 		END
 		ELSE IF @winningNumberMain = 8
@@ -250,11 +382,25 @@ AS
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturn8
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturn8, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 8
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 77
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnRed
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnRed, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 77
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 		END
 		ELSE IF @winningNumberMain = 9
@@ -263,11 +409,25 @@ AS
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturn9
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturn9, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 9
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 			ELSE IF @number = 55
 			BEGIN
 				SET @winAmount = @betAmount * @totalBetReturnGreen
 				EXEC SP_CashWalletOperation @username, 'WIN_BET', @winAmount, @number, @betAmount, @totalBetReturnGreen, @SessionID
+
+				UPDATE [dbo].[CVD_GAME_SESSION_BET]
+				SET [CGAME_WIN_AMOUNT] = @winAmount
+				WHERE [CGAMESES_ID] = @SessionID
+				AND [CGAME_NUMBER] = 55
+
+				SET @totalPayout = @totalPayout + @winAmount
 			END
 		END
 		
@@ -276,6 +436,32 @@ AS
 	END
 	CLOSE tzCur20
 	DEALLOCATE tzCur20
+
+	--To store the result history
+	DECLARE @startDateTime DATETIME = SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, @gameSessionStartDT), 120 ),1,11)+'00:00'--make it the hour is 00:00
+
+	SET @exists = 0
+
+	SELECT @exists = 1
+	FROM [dbo].[CVD_GAME_SESSION_DAILY_HISTORY]
+	WHERE [CGAME_ID] = @gameID
+	AND [CGAME_RESULTON] = @startDateTime
+
+	DECLARE @resultz NVARCHAR(200) = @period + '_' + convert(nvarchar(255), @totalPayout) + '_' + convert(nvarchar(255), @winningNumberMain) + ';'
+
+	IF @exists = 1
+	BEGIN
+		UPDATE [dbo].[CVD_GAME_SESSION_DAILY_HISTORY]
+		SET [CGAME_RESULT] += @resultz
+		WHERE [CGAME_ID] = @gameID
+		AND [CGAME_RESULTON] = @startDateTime
+	END
+	ELSE
+	BEGIN
+		INSERT INTO [dbo].[CVD_GAME_SESSION_DAILY_HISTORY] ([CGAME_ID], [CGAME_RESULT], [CGAME_RESULTON], [CHIS_DELETIONSTATE])
+		VALUES (@gameID, @resultz, @startDateTime, 0)
+	END
+	
 
 
 	RETURN

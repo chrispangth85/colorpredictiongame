@@ -27,3 +27,4 @@ $('.clock-dummy-btn').click(function() {
 $('.join-dummy-btn').click(function() {
     $('.allbtnable').toggleClass('allbtndisable')
 })
+

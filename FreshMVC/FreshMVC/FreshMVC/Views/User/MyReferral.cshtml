@@ -5,16 +5,16 @@
             Get your friends to join just by scanning your
             Referral QR Code!
         </div>
-        <div class="border-dark-s  mrgn-btm-m max-width-300 padding-s border-12">
-            <div id="qrcode" style="width: 100%; height: auto;"></div>
+        <div class="border-dark-s  mrgn-btm-m padding-s border-12">
+            <a download="@ViewBag.Username" + ".jpg" href="@ViewBag.QRCodeImage" title="ImageName">
+                <img class="width-small margin-bottom-xs" src="@ViewBag.QRCodeImage" alt="" style="width: 200px; height: 200px; border-radius: 10px;">
+            </a>
         </div>
         <div class="input-custom focus-active width-100 mrgn-btm-m pos-rel">
             <label class="label-move text-grey to-top" for="referral-code">Referral Link</label>
-            <input class="width-100 width-100 bg-white" type="text" id="referral-link"
-                   data-link="https://reliance-mall.com#/register?r_code="
-                   value="https://reliance-mall.com#/register?r_code=" disabled>
-            <div class="input-copy padding-xs center middle border-12">
-                <img src="img/icon-copy.png" alt="" onclick="copyLink()" class="input-copy-icon">
+            <input class="width-100 mrgn-btm-s width-100 bg-white" style="padding-right:50px;" type="text" id="referral-link" data-link="https://myclassmarketing.com" value="@ViewBag.Referral" disabled>
+            <div class="input-copy padding-xs center middle border-12" style="bottom:100%;">
+                <img src="/HotMall/img/copy-icon.png" alt="" onclick="copyLink()" class="password-icon show" style="cursor:pointer; margin-top:-6px; width: 20px;">
             </div>
         </div>
 
