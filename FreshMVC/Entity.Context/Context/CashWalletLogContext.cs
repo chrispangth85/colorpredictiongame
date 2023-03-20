@@ -35,6 +35,26 @@ namespace Entity.Context
                     .HasMaxLength(200)
                     .HasColumnName("CCASH_APPUSER");
 
+                entity.Property(e => e.CcashBankaccountname)
+                    .HasMaxLength(100)
+                    .HasColumnName("CCASH_BANKACCOUNTNAME")
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.CcashBankname)
+                    .HasMaxLength(100)
+                    .HasColumnName("CCASH_BANKNAME")
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.CcashBranch)
+                    .HasMaxLength(100)
+                    .HasColumnName("CCASH_BRANCH")
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.CcashCardnumber)
+                    .HasMaxLength(100)
+                    .HasColumnName("CCASH_CARDNUMBER")
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.CcashCashin)
                     .HasColumnType("decimal(15, 2)")
                     .HasColumnName("CCASH_CASHIN");
@@ -48,6 +68,11 @@ namespace Entity.Context
                     .HasColumnType("decimal(15, 2)")
                     .HasColumnName("CCASH_CASHOUT");
 
+                entity.Property(e => e.CcashCity)
+                    .HasMaxLength(100)
+                    .HasColumnName("CCASH_CITY")
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.CcashCreatedby)
                     .IsRequired()
                     .HasMaxLength(200)
@@ -60,6 +85,11 @@ namespace Entity.Context
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.CcashDeletionstate).HasColumnName("CCASH_DELETIONSTATE");
+
+                entity.Property(e => e.CcashState)
+                    .HasMaxLength(100)
+                    .HasColumnName("CCASH_STATE")
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.CcashStatus)
                     .HasColumnName("CCASH_STATUS")

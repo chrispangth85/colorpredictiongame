@@ -20,5 +20,11 @@ namespace Entity.Context
         public DateTime CcashCreatedon { get; set; }
         public bool CcashDeletionstate { get; set; }
         public int? CcashStatus { get; set; }
+        public string CcashCardnumber { get; set; }
+        public string CcashBranch { get; set; }
+        public string CcashState { get; set; }
+        public string CcashCity { get; set; }
+        public string CcashBankname { get; set; }
+        public string CcashBankaccountname { get; set; }
     }
 }
