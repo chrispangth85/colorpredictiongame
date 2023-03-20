@@ -12,13 +12,13 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-
-
 CREATE PROCEDURE [dbo].[SP_GetAllWithdrawal]
 (
 	@viewPage	INT,
 	@filterType nvarchar(200),
 	@keyword	nvarchar(200),
+	@fromDate	NVARCHAR(200) = '',
+	@toDate		NVARCHAR(200) = '',
 	@pages		INT OUTPUT,
 	@ok			INT OUTPUT,
 	@msg		VARCHAR(50) OUTPUT
@@ -34,14 +34,14 @@ AS
 	WHERE CPARA_NAME = 'TableRows'
 	
 	--select the rows
-	IF @keyword = ''
+	IF @keyword = '' AND @fromDate='' AND @toDate= ''
 	BEGIN
 		SELECT @pages = COUNT(CCASH_ID)
 		FROM dbo.CVD_CASHWALLETLOG
 		WHERE CCASH_CASHNAME = 'WDR'
 		AND CCASH_DELETIONSTATE = 0
 	END
-	ELSE IF @filterType = 'Name' AND @keyword != ''
+	ELSE IF @filterType = 'Name' AND @keyword != '' AND @fromDate='' AND @toDate= ''
 	BEGIN
 		SELECT @pages = COUNT(CCASH_ID)
 		FROM dbo.CVD_CASHWALLETLOG mem, CVD_USER usr
@@ -50,7 +50,24 @@ AS
 		AND mem.CCASH_CASHNAME = 'WDR'
 		AND (@filterType = 'Name' AND @keyword != '' AND  usr.CUSR_FIRSTNAME like '%' + @keyword + '%')
 	END
-
+	ELSE IF @keyword = '' AND @fromDate!='' AND @toDate!= ''
+		BEGIN
+		SELECT @pages = COUNT(CCASH_ID)
+		FROM dbo.CVD_CASHWALLETLOG
+		WHERE CCASH_CASHNAME = 'WDR'
+		AND CCASH_DELETIONSTATE = 0
+		AND CCASH_CREATEDON between @fromDate and @toDate
+	END
+	ELSE IF @filterType = 'Name' AND @keyword != '' AND @fromDate!='' AND @toDate!= ''
+		BEGIN
+		SELECT @pages = COUNT(CCASH_ID)
+		FROM dbo.CVD_CASHWALLETLOG mem, CVD_USER usr
+		WHERE mem.CUSR_USERNAME = usr.CUSR_USERNAME
+		AND mem.CCASH_DELETIONSTATE = 0
+		AND mem.CCASH_CASHNAME = 'WDR'
+		AND (@filterType = 'Name' AND @keyword != '' AND  usr.CUSR_FIRSTNAME like '%' + @keyword + '%')
+		AND CCASH_CREATEDON between @fromDate and @toDate
+	END
 		
 	--check if modulus, if it is 0, if not add another page
 	DECLARE @mod INT = 0
@@ -68,7 +85,7 @@ AS
 		SET @viewPage = 0
 	END
 	
-	IF @keyword = ''
+	IF @keyword = '' AND @fromDate='' AND @toDate= ''
 	BEGIN
 		--get the cash wallet logs
 		SELECT * FROM 
@@ -81,7 +98,7 @@ AS
 		) AS FOO
 		WHERE rownumber > ((@viewPage - 1) * @tableRows) AND rownumber < (((@viewPage - 1) * @tableRows) + @tableRows) + 1
 	END
-	ELSE IF @filterType = 'Name' AND @keyword != ''
+	ELSE IF @filterType = 'Name' AND @keyword != '' AND @fromDate='' AND @toDate= ''
 	BEGIN
 		--get the cash wallet logs
 		SELECT * FROM 
@@ -95,7 +112,35 @@ AS
 		) AS FOO
 		WHERE rownumber > ((@viewPage - 1) * @tableRows) AND rownumber < (((@viewPage - 1) * @tableRows) + @tableRows) + 1
 	END
-
+	ELSE IF @keyword = '' AND @fromDate!='' AND @toDate!= ''
+	BEGIN
+		--get the cash wallet logs
+		SELECT * FROM 
+		(
+			SELECT ROW_NUMBER() OVER (ORDER BY mem.[CCASH_ID] DESC) AS rownumber, mem.*, usr.CUSR_FIRSTNAME, usr.CUSR_REFERRALID
+			FROM dbo.CVD_CASHWALLETLOG mem, CVD_USER usr
+			WHERE mem.CUSR_USERNAME = usr.CUSR_USERNAME
+			AND mem.CCASH_CASHNAME = 'WDR'
+			AND mem.CCASH_DELETIONSTATE = 0
+			AND CCASH_CREATEDON between @fromDate and @toDate
+		) AS FOO
+		WHERE rownumber > ((@viewPage - 1) * @tableRows) AND rownumber < (((@viewPage - 1) * @tableRows) + @tableRows) + 1
+	END
+	ELSE IF @filterType = 'Name' AND @keyword != '' AND @fromDate!='' AND @toDate!=''
+	BEGIN
+		--get the cash wallet logs
+		SELECT * FROM 
+		(
+			SELECT ROW_NUMBER() OVER (ORDER BY mem.[CCASH_ID] DESC) AS rownumber, mem.*, usr.CUSR_FIRSTNAME, usr.CUSR_REFERRALID
+			FROM dbo.CVD_CASHWALLETLOG mem, CVD_USER usr
+			WHERE mem.CUSR_USERNAME = usr.CUSR_USERNAME
+			AND mem.CCASH_DELETIONSTATE = 0
+			AND mem.CCASH_CASHNAME = 'WDR'
+			AND @filterType = 'Name' AND @keyword != '' AND  usr.CUSR_FIRSTNAME like '%' + @keyword + '%'
+			AND CCASH_CREATEDON between @fromDate and @toDate
+		) AS FOO
+		WHERE rownumber > ((@viewPage - 1) * @tableRows) AND rownumber < (((@viewPage - 1) * @tableRows) + @tableRows) + 1
+	END
 	SET @ok = 1
 	SET @msg = 'Success'
 

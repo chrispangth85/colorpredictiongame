@@ -2,7 +2,31 @@
 @using FreshMVC.Models
 @model PaginationPaymentModel
 
+<script src="~/DatePicker/js/bootstrap-datepicker.js"></script>
+<link href="~/DatePicker/css/bootstrap-datepicker3.css" rel="stylesheet" />
+<link href="~/DatePicker/css/bootstrap-datepicker3.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="~/Lucid/assets/vendor/dropify/css/dropify.min.css">
+<link rel="stylesheet" href="~/Lucid/assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.css">
+<script src="~/Lucid/assets/vendor/dropify/js/dropify.min.js"></script>
+<script src="~/Lucid/assets/js/pages/forms/dropify.js"></script>
+<script src="~/Lucid/assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+
 <script type="text/javascript">
+    $(function () {
+        $("#From").datepicker({
+            autoclose: true,
+            altField: "#alternate",
+            altFormat: "DD, d MM, yy",
+            format: 'dd/mm/yyyy'
+        });
+
+        $("#To").datepicker({
+            autoclose: true,
+            altField: "#alternate",
+            altFormat: "DD, d MM, yy",
+            format: 'dd/mm/yyyy'
+        });
+    });
 
     $("#btnSearch, #btnPage").click(function (evt) {
         var filterValue = $("#FilterValue").val();
@@ -12,13 +36,26 @@
             page = e.options[e.selectedIndex].value;
         }
         var selectedOption = $("#SelectedFilteringCriteria").val();
+        var fromDate = $("#From").val();
+        var toDate = $("#To").val();
+        if (fromDate != "" && toDate == "") {
+            alert("@resShared.msgInvalidToDate");
+            return;
+        }
+        else if (fromDate == "" && toDate != "") {
+            alert("@resShared.msgInvalidFromDate");
+            return;
+        }
         $.ajax({
             type: "POST",
             url: "/AdminGeneral/RechargeListing",
             data: {
                 selectedPage: page,
                 filterType: selectedOption,
-                filterValue: filterValue, },
+                filterValue: filterValue,
+                fromDate: fromDate,
+                toDate: toDate,
+            },
             success: function (data) {
                 $("#main-content").html(data);
                 event.stopPropagation();
@@ -84,153 +121,177 @@
     };
 </script>
 
-<div class="container-fluid">
-    <div class="block-header">
-        <div class="row">
-            <div class="col-lg-6 col-md-8 col-sm-12">
-                <h2>@resShared.mnuRechargeListing</h2>
-                <ul class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
-                    <li class="breadcrumb-item active">@resShared.mnuListing</li>
-                </ul>
+    <div class="container-fluid">
+        <div class="block-header">
+            <div class="row">
+                <div class="col-lg-6 col-md-8 col-sm-12">
+                    <h2>@resShared.mnuRechargeListing</h2>
+                    <ul class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                        <li class="breadcrumb-item active">@resShared.mnuListing</li>
+                    </ul>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="grid" style="margin-left: 10px; margin-right: 10px" id="grid">
-        <input type="hidden" id="eliminateId" />
-        <div class="table-responsive">
-            <div class="row">
+        <div class="grid" style="margin-left: 10px; margin-right: 10px" id="grid">
+            <input type="hidden" id="eliminateId" />
+            <div class="table-responsive">
+                <div class="row">
 
-                <div class="grid" style="margin-left: 15px;" id="grid">
-                    <strong>Filter option</strong>
-                    @Html.DropDownListFor(model => model.SelectedFilteringCriteria, @Model.FilteringCriteria, new { @id = "SelectedFilteringCriteria", @class = "form-control", @style = "width:150px; height:34px" })
+                    <div class="grid" style="margin-left: 15px;" id="grid">
+                        <strong>Filter option</strong>
+                        @Html.DropDownListFor(model => model.SelectedFilteringCriteria, @Model.FilteringCriteria, new { @id = "SelectedFilteringCriteria", @class = "form-control", @style = "width:215px;" })
 
+                    </div>
+
+                    <div class="grid" style="margin-left: 5px;" id="gridFilterValue">
+                        <strong id="optionText">Value</strong>
+                        @Html.TextBoxFor(model => model.FilterValue, new { @class = "form-control", @id = "FilterValue" })
+                    </div>
                 </div>
+                <div class="row">
+                    <div class="grid" style="margin-left: 15px;">
+                        <strong>@resShared.lblFrom</strong>
+                        @Html.TextBoxFor(model => model.FromDate, new
+                        {
+                            @class = "form-control",
+                            @id = "From",
+                            autocomplete = "off"
+                        })
+                    </div>
+                    <div class="grid" style="margin-left: 5px;">
+                        <strong>@resShared.lblTo</strong>
+                        @Html.TextBoxFor(model => model.ToDate, new
+                        {
+                            @class = "form-control",
+                            @id = "To",
+                            autocomplete = "off"
+                        })
+                    </div>
+                    <div class="grid" style="margin-left: 5px;" id="grid">
+                        <br />
+                        <button id="btnSearch" type="button" class="btn btn-primary" style="width: 100px;">@resShared.btnSearch</button>
 
-                <div class="grid" style="margin-left: 5px;" id="gridFilterValue">
-                    <strong id="optionText">Value</strong>
-                    @Html.TextBoxFor(model => model.FilterValue, new { @class = "form-control", @id = "FilterValue" })
+                    </div>
                 </div>
-
 
                 <div class="grid" style="margin-left: 5px;" id="grid">
-                    <br />
-                    <button id="btnSearch" type="button" class="btn btn-primary" style="width: 100px;">@resShared.btnSearch</button>
-
+                    <a href="@Url.Action("DownloadRechargeListing", "AdminGeneral", new {filterType= @Model.SelectedFilteringCriteria, filterValue= @Model.FilterValue, fromDate = @Model.FromDate, toDate = @Model.ToDate})" class="btn btn-primary" style="float:right;width:180px;" target="_blank">
+                        @resShared.btnDownload
+                    </a>
                 </div>
+                <br /><br />
+                <table id="tablestyle" width="100%" class="table table-bordered table-hover table-striped" border="1px solid #414558;">
+                    <thead>
+                        <tr style="background-color: #414558;color:white">
+                            <th>#</th>
+                            <th>
+                                @resShared.lblReferenceID
+                            </th>
+                            <th>
+                                @resShared.lblUsername
+                            </th>
+                            <th>
+                                @resShared.lblName
+                            </th>
+                            <th>
+                                @resShared.lblPhone
+                            </th>
+                            <th>
+                                @resShared.lblRecharge
+                            </th>
+                            <th>
+                                @resShared.lblRechargeTime
+                            </th>
+                            <th>
+                                @resShared.lblAgent
+                            </th>
+                            <th>
+                                @resShared.lblStatus
+                            </th>
+                            <th style="width: 5%; color: White; ">
+                                @resShared.lblEdit
+                            </th>
+                            <th style="width: 5%; color: White; ">
+                                @resShared.lblDelete
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (Model.List.Count == 0)
+                        {
+                            <tr style="height: 25px; border-top: 1px solid white;">
+                                <td style="padding: 5px;" colspan="10">
+                                    @resShared.lblNoRecFound
+                                </td>
+                            </tr>
+                        }
+                        @foreach (var item in Model.List)
+                        {
+                            <tr style="height: 25px; border-top: 1px solid white;">
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Number)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.RefNo)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Username)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.AccountName)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Username)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Amount)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Created)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MerchantCode)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                                <td>
+                                    @if (item.Status == @resShared.lblInProgress)
+                                    {
+                                        <a class="EditData" href="#" id="@item.id"><i class="fa fa-check"></i></a>
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Status == @resShared.lblInProgress)
+                                    {
+                                        <a class="DeleteData" href="#" id="@item.id"><i class="fa fa-remove"></i></a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
             </div>
-            <br /><br />
-            <table id="tablestyle" width="100%" class="table table-bordered table-hover table-striped" border="1px solid #414558;">
-                <thead>
-                    <tr style="background-color: #414558;color:white">
-                        <th>#</th>
-                        <th>
-                            @resShared.lblReferenceID
-                        </th>
-                        <th>
-                            @resShared.lblUsername
-                        </th>
-                        <th>
-                            @resShared.lblName
-                        </th>
-                        <th>
-                            @resShared.lblPhone
-                        </th>
-                        <th>
-                            @resShared.lblRecharge
-                        </th>
-                        <th>
-                            @resShared.lblRechargeTime
-                        </th>
-                        <th>
-                            @resShared.lblAgent
-                        </th>
-                        <th>
-                            @resShared.lblStatus
-                        </th>
-                        <th style="width: 5%; color: White; ">
-                            @resShared.lblEdit
-                        </th>
-                        <th style="width: 5%; color: White; ">
-                            @resShared.lblDelete
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.List.Count == 0)
-                    {
-                        <tr style="height: 25px; border-top: 1px solid white;">
-                            <td style="padding: 5px;" colspan="10">
-                                @resShared.lblNoRecFound
-                            </td>
-                        </tr>
-                    }
-                    @foreach (var item in Model.List)
-                    {
-                        <tr style="height: 25px; border-top: 1px solid white;">
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Number)
-                            </td>
-                              <td>
-                                @Html.DisplayFor(modelItem => item.RefNo)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Username)
-                            </td>
-                             <td>
-                                @Html.DisplayFor(modelItem => item.AccountName)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Username)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Amount)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Created)
-                            </td>
-                             <td>
-                                @Html.DisplayFor(modelItem => item.MerchantCode)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Status)
-                            </td>
-                            <td>
-                                @if (item.Status == @resShared.lblInProgress)
-                                {
-                                    <a class="EditData" href="#" id="@item.id"><i class="fa fa-check"></i></a>
-                                }
-                            </td>
-                            <td>
-                                @if (item.Status == @resShared.lblInProgress)
-                                {
-                                    <a class="DeleteData" href="#" id="@item.id"><i class="fa fa-remove"></i></a>
-                                }
-                            </td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-        @if (Model.List.Count != 0)
-        {
-            <table width="auto" style="text-align:right; margin-right:0px; margin-left:auto;margin-bottom:30px">
-                <tr style="text-align: right">
-                    <td style="text-align: right">
-                        <div class="BtnClass" style="float: right;">
-                            @Html.DropDownList("page", @Model.Pages, new
-                            {
-                                style = "width:80px;",
-                                @class = "form-control"
-                            })
+                @if (Model.List.Count != 0)
+                {
+                    <table width="auto" style="text-align:right; margin-right:0px; margin-left:auto;margin-bottom:30px">
+                        <tr style="text-align: right">
+                            <td style="text-align: right">
+                                <div class="BtnClass" style="float: right;">
+                                    @Html.DropDownList("page", @Model.Pages, new
+                                    {
+                                        style = "width:80px;",
+                                        @class = "form-control"
+                                    })
 
-                        </div>
-                    </td>
-                    <td style="text-align: right">
-                        <button id="btnPage" type="button" class="btn btn-primary" style="width:100px">@resShared.btnView</button>
-                    </td>
-                </tr>
-            </table>
-        }
+                                </div>
+                            </td>
+                            <td style="text-align: right">
+                                <button id="btnPage" type="button" class="btn btn-primary" style="width:100px">@resShared.btnView</button>
+                            </td>
+                        </tr>
+                    </table>
+                }
+            </div>
     </div>
-</div>

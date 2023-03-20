@@ -79,6 +79,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string btnDownload {
+            get {
+                return ResourceManager.GetString("btnDownload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Login.
         /// </summary>
         public static string btnLogIn {
@@ -606,6 +615,15 @@ namespace FreshMVC.Resources {
         public static string lblFourthLevel {
             get {
                 return ResourceManager.GetString("lblFourthLevel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to From.
+        /// </summary>
+        public static string lblFrom {
+            get {
+                return ResourceManager.GetString("lblFrom", resourceCulture);
             }
         }
         
@@ -1321,6 +1339,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to To.
+        /// </summary>
+        public static string lblTo {
+            get {
+                return ResourceManager.GetString("lblTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Transaction.
         /// </summary>
         public static string lblTransaction {
@@ -1699,6 +1726,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid From Date.
+        /// </summary>
+        public static string msgInvalidFromDate {
+            get {
+                return ResourceManager.GetString("msgInvalidFromDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid Login.
         /// </summary>
         public static string msgInvalidLogin {
@@ -1758,6 +1794,15 @@ namespace FreshMVC.Resources {
         public static string msgInvalidResultNumber {
             get {
                 return ResourceManager.GetString("msgInvalidResultNumber", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid To Date.
+        /// </summary>
+        public static string msgInvalidToDate {
+            get {
+                return ResourceManager.GetString("msgInvalidToDate", resourceCulture);
             }
         }
         

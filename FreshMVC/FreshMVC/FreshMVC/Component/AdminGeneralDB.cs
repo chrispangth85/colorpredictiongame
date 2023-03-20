@@ -3557,7 +3557,7 @@ namespace FreshMVC.Component
 
         #region GetAllWithdrawalList
 
-        public static DataSet GetAllWithdrawalList(int viewPage, string filterType, string filterValue, out int pages, out int ok, out string msg)
+        public static DataSet GetAllWithdrawalList(int viewPage, string filterType, string filterValue, string fromDate, string toDate, out int pages, out int ok, out string msg)
         {
             SqlConnection sqlConn = DBConn.GetConnection();
             SqlDataAdapter da = new SqlDataAdapter();
@@ -3576,6 +3576,14 @@ namespace FreshMVC.Component
             SqlParameter pUsername = sqlComm.Parameters.Add("@keyword", SqlDbType.VarChar, 200);
             pUsername.Direction = ParameterDirection.Input;
             pUsername.Value = Helper.NVL(filterValue);
+
+            SqlParameter pFromDate = sqlComm.Parameters.Add("@fromDate", SqlDbType.NVarChar, 200);
+            pFromDate.Direction = ParameterDirection.Input;
+            pFromDate.Value = fromDate;
+
+            SqlParameter pToDate = sqlComm.Parameters.Add("@toDate", SqlDbType.NVarChar, 200);
+            pToDate.Direction = ParameterDirection.Input;
+            pToDate.Value = toDate;
 
             SqlParameter pPages = sqlComm.Parameters.Add("@pages", SqlDbType.Int);
             pPages.Direction = ParameterDirection.Output;
@@ -3604,7 +3612,7 @@ namespace FreshMVC.Component
 
         #region GetAllRechargeList
 
-        public static DataSet GetAllRechargeList(int viewPage, string filterType, string filterValue, out int pages, out int ok, out string msg)
+        public static DataSet GetAllRechargeList(int viewPage, string filterType, string filterValue, string fromDate, string toDate, out int pages, out int ok, out string msg)
         {
             SqlConnection sqlConn = DBConn.GetConnection();
             SqlDataAdapter da = new SqlDataAdapter();
@@ -3623,6 +3631,14 @@ namespace FreshMVC.Component
             SqlParameter pUsername = sqlComm.Parameters.Add("@keyword", SqlDbType.VarChar, 200);
             pUsername.Direction = ParameterDirection.Input;
             pUsername.Value = Helper.NVL(filterValue);
+
+            SqlParameter pFromDate = sqlComm.Parameters.Add("@fromDate", SqlDbType.NVarChar, 200);
+            pFromDate.Direction = ParameterDirection.Input;
+            pFromDate.Value = fromDate;
+
+            SqlParameter pToDate = sqlComm.Parameters.Add("@toDate", SqlDbType.NVarChar, 200);
+            pToDate.Direction = ParameterDirection.Input;
+            pToDate.Value = toDate;
 
             SqlParameter pPages = sqlComm.Parameters.Add("@pages", SqlDbType.Int);
             pPages.Direction = ParameterDirection.Output;

@@ -14,6 +14,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Entity.Context.Models;
 using System.IO;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -895,7 +897,7 @@ namespace FreshMVC.Controllers
                     });
                 }
 
-                if(Helper.NVLInteger(am.Duration) < 60)
+                if (Helper.NVLInteger(am.Duration) < 60)
                 {
                     Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     return Json(new
@@ -1342,7 +1344,7 @@ namespace FreshMVC.Controllers
                             dbContext.SaveChanges();
                         }
                     }
-                }              
+                }
                 else
                 {
                     Response.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -1651,7 +1653,7 @@ namespace FreshMVC.Controllers
         #endregion
 
         #region RechargeListing
-        public IActionResult RechargeListing(int selectedPage = 1, string filterType = "", string filterValue = "")
+        public IActionResult RechargeListing(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
         {
             if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
             {
@@ -1662,12 +1664,22 @@ namespace FreshMVC.Controllers
             }
 
             filterValue = Helper.NVL(filterValue);
+            string fromDateInput = fromDate;
+            string toDateInput = toDate;
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+            }
 
             int ok;
             string msg;
-            int pages = 0;
             var model = new PaginationPaymentModel();
-            var dsAdmin = AdminGeneralDB.GetAllRechargeList(selectedPage, filterType, filterValue, out pages, out ok, out msg);
+            int pages = 0;
+            var dsAdmin = AdminGeneralDB.GetAllRechargeList(selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
 
             Misc.ConstructPageList(selectedPage, pages, model);
 
@@ -1715,6 +1727,9 @@ namespace FreshMVC.Controllers
             model.FilterValue = Helper.NVL(filterValue);
 
             model.FilteringCriteria = filterOptionList;
+
+            model.FromDate = fromDateInput;
+            model.ToDate = toDateInput;
             #endregion
 
             return PartialView("RechargeListing", model);
@@ -1796,10 +1811,116 @@ namespace FreshMVC.Controllers
                 });
             }
         }
+
+        public IActionResult DownloadRechargeListing(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                filterValue = Helper.NVL(filterValue);
+                if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+                {
+                    DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                    DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                    fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                    toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+                }
+
+                int ok;
+                string msg;
+                var model = new PaginationPaymentModel();
+                int pages = 0;
+                var dsAdmin = AdminGeneralDB.GetAllRechargeList(selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+
+                byte[] fileContents;
+
+                //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelPackage excelPackage = new ExcelPackage();
+                var workSheet = excelPackage.Workbook.Worksheets.Add("Report");
+                workSheet.DefaultRowHeight = 12;
+
+                //Header of table  
+                //  
+                workSheet.Row(1).Height = 20;
+                workSheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Row(1).Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Value = "#";
+                workSheet.Cells[1, 2].Value = FreshMVC.Resources.PackBuddyShared.lblReferenceID;
+                workSheet.Cells[1, 3].Value = FreshMVC.Resources.PackBuddyShared.lblUsername;
+                workSheet.Cells[1, 4].Value = FreshMVC.Resources.PackBuddyShared.lblName;
+                workSheet.Cells[1, 5].Value = FreshMVC.Resources.PackBuddyShared.lblPhone;
+                workSheet.Cells[1, 6].Value = FreshMVC.Resources.PackBuddyShared.lblRecharge;
+                workSheet.Cells[1, 7].Value = FreshMVC.Resources.PackBuddyShared.lblRechargeTime;
+                workSheet.Cells[1, 8].Value = FreshMVC.Resources.PackBuddyShared.lblAgent;
+                workSheet.Cells[1, 9].Value = FreshMVC.Resources.PackBuddyShared.lblStatus;
+
+                int recordIndex = 2;
+                string message = string.Empty;
+
+                foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+                {
+                    var am = new PaymentModel();
+                    am.Number = int.Parse(dr["rownumber"].ToString());
+                    am.id = dr["CCASH_ID"].ToString();
+                    am.Username = dr["CUSR_USERNAME"].ToString();
+                    am.RefNo = dr["CCASH_APPOTHER"].ToString();
+                    am.Amount = dr["CCASH_CASHIN"].ToString();
+                    am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                    am.AccountName = dr["CUSR_FIRSTNAME"].ToString();
+                    am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
+                    am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblInProgress : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+
+                    workSheet.Row(recordIndex).Height = 20;
+                    workSheet.Row(recordIndex).Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+
+                    workSheet.Cells[recordIndex, 1].Value = am.Number;
+                    workSheet.Cells[recordIndex, 2].Value = am.RefNo;
+                    workSheet.Cells[recordIndex, 3].Value = am.Username;
+                    workSheet.Cells[recordIndex, 4].Value = am.AccountName;
+                    workSheet.Cells[recordIndex, 5].Value = am.Username;
+                    workSheet.Cells[recordIndex, 6].Value = am.Amount;
+                    workSheet.Cells[recordIndex, 7].Value = am.Created;
+                    workSheet.Cells[recordIndex, 8].Value = am.MerchantCode;
+                    workSheet.Cells[recordIndex, 9].Value = am.Status;
+
+                    recordIndex++;
+                }
+
+                fileContents = excelPackage.GetAsByteArray();
+
+                if (fileContents == null || fileContents.Length == 0)
+                {
+                    return NotFound();
+                }
+
+                return File(
+                   fileContents: fileContents,
+                   contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                   fileDownloadName: string.Format("RechargeListing_{0}.xlsx", DateTime.Now.ToString("yyyyMMddHHmmss"))
+               );
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
         #endregion
 
         #region WithdrawalListing
-        public IActionResult WithdrawalListing(int selectedPage = 1, string filterType = "", string filterValue = "")
+        public IActionResult WithdrawalListing(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
         {
             if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
             {
@@ -1810,12 +1931,23 @@ namespace FreshMVC.Controllers
             }
 
             filterValue = Helper.NVL(filterValue);
+            string fromDateInput = fromDate;
+            string toDateInput = toDate;
+
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+            }
 
             int ok;
             string msg;
-            int pages = 0;
             var model = new PaginationPaymentModel();
-            var dsAdmin = AdminGeneralDB.GetAllWithdrawalList(selectedPage, filterType, filterValue, out pages, out ok, out msg);
+            int pages = 0;
+            var dsAdmin = AdminGeneralDB.GetAllWithdrawalList(selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
 
             Misc.ConstructPageList(selectedPage, pages, model);
 
@@ -1867,6 +1999,9 @@ namespace FreshMVC.Controllers
             model.FilterValue = Helper.NVL(filterValue);
 
             model.FilteringCriteria = filterOptionList;
+
+            model.FromDate = fromDateInput;
+            model.ToDate = toDateInput;
             #endregion
 
             return PartialView("WithdrawalListing", model);
@@ -1934,6 +2069,118 @@ namespace FreshMVC.Controllers
                 }
 
                 return WithdrawalListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        public IActionResult DownloadWithdrawalListing(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                filterValue = Helper.NVL(filterValue);
+                if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+                {
+                    DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                    DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                    fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                    toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+                }
+
+                int ok;
+                string msg;
+                int pages = 0;
+                var dsAdmin = AdminGeneralDB.GetAllWithdrawalList(selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+
+                byte[] fileContents;
+
+                //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelPackage excelPackage = new ExcelPackage();
+                var workSheet = excelPackage.Workbook.Worksheets.Add("Report");
+                workSheet.DefaultRowHeight = 12;
+
+                //Header of table  
+                //  
+                workSheet.Row(1).Height = 20;
+                workSheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Row(1).Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Value = "#";
+                workSheet.Cells[1, 2].Value = FreshMVC.Resources.PackBuddyShared.lblReferenceID;
+                workSheet.Cells[1, 3].Value = FreshMVC.Resources.PackBuddyShared.lblUsername;
+                workSheet.Cells[1, 4].Value = FreshMVC.Resources.PackBuddyShared.lblName;
+                workSheet.Cells[1, 5].Value = FreshMVC.Resources.PackBuddyShared.lblPhone;
+                workSheet.Cells[1, 6].Value = FreshMVC.Resources.PackBuddyShared.lblWithdrawalAmount;
+                workSheet.Cells[1, 7].Value = FreshMVC.Resources.PackBuddyShared.lblServiceFee;
+                workSheet.Cells[1, 8].Value = FreshMVC.Resources.PackBuddyShared.lblFinalAmount;
+                workSheet.Cells[1, 9].Value = FreshMVC.Resources.PackBuddyShared.lblApplicationTime;
+                workSheet.Cells[1, 10].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceBeforeWith;
+                workSheet.Cells[1, 11].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceAfterWith;
+                workSheet.Cells[1, 12].Value = FreshMVC.Resources.PackBuddyShared.lblStatus;
+
+                int recordIndex = 2;
+
+                foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+                {
+                    var am = new PaymentModel();
+                    am.Number = int.Parse(dr["rownumber"].ToString());
+                    am.id = dr["CCASH_ID"].ToString();
+                    am.Username = dr["CUSR_USERNAME"].ToString();
+                    am.RefNo = dr["CCASH_APPOTHER"].ToString();
+                    am.Amount = dr["CCASH_CASHOUT"].ToString();
+                    am.ServiceFee = dr["CCASH_APPRATE"].ToString();
+                    am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - decimal.Parse(dr["CCASH_APPRATE"].ToString())).ToString("#0.00");
+                    am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                    am.BalanceBeforeWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString()) + decimal.Parse(dr["CCASH_CASHOUT"].ToString())).ToString("#0.00");
+                    am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00");
+                    am.AccountName = dr["CUSR_FIRSTNAME"].ToString();
+                    am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
+                    am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblInProgress : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+
+                    workSheet.Row(recordIndex).Height = 20;
+                    workSheet.Row(recordIndex).Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+
+                    workSheet.Cells[recordIndex, 1].Value = am.Number;
+                    workSheet.Cells[recordIndex, 2].Value = am.RefNo;
+                    workSheet.Cells[recordIndex, 3].Value = am.Username;
+                    workSheet.Cells[recordIndex, 4].Value = am.AccountName;
+                    workSheet.Cells[recordIndex, 5].Value = am.Username;
+                    workSheet.Cells[recordIndex, 6].Value = am.Amount;
+                    workSheet.Cells[recordIndex, 7].Value = am.ServiceFee;
+                    workSheet.Cells[recordIndex, 8].Value = am.FinalAmount;
+                    workSheet.Cells[recordIndex, 9].Value = am.Created;
+                    workSheet.Cells[recordIndex, 10].Value = am.BalanceBeforeWdr;
+                    workSheet.Cells[recordIndex, 11].Value = am.BalanceAfterWdr;
+                    workSheet.Cells[recordIndex, 12].Value = am.Status;
+                    recordIndex++;
+                }
+                fileContents = excelPackage.GetAsByteArray();
+
+                if (fileContents == null || fileContents.Length == 0)
+                {
+                    return NotFound();
+                }
+
+                return File(
+                   fileContents: fileContents,
+                   contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                   fileDownloadName: string.Format("WithdrawalListing_{0}.xlsx", DateTime.Now.ToString("yyyyMMddHHmmss"))
+               );
             }
             catch (Exception e)
             {

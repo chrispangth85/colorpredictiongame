@@ -631,7 +631,9 @@ namespace FreshMVC.Models
         public IEnumerable<SelectListItem> FilteringCriteria { get; set; }
         public string SelectedFilteringCriteria { get; set; }
         public string FilterValue { get; set; }
-
+        public IFormFile ExcelFile { get; set; }
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
         public List<PaymentModel> List
         {
             get; set;

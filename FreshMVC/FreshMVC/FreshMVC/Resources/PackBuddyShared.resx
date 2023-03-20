@@ -123,6 +123,9 @@
   <data name="btnCreate" xml:space="preserve">
     <value>Create</value>
   </data>
+  <data name="btnDownload" xml:space="preserve">
+    <value>Download</value>
+  </data>
   <data name="btnLogIn" xml:space="preserve">
     <value>Login</value>
   </data>
@@ -299,6 +302,9 @@
   </data>
   <data name="lblFourthLevel" xml:space="preserve">
     <value>Fourth Level</value>
+  </data>
+  <data name="lblFrom" xml:space="preserve">
+    <value>From</value>
   </data>
   <data name="lblGiveAllThisLevel" xml:space="preserve">
     <value>Give All This Level</value>
@@ -537,6 +543,9 @@
   <data name="lblThirdLevel" xml:space="preserve">
     <value>Third Level</value>
   </data>
+  <data name="lblTo" xml:space="preserve">
+    <value>To</value>
+  </data>
   <data name="lblTransaction" xml:space="preserve">
     <value>Transaction</value>
   </data>
@@ -663,6 +672,9 @@
   <data name="msgInvalidAmount" xml:space="preserve">
     <value>Invalid Amount</value>
   </data>
+  <data name="msgInvalidFromDate" xml:space="preserve">
+    <value>Invalid From Date</value>
+  </data>
   <data name="msgInvalidLogin" xml:space="preserve">
     <value>Invalid Login</value>
   </data>
@@ -683,6 +695,9 @@
   </data>
   <data name="msgInvalidResultNumber" xml:space="preserve">
     <value>Invalid result number</value>
+  </data>
+  <data name="msgInvalidToDate" xml:space="preserve">
+    <value>Invalid To Date</value>
   </data>
   <data name="msgOrderPlaceSucessfully" xml:space="preserve">
     <value>Order placed successfully</value>
