@@ -672,6 +672,9 @@
   <data name="msgInvalidAmount" xml:space="preserve">
     <value>Invalid Amount</value>
   </data>
+  <data name="msgInvalidBankId" xml:space="preserve">
+    <value>Please select the Bank Account</value>
+  </data>
   <data name="msgInvalidFromDate" xml:space="preserve">
     <value>Invalid From Date</value>
   </data>

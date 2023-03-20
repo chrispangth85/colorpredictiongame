@@ -1901,7 +1901,7 @@ namespace FreshMVC.Controllers
                 });
             }
 
-            ProductModel productModel = new ProductModel();
+            var am = new PaymentModel();
 
             if (usernameCookie == "" || usernameCookie == null)
             {
@@ -1910,8 +1910,149 @@ namespace FreshMVC.Controllers
                     reloadPage = true
                 });
             }
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var userFound = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie);
+                if (userFound != null)
+                {
+                    am.Amount = userFound.CusrCashwlt.Value.ToString("0.00");
+                }
+                var serviceFeeFound = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "ServiceFee");
+                if (serviceFeeFound != null)
+                {
+                    am.ServiceFee = serviceFeeFound.CparaDecimalvalue.ToString("0.00");
+                }
 
-            return View("Withdrawal", productModel);
+                var bankListFound = dbContext.CvdMemberBank.Where(c => c.CusrUsername == usernameCookie).ToList();
+                if (bankListFound != null)
+                {
+                    List<SelectListItem> bankList = new List<SelectListItem>();
+                    bankList.Add(new SelectListItem() { Text = Resources.PackBuddyShared.lblSelectBankCard, Value = "" });
+
+                    foreach (var bank in bankListFound)
+                    {
+                        bankList.Add(new SelectListItem() { Text = bank.CbankBankaccount, Value = bank.CbankId.ToString() });
+                    }
+                    am.BankList = bankList;
+                }
+            }
+
+
+            return View("Withdrawal", am);
+        }
+
+        public IActionResult WithdrawalMethod(string password, decimal withdrawalAmount, decimal balanceAmount, decimal serviceFee, int bankId)
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+            if (withdrawalAmount <= 0)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = Resources.PackBuddyShared.msgInvalidAmount
+                });
+            }
+            else if(bankId <= 0)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = Resources.PackBuddyShared.msgInvalidBankId
+                });
+            }
+            else if (string.IsNullOrEmpty(password))
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = Resources.PackBuddyShared.msgInvalidPassword
+                }); ;
+            }
+            else if (withdrawalAmount > balanceAmount)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = Resources.PackBuddyShared.msgInsufficientWalletBalance
+                });
+            }
+            string message = ValidatePassword(usernameCookie, password);
+            if (string.IsNullOrEmpty(message))
+            {
+                AdminDB.CashWalletOperation(usernameCookie, withdrawalAmount * -1, "WDR", 0, "", "", "1", serviceFee, bankId);
+            }
+            else
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new { status = false, message = message });
+
+            }
+
+            return StatusCode((int)HttpStatusCode.OK);
+        }
+
+
+        private string ValidatePassword(string userName, string password)
+        {
+            string message = "";
+            try
+            {
+                string pass = "";
+                var ds = AdminDB.GetUserByUsername(userName, out int ok, out string msg);
+                if (ds.Tables[0].Rows.Count == 0)
+                {
+                    message = Resources.PackBuddyShared.msgInvalidLogin;
+                    return message;
+                }
+
+                userName = ds.Tables[0].Rows[0]["CUSR_USERNAME"].ToString();
+                pass = ds.Tables[0].Rows[0]["CUSR_PASSWORD"].ToString();
+
+                if (Authentication.Encrypt(password) != pass)
+                {
+                    message = Resources.PackBuddyShared.msgInvalidPassword;
+                    return message;
+                }
+
+                var encryptedUsername = Authentication.Encrypt(userName);
+                if (ds.Tables[0].Rows.Count == 0)
+                {
+                    message = Resources.PackBuddyShared.msgInvalidLogin;
+                    return message;
+                }
+
+                return message;
+
+            }
+            catch (Exception ex)
+            {
+                message = ex.ToString();
+                return message;
+            }
         }
         #endregion
 

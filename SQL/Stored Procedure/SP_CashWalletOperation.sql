@@ -22,6 +22,7 @@ CREATE PROCEDURE [dbo].[SP_CashWalletOperation]
 	@appnumber		DECIMAL(15,2) = 0,
 	@apprate		DECIMAL(15,2) = 0,
 	@appother		NVARCHAR(200) = '',
+	@bankid			INT = 0,
 	@status			INT = 0
 )
 AS
@@ -35,39 +36,53 @@ AS
 		RETURN		
 				
 	DECLARE @wallet decimal(15, 2) = 0
-	
+			
 	UPDATE [dbo].CVD_USER
 	SET CUSR_CASHWLT = CUSR_CASHWLT + @cashNum 
 	WHERE CUSR_USERNAME = @username
 
 	--This Recharge wallet is to keep track how much customer will need to spend on 'betting' in order for them to withdraw
 	IF @cashName = 'RED_PACKET'
-	BEGIN
-		UPDATE [dbo].CVD_USER
-		SET CUSR_RECHARGEWLT = CUSR_RECHARGEWLT + @cashNum 
-		WHERE CUSR_USERNAME = @username
-	END
+		BEGIN
+			UPDATE [dbo].CVD_USER
+			SET CUSR_RECHARGEWLT = CUSR_RECHARGEWLT + @cashNum 
+			WHERE CUSR_USERNAME = @username
+		END
 
 	SELECT @wallet = CUSR_CASHWLT
 	FROM [dbo].CVD_USER
-	WHERE CUSR_USERNAME = @username					
+	WHERE CUSR_USERNAME = @username
+		
 
-	IF @cashNum < 0
-	BEGIN
-		INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, [CCASH_CREATEDON])
-		VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status, @gmt_date)
-	END
-	ELSE
-	BEGIN
-		INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, [CCASH_CREATEDON])
-		VALUES(@username, @cashNum, 0, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status, @gmt_date)
-	END	
-			
+	IF @cashName = 'WDR'
+		BEGIN
+			declare @cardnumber NVARCHAR(100)
+			declare @cardbranch NVARCHAR(100)
+			declare @cardstate NVARCHAR(100)
+			declare @cardcity NVARCHAR(100)
+			declare @cardbankname NVARCHAR(100)
+			declare @cardbankaccountname NVARCHAR(100)
+		
+			SELECT @cardnumber = [CBANK_BANKACCOUNT],  @cardbranch = [CBANK_IFSCCODE], @cardstate= [CBANK_STATE], @cardcity=[CBANK_STATE], @cardbankname=[CBANK_NAME], @cardbankaccountname = [CBANK_BANKACCOUNTNAME]
+			FROM [dbo].[CVD_MEMBER_BANK]
+			WHERE [CBANK_ID] = @bankid
+
+			INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, CCASH_CARDNUMBER, CCASH_BRANCH, CCASH_STATE, CCASH_CITY, CCASH_BANKNAME ,CCASH_BANKACCOUNTNAME, [CCASH_CREATEDON])
+			VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status,@cardnumber,@cardbranch,@cardstate,@cardcity,@cardbankname,@cardbankaccountname, @gmt_date)
+		END
+	ELSE 
+		IF (@cashNum < 0)
+			BEGIN
+				INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, [CCASH_CREATEDON])
+				VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status, @gmt_date)
+			END
+		ELSE
+			BEGIN
+				INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, [CCASH_CREATEDON])
+				VALUES(@username, @cashNum, 0, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status, @gmt_date)
+			END	
+		
 	RETURN
-
-
-
-
 GO
 
 

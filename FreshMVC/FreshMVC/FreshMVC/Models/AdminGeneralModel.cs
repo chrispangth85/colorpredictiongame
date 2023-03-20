@@ -709,6 +709,8 @@ namespace FreshMVC.Models
         public string City { get; set; }
         public string PayMd5 { get; set; }
         public string PaymentUrl { get; set; }
+        public IEnumerable<SelectListItem> BankList { get; set; }
+        public string SelectedBank { get; set; }
     }
 
     public class AdminAccessRightModel

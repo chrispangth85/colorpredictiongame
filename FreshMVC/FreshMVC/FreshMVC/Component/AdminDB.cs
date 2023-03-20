@@ -222,7 +222,7 @@ namespace FreshMVC.Component
             return ds;
         }
 
-        public static void CashWalletOperation(string username, decimal netAmount, string type, int orderId, string paymentType, string referenceNo, string status)
+        public static void CashWalletOperation(string username, decimal netAmount, string type, int orderId, string paymentType, string referenceNo, string status, decimal serviceFee = 0,  int bankId = 0)
         {
             SqlConnection sqlConn = DBConn.GetConnection();
             sqlConn.Open();
@@ -254,9 +254,17 @@ namespace FreshMVC.Component
             //pReferenceNo.Direction = ParameterDirection.Input;
             //pReferenceNo.Value = referenceNo;
 
+            SqlParameter pAppRate = sqlComm.Parameters.Add("@apprate", SqlDbType.Decimal);
+            pAppRate.Direction = ParameterDirection.Input;
+            pAppRate.Value = serviceFee;
+
             SqlParameter pStatus = sqlComm.Parameters.Add("@status", SqlDbType.NVarChar);
             pStatus.Direction = ParameterDirection.Input;
             pStatus.Value = status;
+
+            SqlParameter pBankId = sqlComm.Parameters.Add("@bankid", SqlDbType.NVarChar);
+            pBankId.Direction = ParameterDirection.Input;
+            pBankId.Value = bankId;
 
             sqlComm.ExecuteNonQuery();
             sqlConn.Close();

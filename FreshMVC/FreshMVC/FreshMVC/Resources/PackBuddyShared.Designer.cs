@@ -1726,6 +1726,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Please select the Bank Account.
+        /// </summary>
+        public static string msgInvalidBankId {
+            get {
+                return ResourceManager.GetString("msgInvalidBankId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid From Date.
         /// </summary>
         public static string msgInvalidFromDate {
