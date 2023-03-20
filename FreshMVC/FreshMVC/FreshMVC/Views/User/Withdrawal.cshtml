@@ -37,10 +37,10 @@
                 type: "POST",
                 url: "/User/WithdrawalMethod",
                 data: {
-                    withdrawalAmount: document.getElementById("withdrawalAmount").value,
-                    balanceAmount: $("#BalanceAmount").val(),
+                    withdrawalAmount: document.getElementById("withdrawalAmount").value,                    
                     serviceFee: $("#ServiceFee").val(),
                     bankId: $("#SelectedBank").val(),
+                    password: $("#loginPwd").val(),
                 },
                 success: function (data) {
                     location.href = "/User/Profile";
@@ -67,8 +67,6 @@
                         </div>
                         <div>
                             <div class="d-flex flex-column ">
-                                @Html.HiddenFor(model => Model.Amount, new { @id = "BalanceAmmount" })
-
                                 <div class="text-bold text-s text-white">@resSharedPB.lblAvailableBalance:</div>
                                 <h2 class="text-m text-white">₹ @Model.Amount</h2>
                             </div>

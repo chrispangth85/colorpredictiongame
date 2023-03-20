@@ -72,8 +72,8 @@ AS
 			DECLARE @period NVARCHAR(200) = convert(varchar, @startDateTime, 112) + RIGHT('0000' + CAST(@counter AS VARCHAR(4)), 4)
 
 			--Just some checking whenever day changed (00:00) we check if there exists this start date
-			INSERT INTO [dbo].[CVD_GAME_SESSION] ([CGAME_ID], [CGAME_PERIOD], [CGAME_RESULT], [CGAME_START], [CGAME_END], [CGAME_STATUS], [CGAMESES_DELETIONSTATE])
-			VALUES (@ID, @period, -1, @startDateTime, DATEADD(SECOND, @durationSec, @startDateTime), 0, 0)
+			INSERT INTO [dbo].[CVD_GAME_SESSION] ([CGAME_ID], [CGAME_PERIOD], [CGAME_RESULT], [CGAME_START], [CGAME_END], [CGAME_STATUS], CGAME_TOTAL_BET, CGAME_TOTAL_WIN, [CGAMESES_DELETIONSTATE])
+			VALUES (@ID, @period, -1, @startDateTime, DATEADD(SECOND, @durationSec, @startDateTime), 0, 0, 0, 0)
 
 			SET @counter = @counter + 1
 			SET @startDateTime = DATEADD(SECOND, @durationSec, @startDateTime)

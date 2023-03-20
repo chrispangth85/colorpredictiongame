@@ -217,7 +217,15 @@
                                                     {
                                                         <tr>
                                                             <td class="text-center">@x.Period</td>
-                                                            <td class="text-center">@x.Price</td>
+                                                            @if (x.TotalBet >= x.Price)
+                                                            {
+                                                                <td class="text-center" style="color:green; font-weight:bold;">@x.TotalBet</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="text-center" style="color: red; font-weight: bold;">@x.Price</td>
+                                                            }
+
                                                             <td class="green-number text-center">@x.ResultNumber</td>
                                                             <td class="text-center">
                                                                 <div class="d-flex justify-content-center">
@@ -292,39 +300,39 @@
                                                             colorz = "linear-gradient(-180deg, #9c27b0 50%, #00c853 50%)";
                                                         }
 
-                                                    <tr>
-                                                        <td class="text-center">@x.Period</td>
-                                                        <td class="text-center">@x.Price</td>
-                                                        <td class="green-number text-center" style="color: @colorz;">
+                                                        <tr>
+                                                            <td class="text-center">@x.Period</td>
+                                                            <td class="text-center">@x.Price</td>
+                                                            <td class="green-number text-center" style="color: @colorz;">
 
-                                                            <div class="d-flex justify-content-center">
-                                                                @x.ResultNumberString
-                                                                @if (x.ResultNumber == 0 || x.ResultNumber == 5 || x.ResultNumber == 66)
-                                                                {
-                                                                    <div class="violate-result"></div>
-                                                                }
+                                                                <div class="d-flex justify-content-center">
+                                                                    @x.ResultNumberString
+                                                                    @if (x.ResultNumber == 0 || x.ResultNumber == 5 || x.ResultNumber == 66)
+                                                                    {
+                                                                        <div class="violate-result"></div>
+                                                                    }
 
-                                                                @if (x.ResultNumber == 5 || x.ResultNumber == 1 || x.ResultNumber == 3 || x.ResultNumber == 7 || x.ResultNumber == 9 || x.ResultNumber == 55)
-                                                                {
-                                                                    <div class="green-result"></div>
-                                                                }
+                                                                    @if (x.ResultNumber == 5 || x.ResultNumber == 1 || x.ResultNumber == 3 || x.ResultNumber == 7 || x.ResultNumber == 9 || x.ResultNumber == 55)
+                                                                    {
+                                                                        <div class="green-result"></div>
+                                                                    }
 
-                                                                @if (x.ResultNumber == 0 || x.ResultNumber == 2 || x.ResultNumber == 4 || x.ResultNumber == 6 || x.ResultNumber == 8 || x.ResultNumber == 77)
-                                                                {
-                                                                    <div class="red-result"></div>
-                                                                }
-                                                            </div>
-                                                        </td>
-                                                        @if (@x.Won < 0)
-                                                        {
-                                                            <td class="red-number text-center">@x.Won</td>
-                                                        }
-                                                        else
-                                                        {
-                                                            <td class="green-number text-center">@x.Won</td>
-                                                        }
+                                                                    @if (x.ResultNumber == 0 || x.ResultNumber == 2 || x.ResultNumber == 4 || x.ResultNumber == 6 || x.ResultNumber == 8 || x.ResultNumber == 77)
+                                                                    {
+                                                                        <div class="red-result"></div>
+                                                                    }
+                                                                </div>
+                                                            </td>
+                                                            @if (@x.Won < 0)
+                                                            {
+                                                                <td class="red-number text-center">@x.Won</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="green-number text-center">@x.Won</td>
+                                                            }
 
-                                                    </tr>
+                                                        </tr>
                                                     }
                                                 </tbody>
                                             </table>

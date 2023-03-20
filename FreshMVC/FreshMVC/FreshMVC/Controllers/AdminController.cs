@@ -22,6 +22,21 @@ namespace FreshMVC.Controllers
             return View();
         }
 
+        #region ChangeLanguageFromLogin
+        public ActionResult ChangeLanguageFromLogin(string languageCode)
+        {
+            HttpContext.Session.SetString("LanguageChosen", languageCode);
+
+            var cultureInfo = new CultureInfo(languageCode);
+            cultureInfo.NumberFormat.CurrencySymbol = "€";
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
+            return View("Home", null);
+        }
+        #endregion
+
         #region Login
         public IActionResult Login(bool reloadPage = false)
         {

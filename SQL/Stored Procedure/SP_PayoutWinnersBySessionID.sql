@@ -438,6 +438,12 @@ AS
 	DEALLOCATE tzCur20
 
 	--To store the result history
+	DECLARE @totalBet DECIMAL(15,2) = 0
+
+	SELECT @totalBet = ISNULL(SUM([CGAME_AMOUNT]), 0)
+	FROM [dbo].[CVD_GAME_SESSION_BET]
+	WHERE [CGAMESES_ID] = @SessionID
+
 	DECLARE @startDateTime DATETIME = SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, @gameSessionStartDT), 120 ),1,11)+'00:00'--make it the hour is 00:00
 
 	SET @exists = 0
@@ -447,7 +453,7 @@ AS
 	WHERE [CGAME_ID] = @gameID
 	AND [CGAME_RESULTON] = @startDateTime
 
-	DECLARE @resultz NVARCHAR(200) = @period + '_' + convert(nvarchar(255), @totalPayout) + '_' + convert(nvarchar(255), @winningNumberMain) + ';'
+	DECLARE @resultz NVARCHAR(200) = @period + '_' + convert(nvarchar(255), @totalBet) + '_' + convert(nvarchar(255), @totalPayout) + '_' + convert(nvarchar(255), @winningNumberMain) + ';'
 
 	IF @exists = 1
 	BEGIN
@@ -461,7 +467,12 @@ AS
 		INSERT INTO [dbo].[CVD_GAME_SESSION_DAILY_HISTORY] ([CGAME_ID], [CGAME_RESULT], [CGAME_RESULTON], [CHIS_DELETIONSTATE])
 		VALUES (@gameID, @resultz, @startDateTime, 0)
 	END
-	
+
+	--To store the total bet + total payout on CVD_GAME_SESSION
+	UPDATE CVD_GAME_SESSION
+	SET [CGAME_TOTAL_BET] = @totalBet, [CGAME_TOTAL_WIN] = @totalPayout
+	WHERE [CGAME_ID] = @gameID
+	AND [CGAMESES_ID] = @SessionID
 
 
 	RETURN

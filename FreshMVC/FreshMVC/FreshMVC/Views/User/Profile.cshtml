@@ -71,7 +71,7 @@
             $(".orderz").click(function (evt) {
                 $.ajax({
                     type: "POST",
-                    url: "/User/MyOrders",
+                    url: "/User/MyOrder",
                     data: {},
                     success: function (data) {
                         $("#main-content").html(data);
@@ -150,6 +150,8 @@
                                     </a>
                                 </div>
                             </div>
+                        </div>
+                        <div class="profile-p">
                             <div class="profile-menu-accordion padding-s pointer">
                                 <div class="middle left heading-bold">
                                     <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/c-wallet_icon.png" alt="">
@@ -173,7 +175,7 @@
                                     <div class="middle left heading-bold">
                                         <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/myorder.png" alt="">
                                         <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
-                                        @resSharedPB.lblOrders
+                                        @resSharedPB.mnuMyOrder
                                     </div>
                                 </a>
                             </div>
@@ -181,42 +183,45 @@
                         </div>
                         @if (ViewBag.IsAgent)
                         {
-                            <div class="profile-p myredpacketz">
-                                <div class="profile-menu-accordion padding-s pointer">
-                                    <a href="#" class="" style="color:black;">
-                                        <div class="middle left heading-bold">
-                                            <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
-                                            @resSharedPB.lblRedPacket (@resSharedPB.lblAgent)
-                                        </div>
-                                    </a>
-                                </div>
-
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="profile-p myredpacketclaimz">
-                                <div class="profile-menu-accordion padding-s pointer">
-                                    <a href="#" class="" style="color:black;">
-                                        <div class="middle left heading-bold">
-                                            <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
-                                            @resSharedPB.lblRedPacket
-                                        </div>
-                                    </a>
-                                </div>
-
-                            </div>
-                        }
-
-                        <div class="profile-p referralz">
+                        <div class="profile-p myredpacketz">
                             <div class="profile-menu-accordion padding-s pointer">
                                 <a href="#" class="" style="color:black;">
                                     <div class="middle left heading-bold">
-                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/myreferral.png" alt="">
-                                        <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
-                                        @resSharedPB.lblReferrals
+                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
+                                        @resSharedPB.lblRedPacket (@resSharedPB.lblAgent)
                                     </div>
                                 </a>
+                            </div>
+
+                        </div>
+                        }
+                        else
+                        {
+                        <div class="profile-p myredpacketclaimz">
+                            <div class="profile-menu-accordion padding-s pointer">
+                                <a href="#" class="" style="color:black;">
+                                    <div class="middle left heading-bold">
+                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
+                                        @resSharedPB.lblRedPacket
+                                    </div>
+                                </a>
+                            </div>
+
+                        </div>
+                        }
+                        <div class="profile-p">
+                            <div class="profile-menu-accordion padding-s pointer">
+                                <div class="middle left heading-bold">
+                                    <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/myreferral.png" alt="">
+                                    <!-- <a href="recharge.html" class="text-dark">Balance</a> -->
+                                    @resSharedPB.lblReferrals
+                                </div>
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+
+                            <div class="profile-menu-panel">
+                                <a class="profile-menus width-100 padding-s referralz" href="#">@resSharedPB.lblMyReferral</a>
+                                <a class="profile-menus width-100 padding-s" href="./MyTeam">@resSharedPB.lblMyTeam</a>
                             </div>
 
                         </div>
@@ -367,8 +372,8 @@
                                             <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
                                         </div>
                                         <div class="coin-info">
-                                            <h3 class="text-m text-wrap text-bold text-light">56,728</h3>
-                                            <div class="text-s-m">Total Balance</div>
+                                            <h3 class="text-m text-wrap text-bold text-light">@ViewBag.CashWallet</h3>
+                                            <div class="text-s-m">@resSharedPB.lblTotalBalance</div>
                                         </div>
                                         <!-- <i class="fa-solid coin-icon-top pos-abs fa-angle-right hide-mobile"></i> -->
                                         <p class="text text-white ms-auto my-auto">Recharge</p>
@@ -380,7 +385,7 @@
                                             <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
                                         </div>
                                         <div class="coin-info">
-                                            <h3 class="text-m text-wrap text-bold">26,450,000</h3>
+                                            <h3 class="text-m text-wrap text-bold">@ViewBag.TotalCommission</h3>
                                             <div class="text-s-m">Total Commission</div>
                                         </div>
                                         <p class="text text-white ms-auto my-auto">View</p>

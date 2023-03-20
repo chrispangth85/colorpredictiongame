@@ -897,7 +897,7 @@ namespace FreshMVC.Controllers
                     });
                 }
 
-                if (Helper.NVLInteger(am.Duration) < 60)
+                if(Helper.NVLInteger(am.Duration) < 60)
                 {
                     Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     return Json(new
@@ -1344,7 +1344,7 @@ namespace FreshMVC.Controllers
                             dbContext.SaveChanges();
                         }
                     }
-                }
+                }              
                 else
                 {
                     Response.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -1799,7 +1799,7 @@ namespace FreshMVC.Controllers
                     }
                 }
 
-                return RechargeListing();
+                return WithdrawalListing();
             }
             catch (Exception e)
             {
@@ -1917,6 +1917,7 @@ namespace FreshMVC.Controllers
                 });
             }
         }
+
         #endregion
 
         #region WithdrawalListing

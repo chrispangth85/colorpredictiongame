@@ -30,5 +30,10 @@ namespace Entity.Context.Models
         public string MemberLevel3Intro { get; set; }
         public string MemberLevel4Intro { get; set; }
         public string MemberLevel5Intro { get; set; }
+        public decimal? MemberDownlineTotalRecharge { get; set; }
+        public decimal? MemberDownlineTotalWithdrawal { get; set; }
+        public decimal? MemberDownlineTotalBet { get; set; }
+        public decimal? MemberDownlineTotalWin { get; set; }
+        public decimal? MemberDownlineTotalCommission { get; set; }
     }
 }

@@ -991,7 +991,7 @@ namespace FreshMVC.Controllers
                             GameHistoryRecord tmpResult = new GameHistoryRecord();
                             int zzz = 0;
 
-                            if (childResult.Length == 3)
+                            if (childResult.Length == 4)
                             {
                                 foreach (var tt in childResult)
                                 {
@@ -1001,9 +1001,13 @@ namespace FreshMVC.Controllers
                                     }
                                     else if (zzz == 1)
                                     {
-                                        tmpResult.Price = decimal.Parse(tt);
+                                        tmpResult.TotalBet = decimal.Parse(tt);
                                     }
                                     else if (zzz == 2)
+                                    {
+                                        tmpResult.Price = decimal.Parse(tt);//this is total win
+                                    }
+                                    else if (zzz == 3)
                                     {
                                         tmpResult.ResultNumber = int.Parse(tt);
                                     }
@@ -1196,6 +1200,8 @@ namespace FreshMVC.Controllers
             var am = new MemberHomeModel();
             ViewBag.HeaderPage = "Profile";
             ViewBag.IsAgent = false;
+            ViewBag.CashWallet = 0;
+            ViewBag.TotalCommission = 0;
 
             using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
             {
@@ -1204,6 +1210,15 @@ namespace FreshMVC.Controllers
                 {
                     ViewBag.IsAgent = true;
                 }
+
+                var found = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && (c.CroleId == 3 || c.CroleId == 2));
+
+                if (found != null)
+                {
+                    ViewBag.CashWallet = found.CusrCashwlt;
+                    ViewBag.TotalCommission = found.MemberDownlineTotalCommission;
+                }
+
             }
 
             return View("Profile", am);
@@ -1941,7 +1956,7 @@ namespace FreshMVC.Controllers
             return View("Withdrawal", am);
         }
 
-        public IActionResult WithdrawalMethod(string password, decimal withdrawalAmount, decimal balanceAmount, decimal serviceFee, int bankId)
+        public IActionResult WithdrawalMethod(string password, decimal withdrawalAmount, decimal serviceFee, int bankId)
         {
             string usernameCookie = "";
             try
@@ -1964,6 +1979,7 @@ namespace FreshMVC.Controllers
                     reloadPage = true
                 });
             }
+            
             if (withdrawalAmount <= 0)
             {
                 Response.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -1973,7 +1989,8 @@ namespace FreshMVC.Controllers
                     message = Resources.PackBuddyShared.msgInvalidAmount
                 });
             }
-            else if(bankId <= 0)
+            
+            if (bankId <= 0)
             {
                 Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return Json(new
@@ -1982,7 +1999,8 @@ namespace FreshMVC.Controllers
                     message = Resources.PackBuddyShared.msgInvalidBankId
                 });
             }
-            else if (string.IsNullOrEmpty(password))
+            
+            if (string.IsNullOrEmpty(password))
             {
                 Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return Json(new
@@ -1991,7 +2009,18 @@ namespace FreshMVC.Controllers
                     message = Resources.PackBuddyShared.msgInvalidPassword
                 }); ;
             }
-            else if (withdrawalAmount > balanceAmount)
+
+            decimal balanceAmount = 0;
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var found = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && (c.CroleId == 3 || c.CroleId == 2));
+                if (found != null)
+                {
+                    balanceAmount = found.CusrCashwlt.Value;                    
+                }
+            }
+
+            if (withdrawalAmount > balanceAmount)
             {
                 Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return Json(new
@@ -2003,7 +2032,8 @@ namespace FreshMVC.Controllers
             string message = ValidatePassword(usernameCookie, password);
             if (string.IsNullOrEmpty(message))
             {
-                AdminDB.CashWalletOperation(usernameCookie, withdrawalAmount * -1, "WDR", 0, "", "", "1", serviceFee, bankId);
+                withdrawalAmount = 0 - withdrawalAmount;
+                AdminDB.CashWalletOperation(usernameCookie, withdrawalAmount, "WDR", 0, "", "", "0", serviceFee, bankId);
             }
             else
             {
@@ -2054,9 +2084,41 @@ namespace FreshMVC.Controllers
                 return message;
             }
         }
+
         #endregion
 
+        #region MyOrder
+        public ActionResult MyOrder()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
 
+            var am = new MemberHomeModel();
+
+            if (usernameCookie == "")
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            return View("MyOrder", am);
+        }
+        #endregion
+
+        #region RechargeMethod
         public IActionResult RechargeMethod(string rechargeAmount)
         {
             string usernameCookie = "";
@@ -2093,7 +2155,9 @@ namespace FreshMVC.Controllers
 
             return StatusCode((int)HttpStatusCode.OK);
         }
+        #endregion
 
+        #region CreatePaymentTwo + ReturnUrl
         public IActionResult CreatePaymentTwo(decimal amount, string bankName, string accountName, string cardNo, string branch, string province, string city)
         {
             string username = "";
@@ -2238,5 +2302,119 @@ namespace FreshMVC.Controllers
 
             return View("ReturnUrl");
         }
+        #endregion
+
+        #region MyTeam
+        public ActionResult MyTeam(string upIDEnc)
+        {
+            string usernameCookie = "";
+            string upID = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+                upID = Authentication.MD5Decrypt(upIDEnc);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new SponsorChartModel();
+
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var foundAgentOrUser = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && (c.CroleId == 3 || c.CroleId == 2));
+                var foundUpID = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == upID);
+
+                if (foundAgentOrUser == null)
+                {
+                    return RedirectToAction("ClientLogin", "UserLogin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+                else
+                {
+                    //am.RedPacketBalance = (decimal)foundAgent.CusrRedpacketwlt;
+                }
+
+                if (foundUpID == null)
+                {
+                    upID = "";
+                }
+            }
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            //if upID is not empty string, means we want to view upID sponsor chart. Else we view the logged in account sponsor chart
+            if (upID == "")
+            {
+                upID = usernameCookie;
+            }
+
+            am.Upline = upID;
+            am.UpIDEnc = upIDEnc;
+
+            var dsAdmin = MerchantGeneralDB.GetSponsorTreeByUsername(upID);
+
+            //First level
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                SponsorModel temp = new SponsorModel();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.EncryptedUsername = Authentication.MD5Encrypt(temp.Username);
+
+                am.FirstLevel.Add(temp);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[1].Rows)
+            {
+                SponsorModel temp = new SponsorModel();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.EncryptedUsername = Authentication.MD5Encrypt(temp.Username);
+
+                am.SecondLevel.Add(temp);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[2].Rows)
+            {
+                SponsorModel temp = new SponsorModel();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.EncryptedUsername = Authentication.MD5Encrypt(temp.Username);
+
+                am.ThirdLevel.Add(temp);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[3].Rows)
+            {
+                SponsorModel temp = new SponsorModel();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.EncryptedUsername = Authentication.MD5Encrypt(temp.Username);
+
+                am.FourthLevel.Add(temp);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[4].Rows)
+            {
+                SponsorModel temp = new SponsorModel();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.EncryptedUsername = Authentication.MD5Encrypt(temp.Username);
+
+                am.FifthLevel.Add(temp);
+            }
+
+            return View("MyTeam", am);
+        }
+        #endregion
     }
 }

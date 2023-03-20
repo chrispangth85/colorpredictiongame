@@ -112,6 +112,31 @@ namespace Entity.Context
                     .IsUnicode(false)
                     .HasColumnName("CUSR_USERNAME");
 
+                entity.Property(e => e.MemberDownlineTotalBet)
+                    .HasColumnType("decimal(15, 2)")
+                    .HasColumnName("MEMBER_DOWNLINE_TOTAL_BET")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.MemberDownlineTotalCommission)
+                    .HasColumnType("decimal(15, 2)")
+                    .HasColumnName("MEMBER_DOWNLINE_TOTAL_COMMISSION")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.MemberDownlineTotalRecharge)
+                    .HasColumnType("decimal(15, 2)")
+                    .HasColumnName("MEMBER_DOWNLINE_TOTAL_RECHARGE")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.MemberDownlineTotalWin)
+                    .HasColumnType("decimal(15, 2)")
+                    .HasColumnName("MEMBER_DOWNLINE_TOTAL_WIN")
+                    .HasDefaultValueSql("((0))");
+
+                entity.Property(e => e.MemberDownlineTotalWithdrawal)
+                    .HasColumnType("decimal(15, 2)")
+                    .HasColumnName("MEMBER_DOWNLINE_TOTAL_WITHDRAWAL")
+                    .HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.MemberLevel2Intro)
                     .HasMaxLength(200)
                     .HasColumnName("MEMBER_LEVEL2_INTRO")

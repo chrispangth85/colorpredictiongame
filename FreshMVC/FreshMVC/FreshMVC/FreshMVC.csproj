@@ -41,13 +41,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="Resources\Shared.Designer.cs">
-      <DependentUpon>Shared.resx</DependentUpon>
+    <Compile Update="Resources\PackBuddyShared.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-    </Compile>
-    <Compile Update="Resources\PackBuddyShared.Designer.cs">
       <DependentUpon>PackBuddyShared.resx</DependentUpon>
+    </Compile>
+    <Compile Update="Resources\Shared.Designer.cs">
+      <DependentUpon>Shared.resx</DependentUpon>
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
     </Compile>

@@ -36,23 +36,29 @@ AS
 		RETURN		
 				
 	DECLARE @wallet decimal(15, 2) = 0
-			
+	
 	UPDATE [dbo].CVD_USER
 	SET CUSR_CASHWLT = CUSR_CASHWLT + @cashNum 
 	WHERE CUSR_USERNAME = @username
 
 	--This Recharge wallet is to keep track how much customer will need to spend on 'betting' in order for them to withdraw
 	IF @cashName = 'RED_PACKET'
-		BEGIN
-			UPDATE [dbo].CVD_USER
-			SET CUSR_RECHARGEWLT = CUSR_RECHARGEWLT + @cashNum 
-			WHERE CUSR_USERNAME = @username
-		END
+	BEGIN
+		UPDATE [dbo].CVD_USER
+		SET CUSR_RECHARGEWLT = CUSR_RECHARGEWLT + @cashNum 
+		WHERE CUSR_USERNAME = @username
+	END
+
+	IF @cashName = 'WIN_BET'
+	BEGIN
+		--This is to pass all upline total downline win
+		INSERT INTO [dbo].[CVD_PENDING_JOB]([CUSR_USERNAME], [CJOB_CASHNAME], [CJOB_AMOUNT], [CJOB_APPOTHER1], [CJOB_APPOTHER2], [CJOB_STATUS], [CJOB_CREATEDON])
+		VALUES (@username, 'BetWin', @cashNum, '', '', 0, @gmt_date)
+	END
 
 	SELECT @wallet = CUSR_CASHWLT
 	FROM [dbo].CVD_USER
-	WHERE CUSR_USERNAME = @username
-		
+	WHERE CUSR_USERNAME = @username					
 
 	IF @cashName = 'WDR'
 		BEGIN
@@ -70,19 +76,25 @@ AS
 			INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, CCASH_CARDNUMBER, CCASH_BRANCH, CCASH_STATE, CCASH_CITY, CCASH_BANKNAME ,CCASH_BANKACCOUNTNAME, [CCASH_CREATEDON])
 			VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status,@cardnumber,@cardbranch,@cardstate,@cardcity,@cardbankname,@cardbankaccountname, @gmt_date)
 		END
-	ELSE 
-		IF (@cashNum < 0)
-			BEGIN
-				INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, [CCASH_CREATEDON])
-				VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status, @gmt_date)
-			END
+	ELSE
+	BEGIN
+		IF @cashNum < 0
+		BEGIN
+			INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, [CCASH_CREATEDON])
+			VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status, @gmt_date)
+		END
 		ELSE
-			BEGIN
-				INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, [CCASH_CREATEDON])
-				VALUES(@username, @cashNum, 0, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status, @gmt_date)
-			END	
-		
+		BEGIN
+			INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, [CCASH_CREATEDON])
+			VALUES(@username, @cashNum, 0, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status, @gmt_date)
+		END	
+	END
+	
 	RETURN
+
+
+
+
 GO
 
 

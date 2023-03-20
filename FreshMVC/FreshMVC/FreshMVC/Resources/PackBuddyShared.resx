@@ -168,6 +168,9 @@
   <data name="lblAgent" xml:space="preserve">
     <value>Agent</value>
   </data>
+  <data name="lblAll" xml:space="preserve">
+    <value>All</value>
+  </data>
   <data name="lblAmount" xml:space="preserve">
     <value>Amount</value>
   </data>
@@ -227,6 +230,9 @@
   </data>
   <data name="lblClaimedOn" xml:space="preserve">
     <value>Claimed On</value>
+  </data>
+  <data name="lblCompleted" xml:space="preserve">
+    <value>Completed</value>
   </data>
   <data name="lblConfirm" xml:space="preserve">
     <value>Confirm</value>
@@ -357,6 +363,9 @@
   <data name="lblJoinViolet" xml:space="preserve">
     <value>Join Violet</value>
   </data>
+  <data name="lblLanguage" xml:space="preserve">
+    <value>Language</value>
+  </data>
   <data name="lblLogin" xml:space="preserve">
     <value>Login</value>
   </data>
@@ -374,6 +383,12 @@
   </data>
   <data name="lblMyRecord" xml:space="preserve">
     <value>My Record</value>
+  </data>
+  <data name="lblMyReferral" xml:space="preserve">
+    <value>My Referral</value>
+  </data>
+  <data name="lblMyTeam" xml:space="preserve">
+    <value>My Team</value>
   </data>
   <data name="lblName" xml:space="preserve">
     <value>Name</value>
@@ -462,6 +477,9 @@
   <data name="lblPayout" xml:space="preserve">
     <value>Payout</value>
   </data>
+  <data name="lblPendingDelivery" xml:space="preserve">
+    <value>Pending Delivery</value>
+  </data>
   <data name="lblPeriod" xml:space="preserve">
     <value>Period</value>
   </data>
@@ -522,6 +540,9 @@
   <data name="lblServiceFee" xml:space="preserve">
     <value>Service Fee</value>
   </data>
+  <data name="lblShipped" xml:space="preserve">
+    <value>Shipped</value>
+  </data>
   <data name="lblShowPassword" xml:space="preserve">
     <value>Show Password</value>
   </data>
@@ -545,6 +566,9 @@
   </data>
   <data name="lblTo" xml:space="preserve">
     <value>To</value>
+  </data>
+  <data name="lblTotalBalance" xml:space="preserve">
+    <value>Total Balance</value>
   </data>
   <data name="lblTransaction" xml:space="preserve">
     <value>Transaction</value>
@@ -611,6 +635,9 @@
   </data>
   <data name="mnuLotteryBetListing" xml:space="preserve">
     <value>Lottery Bet Listing</value>
+  </data>
+  <data name="mnuMyOrder" xml:space="preserve">
+    <value>My Order</value>
   </data>
   <data name="mnuProduct" xml:space="preserve">
     <value>Products</value>

@@ -222,7 +222,7 @@ namespace FreshMVC.Component
             return ds;
         }
 
-        public static void CashWalletOperation(string username, decimal netAmount, string type, int orderId, string paymentType, string referenceNo, string status, decimal serviceFee = 0,  int bankId = 0)
+        public static void CashWalletOperation(string username, decimal netAmount, string type, int orderId, string paymentType, string referenceNo, string status, decimal serviceFee = 0, int bankId = 0)
         {
             SqlConnection sqlConn = DBConn.GetConnection();
             sqlConn.Open();

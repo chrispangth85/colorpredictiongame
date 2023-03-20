@@ -43,6 +43,10 @@ AS
 	AND [CGAME_PERIOD] = @period
 	AND [CGAME_STATUS] = 1--Game must be 'Active' state
 
+	--This is to pass all upline total downline bet
+	INSERT INTO [dbo].[CVD_PENDING_JOB]([CUSR_USERNAME], [CJOB_CASHNAME], [CJOB_AMOUNT], [CJOB_APPOTHER1], [CJOB_APPOTHER2], [CJOB_STATUS], [CJOB_CREATEDON])
+	VALUES (@username, 'PlaceBet', @amount, '', '', 0, @gmt_date)
+
 	--Check game session valid or not
 	IF @found = 0
 	BEGIN

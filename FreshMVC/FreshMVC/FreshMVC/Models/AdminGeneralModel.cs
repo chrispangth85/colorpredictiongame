@@ -627,7 +627,7 @@ namespace FreshMVC.Models
     }
 
     public class PaginationPaymentModel : PaginationBase
-    { 
+    {
         public IEnumerable<SelectListItem> FilteringCriteria { get; set; }
         public string SelectedFilteringCriteria { get; set; }
         public string FilterValue { get; set; }
@@ -1569,6 +1569,7 @@ namespace FreshMVC.Models
     public class GameHistoryRecord
     {
         public string Period { get; set; }
+        public decimal TotalBet { get; set; }
         public decimal Price { get; set; }
         public int ResultNumber { get; set; }
         public string ResultNumberString { get; set; }

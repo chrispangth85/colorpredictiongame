@@ -39,6 +39,42 @@
 
         $(document).ready(function () {
 
+            $("#lanCN").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                var cId = "zh-CN";
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/ChangeLanguageFromLogin",
+                    data: { languageCode: cId },
+                    success: function (data) {
+                        //refresh page.
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        //refresh page.
+                        location.reload();
+                    }
+                });
+            });
+
+            $("#lanEN").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                var cId = "en-US";
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/ChangeLanguageFromLogin",
+                    data: { languageCode: cId },
+                    success: function (data) {
+                        //refresh page.
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        //refresh page.
+                        location.reload();
+                    }
+                });
+            });
+
             $("#Logout").click(function (evt) {
                 $('.page-loader-wrapper').show();
                 var url = '@Url.Action("Login", "Admin", new { reloadPage = -1 })';
@@ -304,7 +340,34 @@
                 <div class="navbar-right">
                     <div id="navbar-menu">
                         <ul class="nav navbar-nav">
-
+                            <li class="dropdown tasks-menu">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                    <i class="fa fa-language">&nbsp;&nbsp;@resShared.lblLanguage</i> <span class="label label-danger">
+                                    </span>
+                                </a>
+                                <ul class="dropdown-menu" style="padding: 10px !important;">
+                                    <li>
+                                        <!-- inner menu: contains the actual data -->
+                                        <ul class="" style="padding-inline-start:0px;">
+                                            <li style="list-style-type: none; ">
+                                                <a id="lanEN" href="#">
+                                                    <h3 style="font-size: 14px; padding: 0; margin: 3px 3px 15px 3px; color: #666;">
+                                                        English
+                                                    </h3>
+                                                </a>
+                                            </li>
+                                            <!-- end task item -->
+                                            <li style="list-style-type: none; ">
+                                                <a id="lanCN"  href="#">
+                                                    <h3 style="font-size: 14px; padding: 0; margin: 0 0 10px; color: #666;">
+                                                        简体
+                                                    </h3>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
                             <li><a id="Logout" href="#" class="icon-menu"><i class="icon-login"></i></a></li>
                         </ul>
                     </div>
