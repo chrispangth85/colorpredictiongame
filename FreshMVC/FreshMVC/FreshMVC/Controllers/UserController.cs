@@ -2416,5 +2416,51 @@ namespace FreshMVC.Controllers
             return View("MyTeam", am);
         }
         #endregion
+
+        #region Transaction
+        public ActionResult Transaction()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new PaginationPaymentModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var transactionFound = dbContext.CvdCashwalletlog.OrderByDescending(t => t.CcashCreatedon).Take(100);
+                foreach (var transaction in transactionFound)
+                {
+                    PaymentModel paymentModel = new PaymentModel();
+                    paymentModel.Username = transaction.CusrUsername;
+                    paymentModel.RefNo = transaction.CcashAppother;
+                    paymentModel.Remark = transaction.CcashCashname;
+                    paymentModel.FinalAmount = Convert.ToString(Convert.ToDecimal(transaction.CcashCashin) == 0 ? Convert.ToDecimal(transaction.CcashCashout) : Convert.ToDecimal(transaction.CcashCashin));
+                    paymentModel.Created = transaction.CcashCreatedon.ToString("dd/MM/yyyy HH:mm:ss");
+                    paymentModel.Status = transaction.CcashStatus == 0 ? Resources.PackBuddyShared.lblInProgress : transaction.CcashStatus == 1 ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+                    am.List.Add(paymentModel);
+                }
+            }
+         
+            return View("Transaction", am);
+        }
+        #endregion
     }
 }
