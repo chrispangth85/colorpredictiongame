@@ -1978,6 +1978,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Withdrawal amount exceeds the maximum withdrawal amount allowed..
+        /// </summary>
+        public static string msgExceedMaxWithdrawalAmount {
+            get {
+                return ResourceManager.GetString("msgExceedMaxWithdrawalAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to You balance is insufficient.
         /// </summary>
         public static string msgGameInsufficientFund {
@@ -2118,6 +2127,15 @@ namespace FreshMVC.Resources {
         public static string msgInvalidToDate {
             get {
                 return ResourceManager.GetString("msgInvalidToDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Withdrawal amount is less than the minimum withdrawal amount allowed..
+        /// </summary>
+        public static string msgLessMinWithdrawalAmount {
+            get {
+                return ResourceManager.GetString("msgLessMinWithdrawalAmount", resourceCulture);
             }
         }
         

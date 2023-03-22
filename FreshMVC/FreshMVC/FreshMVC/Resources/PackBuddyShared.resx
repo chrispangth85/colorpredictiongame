@@ -756,6 +756,9 @@
   <data name="msgDurationMustBeLongerThan60Seconds" xml:space="preserve">
     <value>Duration must be longer than 60 seconds</value>
   </data>
+  <data name="msgExceedMaxWithdrawalAmount" xml:space="preserve">
+    <value>Withdrawal amount exceeds the maximum withdrawal amount allowed.</value>
+  </data>
   <data name="msgGameInsufficientFund" xml:space="preserve">
     <value>You balance is insufficient</value>
   </data>
@@ -803,6 +806,9 @@
   </data>
   <data name="msgInvalidToDate" xml:space="preserve">
     <value>Invalid To Date</value>
+  </data>
+  <data name="msgLessMinWithdrawalAmount" xml:space="preserve">
+    <value>Withdrawal amount is less than the minimum withdrawal amount allowed.</value>
   </data>
   <data name="msgOrderPlaceSucessfully" xml:space="preserve">
     <value>Order placed successfully</value>

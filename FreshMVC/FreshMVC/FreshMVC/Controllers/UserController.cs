@@ -2013,6 +2013,42 @@ namespace FreshMVC.Controllers
             decimal balanceAmount = 0;
             using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
             {
+                var withdrawalSettingFound = dbContext.CvdParameter.Where(c => c.CparaName == "WithdrawalMinAmount" || c.CparaName == "WithdrawalMaxAmount").ToList();
+                decimal minWithdrawalAmount = 0;
+                decimal maxWithdrawalAmount = 0;
+                if (withdrawalSettingFound != null)
+                {
+                    foreach(CvdParameter withdrawalSetting in withdrawalSettingFound)
+                    {
+                        if (withdrawalSetting.CparaName == "WithdrawalMinAmount")
+                        {
+                            minWithdrawalAmount = withdrawalSetting.CparaDecimalvalue;
+                        }
+                        if (withdrawalSetting.CparaName == "WithdrawalMaxAmount")
+                        {
+                            maxWithdrawalAmount = withdrawalSetting.CparaDecimalvalue;
+                        }
+                    }
+                }
+                if (minWithdrawalAmount > withdrawalAmount)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.msgLessMinWithdrawalAmount
+                    }); ;
+                }
+                if (withdrawalAmount > maxWithdrawalAmount)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.msgExceedMaxWithdrawalAmount
+                    }); ;
+                }
+
                 var found = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && (c.CroleId == 3 || c.CroleId == 2));
                 if (found != null)
                 {
