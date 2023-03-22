@@ -1932,7 +1932,7 @@ namespace FreshMVC.Controllers
                 {
                     am.Amount = userFound.CusrCashwlt.Value.ToString("0.00");
                 }
-                var serviceFeeFound = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "ServiceFee");
+                var serviceFeeFound = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "WithdrawalServiceFee");
                 if (serviceFeeFound != null)
                 {
                     am.ServiceFee = serviceFeeFound.CparaDecimalvalue.ToString("0.00");
