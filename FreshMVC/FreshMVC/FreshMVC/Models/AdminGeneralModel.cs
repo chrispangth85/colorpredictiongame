@@ -1618,4 +1618,28 @@ namespace FreshMVC.Models
 
         }
     }
+
+    public class SystemConfigurationModel
+    {
+        public decimal WithdrawalMinAmount { get; set; }
+        public decimal WithdrawalMaxAmount { get; set; }
+        public decimal WithdrawalServiceFee { get; set; }
+        public decimal FirstChargeLevel1 { get; set; }
+        public decimal FirstChargeLevel2 { get; set; }
+        public decimal RechargeMinAmount { get; set; }
+        public decimal RechargeMaxAmount { get; set; }
+        public decimal WinningLevel1 { get; set; }
+        public decimal WinningLevel2 { get; set; }
+        public decimal GameServiceFee { get; set; }
+        public decimal GameHandlingFee { get; set; }
+        public decimal SponsorBonusLevel1 { get; set; }
+        public decimal SponsorBonusLevel2 { get; set; }
+        public decimal SponsorBonusLevel3 { get; set; }
+        public string GatewayPaymentHost { get; set; }
+        public string GatewayWithdrawalHost { get; set; }
+        public string GatewayMemberID { get; set; }
+        public string GatewayPaymentKey { get; set; }
+        public string SupportPhoneNumber { get; set; }
+        public string SupportApkUrl { get; set; }
+    }
 }

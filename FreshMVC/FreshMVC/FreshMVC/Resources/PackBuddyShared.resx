@@ -174,6 +174,12 @@
   <data name="lblAmount" xml:space="preserve">
     <value>Amount</value>
   </data>
+  <data name="lblApkUrl" xml:space="preserve">
+    <value>Apk Url</value>
+  </data>
+  <data name="lblApkUrlIsRequired" xml:space="preserve">
+    <value>Apk Url is Required</value>
+  </data>
   <data name="lblApplicationTime" xml:space="preserve">
     <value>Application Time</value>
   </data>
@@ -297,8 +303,14 @@
   <data name="lblFinalAmount" xml:space="preserve">
     <value>Final Amount</value>
   </data>
+  <data name="lblFirstCharge" xml:space="preserve">
+    <value>First Charge</value>
+  </data>
   <data name="lblFirstLevel" xml:space="preserve">
     <value>First Level</value>
+  </data>
+  <data name="lblFirstLevelCommisison" xml:space="preserve">
+    <value>First Level Commission</value>
   </data>
   <data name="lblFirstName" xml:space="preserve">
     <value>First Name</value>
@@ -312,6 +324,9 @@
   <data name="lblFrom" xml:space="preserve">
     <value>From</value>
   </data>
+  <data name="lblGameFees" xml:space="preserve">
+    <value>Game Fees</value>
+  </data>
   <data name="lblGiveAllThisLevel" xml:space="preserve">
     <value>Give All This Level</value>
   </data>
@@ -323,6 +338,9 @@
   </data>
   <data name="lblGreenReturn" xml:space="preserve">
     <value>Green return rate</value>
+  </data>
+  <data name="lblHandlingFee" xml:space="preserve">
+    <value>Handling Fee</value>
   </data>
   <data name="lblIFSCCode" xml:space="preserve">
     <value>IFSC Code</value>
@@ -372,11 +390,23 @@
   <data name="lblLogOut" xml:space="preserve">
     <value>Logout</value>
   </data>
+  <data name="lblMaxAmount" xml:space="preserve">
+    <value>Max Amount</value>
+  </data>
   <data name="lblMember" xml:space="preserve">
     <value>Member</value>
   </data>
+  <data name="lblMemberID" xml:space="preserve">
+    <value>Member ID</value>
+  </data>
+  <data name="lblMemberIDIsRequired" xml:space="preserve">
+    <value>Member ID is Required</value>
+  </data>
   <data name="lblMemberType" xml:space="preserve">
     <value>Member Type</value>
+  </data>
+  <data name="lblMinAmount" xml:space="preserve">
+    <value>Min Amount</value>
   </data>
   <data name="lblMobile" xml:space="preserve">
     <value>Mobile</value>
@@ -474,6 +504,21 @@
   <data name="lblPayment" xml:space="preserve">
     <value>Payment</value>
   </data>
+  <data name="lblPaymentGateway" xml:space="preserve">
+    <value>Payment Gateway</value>
+  </data>
+  <data name="lblPaymentHost" xml:space="preserve">
+    <value>Payment Host</value>
+  </data>
+  <data name="lblPaymentHostIsRequired" xml:space="preserve">
+    <value>Payment Host is Required</value>
+  </data>
+  <data name="lblPaymentKey" xml:space="preserve">
+    <value>Payment Key</value>
+  </data>
+  <data name="lblPaymentKeyIsRequired" xml:space="preserve">
+    <value>Payment Key is Required</value>
+  </data>
   <data name="lblPayout" xml:space="preserve">
     <value>Payout</value>
   </data>
@@ -488,6 +533,12 @@
   </data>
   <data name="lblPhoneIsRequired" xml:space="preserve">
     <value>Phone is required</value>
+  </data>
+  <data name="lblPhoneNumber" xml:space="preserve">
+    <value>Phone Number</value>
+  </data>
+  <data name="lblPhoneNumberIsRequired" xml:space="preserve">
+    <value>Phone Number is Required</value>
   </data>
   <data name="lblPleaseWait" xml:space="preserve">
     <value>Please Wait</value>
@@ -534,6 +585,9 @@
   <data name="lblSecondLevel" xml:space="preserve">
     <value>Second Level</value>
   </data>
+  <data name="lblSecondLevelCommission" xml:space="preserve">
+    <value>Second Level Commission</value>
+  </data>
   <data name="lblSelectBankCard" xml:space="preserve">
     <value>Select Bank Card</value>
   </data>
@@ -549,6 +603,9 @@
   <data name="lblSoldOut" xml:space="preserve">
     <value>SOLD OUT</value>
   </data>
+  <data name="lblSponsorBonus" xml:space="preserve">
+    <value>Sponsor Bonus</value>
+  </data>
   <data name="lblStart" xml:space="preserve">
     <value>Start</value>
   </data>
@@ -561,8 +618,14 @@
   <data name="lblSuccess" xml:space="preserve">
     <value>Success</value>
   </data>
+  <data name="lblSupport" xml:space="preserve">
+    <value>Support</value>
+  </data>
   <data name="lblThirdLevel" xml:space="preserve">
     <value>Third Level</value>
+  </data>
+  <data name="lblThirdLevelCommission" xml:space="preserve">
+    <value>Third Level Commission</value>
   </data>
   <data name="lblTo" xml:space="preserve">
     <value>To</value>
@@ -612,11 +675,20 @@
   <data name="lblWin" xml:space="preserve">
     <value>Win</value>
   </data>
+  <data name="lblWinning" xml:space="preserve">
+    <value>Winning</value>
+  </data>
   <data name="lblWithdrawal" xml:space="preserve">
     <value>Withdrawal</value>
   </data>
   <data name="lblWithdrawalAmount" xml:space="preserve">
     <value>Withdrawal Amount</value>
+  </data>
+  <data name="lblWithdrawHost" xml:space="preserve">
+    <value>Withdraw Host</value>
+  </data>
+  <data name="lblWithdrawHostIsRequired" xml:space="preserve">
+    <value>Withdraw Host is Required</value>
   </data>
   <data name="mnuAdmin" xml:space="preserve">
     <value>Admin</value>
@@ -650,6 +722,9 @@
   </data>
   <data name="mnuSessionListing" xml:space="preserve">
     <value>Session Listing</value>
+  </data>
+  <data name="mnuSystemConfiguration" xml:space="preserve">
+    <value>System Configuration</value>
   </data>
   <data name="mnuTransaction" xml:space="preserve">
     <value>Transaction</value>

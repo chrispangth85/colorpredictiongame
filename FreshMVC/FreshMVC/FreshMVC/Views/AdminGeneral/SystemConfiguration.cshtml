@@ -1,0 +1,202 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared;
+@using FreshMVC.Models
+@model SystemConfigurationModel
+
+<script type="text/javascript">
+       $("#btnSaveAd").click(function (evt) {
+        $('.page-loader-wrapper').show();
+
+        let formData = new FormData($("#editAdForm")[0]);
+      
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/EditSystemConfigurationMethod",
+            data: formData,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                $('.page-loader-wrapper').hide();
+                $("#main-content").html(data);
+                alert("@resShared.msgSaveSuccessfully");
+            },
+            error: function (xhr, status, error) {
+                $('.page-loader-wrapper').hide();
+                let r = jQuery.parseJSON(xhr.responseText);
+                var errorM = r.message;
+                alert(errorM);
+            }
+        });
+     });
+
+</script>
+
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <h2>@resShared.mnuSystemConfiguration</h2>
+            </div>
+        </div>
+    </div>
+    @using (Html.BeginForm("EditAdminPermissionMethod", "AdminGeneral", FormMethod.Post, new { name = "editAdForm", id = "editAdForm" }))
+    {
+        <div class="grid" style="margin-left: 10px; margin-right: 10px">
+            <div class="table-responsive">
+                <div class="row">
+                    <div class="grid" style="margin-left: 15px; width: 25%">
+                        <div class="card">
+                            <div class="body">
+                                <p class="lead">@resShared.lblFirstCharge</p>
+                                <div class="form-group">
+                                    <a>@resShared.lblFirstLevelCommisison</a>
+                                    @Html.TextBoxFor(model => model.FirstChargeLevel1, new { @class = "form-control", @type = "number", @min = "0", @id = "FirstChargeFirstLevelCommission" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblSecondLevelCommission</a>
+                                    @Html.TextBoxFor(model => model.FirstChargeLevel2, new { @class = "form-control", @type = "number", @min = "0", @id = "FirstChargeSecondLevelCommission" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid" style="margin-left: 30px; width: 25%">
+                        <div class="card">
+                            <div class="body">
+                                <p class="lead">@resShared.lblRecharge</p>
+                                <div class="form-group">
+                                    <a>@resShared.lblMinAmount</a>
+                                    @Html.TextBoxFor(model => model.RechargeMinAmount, new { @class = "form-control", @type = "number", @min = "0", @id = "RechargeMinAmount" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblMaxAmount</a>
+                                    @Html.TextBoxFor(model => model.RechargeMaxAmount, new { @class = "form-control", @type = "number", @min = "0", @id = "RechargeMaxAmount" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid" style="margin-left: 30px; width: 25%">
+                        <div class="card">
+                            <div class="body">
+                                <p class="lead">@resShared.lblWinning</p>
+                                <div class="form-group">
+                                    <a>@resShared.lblFirstLevelCommisison</a>
+                                    @Html.TextBoxFor(model => model.WinningLevel2, new { @class = "form-control", @type = "number", @min = "0", @id = "WinningFirstLevelCommission" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblSecondLevelCommission</a>
+                                    @Html.TextBoxFor(model => model.WinningLevel1, new { @class = "form-control", @type = "number", @min = "0", @id = "WinningSecondLevelCommission" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="grid" style="margin-left: 15px;width:25%">
+                        <div class="card">
+                            <div class="body">
+                                <p class="lead">@resShared.lblWithdrawal</p>
+                                <div class="form-group">
+                                    <a>@resShared.lblMinAmount</a>
+                                    @Html.TextBoxFor(model => model.WithdrawalMinAmount, new { @class = "form-control", @type = "number", @min = "0", @id = "WithdrawalMinAmount" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblMaxAmount</a>
+                                    @Html.TextBoxFor(model => model.WithdrawalMaxAmount, new { @class = "form-control", @type = "number", @min = "0", @id = "WithdrawalMaxAmount" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblServiceFee</a>
+                                    @Html.TextBoxFor(model => model.WithdrawalServiceFee, new { @class = "form-control", @type = "number", @min = "0", @id = "WithdrawalServiceFee" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid" style="margin-left: 30px;width:25%">
+                        <div class="card">
+                            <div class="body">
+                                <p class="lead">@resShared.lblSponsorBonus</p>
+                                <div class="form-group">
+                                    <a>@resShared.lblFirstLevelCommisison</a>
+                                    @Html.TextBoxFor(model => model.SponsorBonusLevel1, new { @class = "form-control", @type = "number", @min = "0", @id = "SponsorBonusLevel1" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblSecondLevelCommission</a>
+                                    @Html.TextBoxFor(model => model.SponsorBonusLevel2, new { @class = "form-control", @type = "number", @min = "0", @id = "SponsorBonusLevel2" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblThirdLevelCommission</a>
+                                    @Html.TextBoxFor(model => model.SponsorBonusLevel3, new { @class = "form-control", @type = "number", @min = "0", @id = "SponsorBonusLevel3" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid" style="margin-left: 30px;width:25%">
+                        <div class="card">
+                            <div class="body">
+                                <p class="lead">@resShared.lblGameFees</p>
+                                <div class="form-group">
+                                    <a>@resShared.lblHandlingFee</a>
+                                    @Html.TextBoxFor(model => model.GameHandlingFee, new { @class = "form-control", @type = "number", @min = "0", @id = "GameHandlingFee" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblServiceFee</a>
+                                    @Html.TextBoxFor(model => model.GameServiceFee, new { @class = "form-control", @type = "number", @min = "0", @id = "GameServiceFee" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="grid" style="margin-left: 15px;width:80%">
+                        <div class="card">
+                            <div class="body">
+                                <p class="lead">@resShared.lblPaymentGateway</p>
+                                <div class="form-group">
+                                    <a>@resShared.lblPaymentHost</a>
+                                    @Html.TextBoxFor(model => model.GatewayPaymentHost, new { @class = "form-control", @id = "GatewayPaymentHost" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblWithdrawHost</a>
+                                    @Html.TextBoxFor(model => model.GatewayWithdrawalHost, new { @class = "form-control", @id = "GatewayWithdrawalHost" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblMemberID</a>
+                                    @Html.TextBoxFor(model => model.GatewayMemberID, new { @class = "form-control", @id = "GatewayMemberID" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblPaymentKey</a>
+                                    @Html.TextBoxFor(model => model.GatewayPaymentKey, new { @class = "form-control", @type = "password", @id = "GatewayPaymentKey" })
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="grid" style="margin-left: 15px;width:80%">
+                        <div class="card">
+                            <div class="body">
+                                <p class="lead">@resShared.lblSupport</p>
+                                <div class="form-group">
+                                    <a>@resShared.lblPhoneNumber</a>
+                                    @Html.TextBoxFor(model => model.SupportPhoneNumber, new { @class = "form-control", @id = "SupportPhoneNumber" })
+                                </div>
+                                <div class="form-group">
+                                    <a>@resShared.lblApkUrl</a>
+                                    @Html.TextBoxFor(model => model.SupportApkUrl, new { @class = "form-control", @id = "SupportApkUrl" })
+                                </div>
+                            </div>
+                        </div>
+                        <input id="btnSaveAd" type="button" class="btn btn-sm btn-primary" style="width:180px; height:35px" value="@resShared.btnSave" />
+                        <br/> 
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

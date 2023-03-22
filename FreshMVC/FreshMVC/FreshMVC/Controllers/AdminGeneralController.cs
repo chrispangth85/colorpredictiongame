@@ -2194,5 +2194,254 @@ namespace FreshMVC.Controllers
             }
         }
         #endregion
+
+        #region SystemConfiguration
+        public IActionResult SystemConfiguration()
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var model = new SystemConfigurationModel();
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var parameters = dbContext.CvdParameter.ToList();
+
+                if (parameters != null)
+                {
+                    foreach(var parameter in parameters)
+                    {
+                        switch (parameter.CparaName)
+                        {
+                            case "WithdrawalMinAmount":
+                                model.WithdrawalMinAmount = parameter.CparaDecimalvalue;
+                                break;
+                            case "WithdrawalMaxAmount":
+                                model.WithdrawalMaxAmount = parameter.CparaDecimalvalue;
+                                break;
+                            case "WithdrawalServiceFee":
+                                model.WithdrawalServiceFee = parameter.CparaDecimalvalue;
+                                break;
+                            case "FirstChargeLevel1":
+                                model.FirstChargeLevel1 = parameter.CparaDecimalvalue;
+                                break;
+                            case "FirstChargeLevel2":
+                                model.FirstChargeLevel2 = parameter.CparaDecimalvalue;
+                                break;
+                            case "RechargeMinAmount":
+                                model.RechargeMinAmount = parameter.CparaDecimalvalue;
+                                break;
+                            case "RechargeMaxAmount":
+                                model.RechargeMaxAmount = parameter.CparaDecimalvalue;
+                                break;
+                            case "WinningLevel1":
+                                model.WinningLevel1 = parameter.CparaDecimalvalue;
+                                break;
+                            case "WinningLevel2":
+                                model.WinningLevel2 = parameter.CparaDecimalvalue;
+                                break;
+                            case "GameServiceFee":
+                                model.GameServiceFee = parameter.CparaDecimalvalue;
+                                break;
+                            case "GameHandlingFee":
+                                model.GameHandlingFee = parameter.CparaDecimalvalue;
+                                break;
+                            case "SponsorBonusLevel1":
+                                model.SponsorBonusLevel1 = parameter.CparaDecimalvalue;
+                                break;
+                            case "SponsorBonusLevel2":
+                                model.SponsorBonusLevel2 = parameter.CparaDecimalvalue;
+                                break;
+                            case "SponsorBonusLevel3":
+                                model.SponsorBonusLevel3 = parameter.CparaDecimalvalue;
+                                break;
+                            case "GatewayPaymentHost":
+                                model.GatewayPaymentHost = parameter.CparaStringvalue;
+                                break;
+                            case "GatewayWithdrawalHost":
+                                model.GatewayWithdrawalHost = parameter.CparaStringvalue;
+                                break;
+                            case "GatewayMemberID":
+                                model.GatewayMemberID = parameter.CparaStringvalue;
+                                break;
+                            case "GatewayPaymentKey":
+                                model.GatewayPaymentKey = parameter.CparaStringvalue;
+                                break;
+                            case "SupportPhoneNumber":
+                                model.SupportPhoneNumber = parameter.CparaStringvalue;
+                                break;
+                            case "SupportApkUrl":
+                                model.SupportApkUrl = parameter.CparaStringvalue;
+                                break;
+                        }
+                    }
+                }
+            }
+            return PartialView("SystemConfiguration", model);
+        }
+
+
+        [HttpPost]
+        public IActionResult EditSystemConfigurationMethod(SystemConfigurationModel model)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                if (string.IsNullOrEmpty(model.GatewayPaymentHost))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblPaymentHostIsRequired
+                    });
+                }
+
+                if (string.IsNullOrEmpty(model.GatewayWithdrawalHost))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblWithdrawHostIsRequired
+                    }); ;
+                }
+
+                if (string.IsNullOrEmpty(model.GatewayMemberID))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblMemberIDIsRequired
+                    });
+                }
+
+                if (string.IsNullOrEmpty(model.GatewayPaymentKey))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblPaymentKeyIsRequired
+                    });
+                }
+
+                if (string.IsNullOrEmpty(model.SupportPhoneNumber))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblPhoneNumberIsRequired
+                    });
+                }
+
+                if (string.IsNullOrEmpty(model.SupportApkUrl))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblApkUrlIsRequired
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var parameters = dbContext.CvdParameter.ToList();
+                    foreach (var parameter in parameters)
+                    {
+                        switch (parameter.CparaName)
+                        {
+                            case "WithdrawalMinAmount":
+                                parameter.CparaDecimalvalue = model.WithdrawalMinAmount;
+                                break;
+                            case "WithdrawalMaxAmount":
+                                parameter.CparaDecimalvalue = model.WithdrawalMaxAmount;
+                                break;
+                            case "WithdrawalServiceFee":
+                                parameter.CparaDecimalvalue = model.WithdrawalServiceFee;
+                                break;
+                            case "FirstChargeLevel1":
+                                parameter.CparaDecimalvalue = model.FirstChargeLevel1;
+                                break;
+                            case "FirstChargeLevel2":
+                                parameter.CparaDecimalvalue = model.FirstChargeLevel2;
+                                break;
+                            case "RechargeMinAmount":
+                                parameter.CparaDecimalvalue = model.RechargeMinAmount;
+                                break;
+                            case "RechargeMaxAmount":
+                                parameter.CparaDecimalvalue = model.RechargeMaxAmount;
+                                break;
+                            case "WinningLevel1":
+                                parameter.CparaDecimalvalue = model.WinningLevel1;
+                                break;
+                            case "WinningLevel2":
+                                parameter.CparaDecimalvalue = model.WinningLevel2;
+                                break;
+                            case "GameServiceFee":
+                                parameter.CparaDecimalvalue = model.GameServiceFee;
+                                break;
+                            case "GameHandlingFee":
+                                parameter.CparaDecimalvalue = model.GameHandlingFee;
+                                break;
+                            case "SponsorBonusLevel1":
+                                parameter.CparaDecimalvalue = model.SponsorBonusLevel1;
+                                break;
+                            case "SponsorBonusLevel2":
+                                parameter.CparaDecimalvalue = model.SponsorBonusLevel2;
+                                break;
+                            case "SponsorBonusLevel3":
+                                parameter.CparaDecimalvalue = model.SponsorBonusLevel3;
+                                break;
+                            case "GatewayPaymentHost":
+                                parameter.CparaStringvalue = model.GatewayPaymentHost;
+                                break;
+                            case "GatewayWithdrawalHost":
+                                parameter.CparaStringvalue = model.GatewayWithdrawalHost;
+                                break;
+                            case "GatewayMemberID":
+                                parameter.CparaStringvalue = model.GatewayMemberID;
+                                break;
+                            case "GatewayPaymentKey":
+                                parameter.CparaStringvalue = model.GatewayPaymentKey;
+                                break;
+                            case "SupportPhoneNumber":
+                                parameter.CparaStringvalue = model.SupportPhoneNumber;
+                                break;
+                            case "SupportApkUrl":
+                                parameter.CparaStringvalue = model.SupportApkUrl;
+                                break;
+                        }
+                    }
+                    dbContext.SaveChanges();
+
+                }
+                return SystemConfiguration();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+        #endregion
     }
 }

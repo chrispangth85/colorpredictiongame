@@ -261,6 +261,29 @@
                 });
             });
 
+
+            $("#systemConfiguration").click(function (evt) {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#systemConfiguration').addClass('active');
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/SystemConfiguration",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
             
             $("#userListing").click(function (evt) {
                 $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
@@ -441,6 +464,14 @@
                                         <li id="rechargeListing" style="cursor:pointer"><a>@resShared.mnuRechargeListing</a></li>
                                         <li id="withdrawalListing" style="cursor:pointer"><a>@resShared.mnuWithdrawalListing</a></li>
                                     </ul>
+                                </li>
+
+                                <li>
+                                    <a class="has-arrow" id="systemConfiguration"><i class="icon-speedometer"></i><span>@resShared.mnuSystemConfiguration</span></a>
+                                    @*<ul class="mainMenuKH">
+                                        <li id="rechargeListing" style="cursor:pointer"><a>@resShared.mnuRechargeListing</a></li>
+                                        <li id="withdrawalListing" style="cursor:pointer"><a>@resShared.mnuWithdrawalListing</a></li>
+                                    </ul>*@
                                 </li>
                             </ul>
                         </nav>
