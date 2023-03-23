@@ -25,6 +25,7 @@ namespace Entity.Context
             this.OnModelCreatingCvdCashwalletlogContext(modelBuilder);
             this.OnModelCreatingCvdBankContext(modelBuilder);
             this.OnModelCreatingCvdMemberBankContext(modelBuilder);
+            this.OnModelCreatingCvdDailytransContext(modelBuilder);
 
             OnModelCreatingPartial(modelBuilder);
         }

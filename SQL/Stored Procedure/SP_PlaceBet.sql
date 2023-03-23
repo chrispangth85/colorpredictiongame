@@ -43,10 +43,6 @@ AS
 	AND [CGAME_PERIOD] = @period
 	AND [CGAME_STATUS] = 1--Game must be 'Active' state
 
-	--This is to pass all upline total downline bet
-	INSERT INTO [dbo].[CVD_PENDING_JOB]([CUSR_USERNAME], [CJOB_CASHNAME], [CJOB_AMOUNT], [CJOB_APPOTHER1], [CJOB_APPOTHER2], [CJOB_STATUS], [CJOB_CREATEDON])
-	VALUES (@username, 'PlaceBet', @amount, '', '', 0, @gmt_date)
-
 	--Check game session valid or not
 	IF @found = 0
 	BEGIN
@@ -86,6 +82,14 @@ AS
 	--Deduct the Cash Wallet for betting
 	DECLARE @bet DECIMAL(15,2) = 0 - @amount
 	EXEC SP_CashWalletOperation @username, 'PLACE_BET', @bet, '', @amount, 0, @gameSessionID
+
+	--Put to pending job to calc referral wallet based on the 
+	INSERT INTO [dbo].[CVD_PENDING_JOB]([CUSR_USERNAME], [CJOB_CASHNAME], [CJOB_AMOUNT], [CJOB_APPOTHER1], [CJOB_APPOTHER2], [CJOB_STATUS], [CJOB_CREATEDON])
+	VALUES (@username, 'PlaceBetReferralBonus', @amount, @@IDENTITY, '', 0, @gmt_date)
+
+	--This is to pass all upline total downline bet
+	INSERT INTO [dbo].[CVD_PENDING_JOB]([CUSR_USERNAME], [CJOB_CASHNAME], [CJOB_AMOUNT], [CJOB_APPOTHER1], [CJOB_APPOTHER2], [CJOB_STATUS], [CJOB_CREATEDON])
+	VALUES (@username, 'PlaceBet', @amount, '', '', 0, @gmt_date)
 
 	SET @ok = 1
 	SET @msg = 'Success'

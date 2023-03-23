@@ -232,6 +232,16 @@ namespace FreshMVC.Controllers
             {
                 phone = Misc.MassagePhoneNumber(phone, countrycode);
 
+                if(countrycode == "91" && phone.Length != 10)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.msgPhoneNumberIndiaMustBe10Digit
+                    });
+                }
+
                 phone = string.Format("{0}{1}", countrycode, phone);
 
                 string intro = "";
@@ -309,6 +319,7 @@ namespace FreshMVC.Controllers
 
                     //update the level 2-5
                     AdminDB.UpdateUserLevel2To5Data(phone);
+                    AdminDB.InsertPendingJob(usr.CusrUsername, "UpdateTotalSponsor", 0, "", "");
 
                     Response.Cookies.Append("UserIDCookie", usr.CusrUsername, new CookieOptions() { Expires = DateTime.Now.AddYears(1), HttpOnly = false, IsEssential = true });
                 }

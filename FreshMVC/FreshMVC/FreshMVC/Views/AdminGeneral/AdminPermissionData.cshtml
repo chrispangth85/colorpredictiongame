@@ -1,0 +1,238 @@
+﻿@model AdminModel
+@using resShared = FreshMVC.Resources.PackBuddyShared;
+
+<script src="@Url.Content("~/Scripts/jquery.validate.min.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.validate.unobtrusive.min.js")" type="text/javascript"></script>
+<script type="text/javascript">
+
+    $("[id *= 'IsSelectAll']").change(function () {
+        var isChecked = $(this).is(':checked');
+
+        var modName = $(this).attr("mainModuleName");
+
+        //alert(modName);
+        if (modName == 'General') {
+            $("[id *= 'General']").each(function () {
+                $(this).prop("checked", isChecked);
+            });
+        }
+        else if (modName == 'User') {
+            $("[id *= 'User']").each(function () {
+                $(this).prop("checked", isChecked);
+            });
+        }
+        else if (modName == 'Product') {
+            $("[id *= 'Product']").each(function () {
+                $(this).prop('checked', isChecked);
+            });
+        }
+        else if (modName == 'Game') {
+            $("[id *= 'Game']").each(function () {
+                $(this).prop('checked', isChecked);
+            });
+        }
+        else if (modName == 'RedPacket') {
+            $("[id *= 'RedPacket']").each(function () {
+                $(this).prop('checked', isChecked);
+            });
+        }
+        else if (modName == 'Banners') {
+            $("[id *= 'Banners']").each(function () {
+                $(this).prop('checked', isChecked);
+            });
+        }
+        else if (modName == 'Transaction') {
+            $("[id *= 'Transaction']").each(function () {
+                $(this).prop('checked', isChecked);
+            });
+        }
+        else if (modName == 'Configuration') {
+            $("[id *= 'Configuration']").each(function () {
+                $(this).prop('checked', isChecked);
+            });
+        }
+    });
+
+    $("#btnSaveAd").click(function (evt) {
+        var username = document.getElementById('username').value;
+
+        $('.page-loader-wrapper').show();
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/EditAdminPermissionMethod",
+            data: { data: $("#editAdForm").serialize().toString(), userId: username },
+            success: function (data) {
+                $("#main-content").html(data);
+                $('.page-loader-wrapper').hide();
+                alert("@resShared.msgSaveSuccessfully");
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+                $('.page-loader-wrapper').hide();
+            }
+        });
+    });
+
+    $("#btnBack").click(function (evt) {
+
+        $('.page-loader-wrapper').show();
+
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/AdminPermissionList",
+            data: {
+            },
+            success: function (data) {
+                $("#main-content").html(data);
+                $('.page-loader-wrapper').hide();
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+                $('.page-loader-wrapper').hide();
+            }
+        });
+    });
+
+</script>
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-6 col-md-8 col-sm-12">
+                <h2>@resShared.mnuAdmin</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                    <li class="breadcrumb-item active">@resShared.mnuAccessControl</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    @using (Html.BeginForm("EditAdminPermissionMethod", "AdminGeneral", FormMethod.Post, new { name = "editAdForm", id = "editAdForm" }))
+    {
+        @Html.Hidden("username", Model.Username)
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12" style="padding:10px;">
+                <div class="card" style="padding:50px;">
+                    <div class="row">
+                        <div class="col-12 col-md-12">
+                            <div class="example">
+                                <div class="description">
+                                    <div class="description-text">
+                                    </div>
+                                </div>
+                                <div class="source-preview-wrapper">
+                                    <div class="preview">
+                                        <div class="preview-elements">
+                                            <div class="form-group">
+                                                <strong>Username<span style="color: Red">*</span></strong>
+                                                @Html.TextBoxFor(m => @Model.Username, new { @class = "form-control", @readonly = "readonly", @style = "width:95%" })
+                                            </div>
+                                            <div class="row" align="center">
+                                                @{ //find all the mainModules by distinct it out
+                                                    var mainModules = Model.AdminAccessRight.GroupBy(x => x.MainModule).Select(y => y.First().MainModule);
+                                                    foreach (var mainModule in mainModules)
+                                                    {
+                                                        var listMainModule = Model.AdminAccessRight.Where(y => y.MainModule == mainModule);
+                                                        var mainModuleCheck = listMainModule.ElementAt(0);
+                                                        //get all actual accessRight object based on mainModules
+                                                        var groupedByMainModule = Model.AdminAccessRight.FindAll(x => x.MainModule == mainModule);
+                                                        if (groupedByMainModule.Any())
+                                                        {
+                                                            <table class="table table-bordered table-striped" style="width: 95%;">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th class="secondary-text" style="text-align: center" colspan="2">
+                                                                            @mainModule
+                                                                            @Html.CheckBoxFor(modelItem => mainModuleCheck.IsSelectAll, new { id = @mainModule + "IsSelectAll", mainModuleName = @mainModule }) Select All
+                                                                        </th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    @{ //categorize by sub-module
+                                                                        var subModules = groupedByMainModule.GroupBy(x => x.Module).Select(y => y.First().Module);
+                                                                        foreach (var subModule in subModules)
+                                                                        {
+                                                                            var groupedBySubModules = groupedByMainModule.FindAll(x => x.Module == subModule);
+                                                                            if (groupedBySubModules.Any())
+                                                                            {
+                                                                                bool isAdded = false;
+                                                                                foreach (var item in groupedBySubModules)
+                                                                                {
+                                                                                    if (!isAdded)
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td style="width: 60%;">
+                                                                                                <label>
+                                                                                                    <strong>@item.Module</strong>
+                                                                                                </label>
+                                                                                            </td>
+                                                                                            <td style="width: 40%;">
+                                                                                                <p align="center">
+                                                                                                    @*@Html.CheckBoxFor(model => item.Function, new { @ID = @mainModule + item.FunctionCode, @Name = item.FunctionCode })*@
+                                                                                                    @if (item.Function)
+                                                                                                    {
+                                                                                                        <input id=@mainModule + item.FunctionCode name="@item.FunctionCode" type="checkbox" value="@item.Function" checked />
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <input id=@mainModule + item.FunctionCode name="@item.FunctionCode" type="checkbox" value="@item.Function" />
+                                                                                                    }
+
+                                                                                                    @item.FunctionName
+                                                                                                </p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                        isAdded = true;
+                                                                                    }
+                                                                                    else
+                                                                                    {
+                                                                                        <tr>
+                                                                                            <td>
+                                                                                            </td>
+                                                                                            <td>
+                                                                                                <p align="center">
+                                                                                                    @*@Html.CheckBoxFor(model => item.Function, new { @ID = @mainModule + item.FunctionCode, @Name = item.FunctionCode })*@
+                                                                                                    @if (item.Function)
+                                                                                                    {
+                                                                                                        <input id=@mainModule + item.FunctionCode name="@item.FunctionCode" type="checkbox" value="@item.Function" checked />
+                                                                                                    }
+                                                                                                    else
+                                                                                                    {
+                                                                                                        <input id=@mainModule + item.FunctionCode name="@item.FunctionCode" type="checkbox" value="@item.Function" />
+                                                                                                    }
+                                                                                                    @item.FunctionName
+                                                                                                </p>
+                                                                                            </td>
+                                                                                        </tr>
+                                                                                    }
+                                                                                }
+                                                                            }
+                                                                        } }
+                                                                </tbody>
+                                                            </table>
+                                                        }
+                                                    } }
+                                                <table width="80%">
+                                                    <tr>
+                                                        <td colspan="2">
+                                                            <input id="btnBack" type="button" class="btn btn-sm btn-primary" style="width:180px; height:35px" value="@resShared.btnBack" />
+                                                            <button id="btnSaveAd" type="button" class="btn btn-sm btn-primary" style="width:180px; height:35px">Save</button>
+
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

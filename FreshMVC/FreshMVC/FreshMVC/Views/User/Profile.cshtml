@@ -51,6 +51,8 @@
                         alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
                     }
                 });
+
+                $("#profile-mobile-menu").click();
             });
 
             $(".myredpacketclaimz").click(function (evt) {
@@ -66,6 +68,9 @@
                         alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
                     }
                 });
+
+
+                $("#profile-mobile-menu").click();
             });
 
             $(".orderz").click(function (evt) {
@@ -81,6 +86,8 @@
                         alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
                     }
                 });
+
+                $("#profile-mobile-menu").click();
             });
 
             $(".referralz").click(function (evt) {
@@ -96,24 +103,45 @@
                         alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
                     }
                 });
+
+                $("#profile-mobile-menu").click();
+            });
+
+            $(".languagez").click(function (evt) {
+                $.ajax({
+                    type: "POST",
+                    url: "/User/Languages",
+                    data: { },
+                    success: function (data) {
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        let r = JSON.parse(xhr.responseText);
+                        alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
+                    }
+                });
+
+                $("#profile-mobile-menu").click();
             });
 
             $(".logoutz").click(function (evt) {
-                $.ajax({
-                        type: "POST",
-                        url: "/UserLogin/Logout",
-                        data: { },
-                        success: function (data) {
-                            var url = '@Url.Action("Home", "User", new { })';
-                            window.location.href = url;
-                        },
-                        error: function (xhr, status, error) {
-                            let r = JSON.parse(xhr.responseText);
-                            alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
-                        }
-                    });
+            $.ajax({
+                    type: "POST",
+                    url: "/UserLogin/Logout",
+                    data: { },
+                    success: function (data) {
+                        var url = '@Url.Action("Home", "User", new { })';
+                        window.location.href = url;
+                    },
+                    error: function (xhr, status, error) {
+                        let r = JSON.parse(xhr.responseText);
+                        alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
+                    }
                 });
             });
+        });
+
+
 
 
     </script>
@@ -133,8 +161,8 @@
                                  style="width: 60px; height: 60px;">
                         </div>
                         <div style="width: 65%" class="ms-2">
-                            <h2>Username</h2>
-                            <div> ID: A262626</div>
+                            <h2>@resSharedPB.lblUsername</h2>
+                            <div> ID: @Model.Username</div>
                         </div>
                     </div>
                     <div id="profile-nav">
@@ -183,31 +211,31 @@
                         </div>
                         @if (ViewBag.IsAgent)
                         {
-                        <div class="profile-p myredpacketz">
-                            <div class="profile-menu-accordion padding-s pointer">
-                                <a href="#" class="" style="color:black;">
-                                    <div class="middle left heading-bold">
-                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
-                                        @resSharedPB.lblRedPacket (@resSharedPB.lblAgent)
-                                    </div>
-                                </a>
-                            </div>
+                            <div class="profile-p myredpacketz">
+                                <div class="profile-menu-accordion padding-s pointer">
+                                    <a href="#" class="" style="color:black;">
+                                        <div class="middle left heading-bold">
+                                            <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
+                                            @resSharedPB.lblRedPacket (@resSharedPB.lblAgent)
+                                        </div>
+                                    </a>
+                                </div>
 
-                        </div>
+                            </div>
                         }
                         else
                         {
-                        <div class="profile-p myredpacketclaimz">
-                            <div class="profile-menu-accordion padding-s pointer">
-                                <a href="#" class="" style="color:black;">
-                                    <div class="middle left heading-bold">
-                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
-                                        @resSharedPB.lblRedPacket
-                                    </div>
-                                </a>
-                            </div>
+                            <div class="profile-p myredpacketclaimz">
+                                <div class="profile-menu-accordion padding-s pointer">
+                                    <a href="#" class="" style="color:black;">
+                                        <div class="middle left heading-bold">
+                                            <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
+                                            @resSharedPB.lblRedPacket
+                                        </div>
+                                    </a>
+                                </div>
 
-                        </div>
+                            </div>
                         }
                         <div class="profile-p">
                             <div class="profile-menu-accordion padding-s pointer">
@@ -225,7 +253,18 @@
                             </div>
 
                         </div>
+                        <div class="profile-p languagez">
+                            <div class="profile-menu-accordion padding-s pointer">
+                                <a href="#" class="" style="color:black;">
+                                    <div class="middle left heading-bold">
+                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/setting.png" alt="">
+                                        <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
+                                        @resSharedPB.lblLanguage
+                                    </div>
+                                </a>
+                            </div>
 
+                        </div>
                         <div class="profile-p logoutz">
                             <div class="profile-menu-accordion padding-s pointer">
                                 <a href="#" class="" style="color:black;">
@@ -251,8 +290,8 @@
                                      style="width: 60px; height: 60px;">
                             </div>
                             <div>
-                                <h2>Username</h2>
-                                <div>ID: A262626</div>
+                                <h2>@resSharedPB.lblUsername</h2>
+                                <div>ID: @Model.Username</div>
 
                             </div>
                             <div style="margin-left: auto;">
@@ -267,92 +306,89 @@
                                                         <img class="profile-menu-img mrgn-right-s"
                                                              src="~/HotMall/img/c-wallet_icon.png" alt="">
                                                         <!-- <a href="recharge.html" class="text-dark">Balance</a> -->
-                                                        Balance
+                                                        @resSharedPB.lblBalance
                                                     </div>
                                                     <i class="fa-solid fa-angle-down"></i>
                                                 </div>
 
                                                 <div class="profile-menu-panel">
-                                                    <a class="profile-menus width-100 padding-s"
-                                                       href="recharge.html">Recharge</a>
-                                                    <a class="profile-menus width-100 padding-s" href="">Page 1</a>
-                                                    <a class="profile-menus width-100 padding-s" href="">Page 2</a>
+                                                    <a class="profile-menus width-100 padding-s" href="./Recharge">@resSharedPB.lblRecharge</a>
+                                                    <a class="profile-menus width-100 padding-s" href="./Withdrawal">@resSharedPB.lblWithdrawal</a>
+                                                    <a class="profile-menus width-100 padding-s" href="./BankCard">@resSharedPB.lblBankcard</a>
+                                                    <a class="profile-menus width-100 padding-s" href="./Transaction">@resSharedPB.lblTransaction</a>
                                                 </div>
 
                                             </div>
-                                            <div class="profile-p">
+                                            <div class="profile-p orderz">
                                                 <div class="profile-menu-accordion padding-s pointer">
                                                     <div class="middle left heading-bold">
-                                                        <img class="profile-menu-img mrgn-right-s"
-                                                             src="~/HotMall/img/reports_icon.png" alt="">
-                                                        <!-- <a href="commission.html" class="text-dark">Commission</a> -->
-                                                        Commission
-                                                    </div>
-                                                    <i class="fa-solid fa-angle-down"></i>
-                                                </div>
-
-                                                <div class="profile-menu-panel">
-                                                    <a class="profile-menus width-100 padding-s"
-                                                       href="commission.html">View Commission</a>
-                                                    <a class="profile-menus width-100 padding-s" href="">Page 1</a>
-                                                    <a class="profile-menus width-100 padding-s" href="">Page 2</a>
-                                                </div>
-                                            </div>
-                                            <div class="profile-p">
-                                                <div class="profile-menu-accordion padding-s pointer">
-                                                    <div class="middle left heading-bold">
-                                                        <img class="profile-menu-img mrgn-right-s"
-                                                             src="~/HotMall/img/reports_icon.png" alt="">
-                                                        <!-- <a href="interest.html" class="text-dark">Interest</a> -->
-                                                        Interest
-                                                    </div>
-                                                    <i class="fa-solid fa-angle-down"></i>
-                                                </div>
-                                                <div class="profile-menu-panel">
-                                                    <a class="profile-menus width-100 padding-s"
-                                                       href="interest.html">View Interest</a>
-                                                    <a class="profile-menus width-100 padding-s" href="">Page 1</a>
-                                                    <a class="profile-menus width-100 padding-s" href="">Page 2</a>
-                                                </div>
-                                            </div>
-                                            <div class="profile-p">
-                                                <div class="profile-menu-accordion padding-s pointer">
-                                                    <div class="middle left heading-bold">
-                                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/ranking.svg"
-                                                             alt="">
-                                                        <!-- <a href="promotion.html" class="text-dark">Promotion</a> -->
-                                                        Promotion
-                                                    </div>
-                                                    <i class="fa-solid fa-angle-down"></i>
-                                                </div>
-
-                                                <div class="profile-menu-panel">
-                                                    <a class="profile-menus width-100 padding-s"
-                                                       href="promotion.html">Promote</a>
-                                                    <a class="profile-menus width-100 padding-s" href="">Page 1</a>
-                                                    <a class="profile-menus width-100 padding-s" href="">Page 2</a>
-                                                </div>
-                                            </div>
-                                            <div class="profile-p">
-                                                <div class="profile-menu-accordion padding-s pointer">
-                                                    <div class="middle left heading-bold">
-                                                        <img class="profile-menu-img mrgn-right-s"
-                                                             src="~/HotMall/img/invite-friends.jpeg" alt="">
+                                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/myorder.png" alt="">
                                                         <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
-                                                        Referrals
+                                                        @resSharedPB.mnuMyOrder
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            @if (ViewBag.IsAgent)
+                                            {
+                                                <div class="profile-p myredpacketz">
+                                                    <div class="profile-menu-accordion padding-s pointer">
+                                                        <a href="#" class="" style="color:black;">
+                                                            <div class="middle left heading-bold">
+                                                                <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
+                                                                @resSharedPB.lblRedPacket (@resSharedPB.lblAgent)
+                                                            </div>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <div class="profile-p myredpacketclaimz">
+                                                    <div class="profile-menu-accordion padding-s pointer">
+                                                        <a href="#" class="" style="color:black;">
+                                                            <div class="middle left heading-bold">
+                                                                <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/redpacket.png" alt="">
+                                                                @resSharedPB.lblRedPacket
+                                                            </div>
+                                                        </a>
+                                                    </div>
+
+                                                </div>
+                                            }
+                                            <div class="profile-p">
+                                                <div class="profile-menu-accordion padding-s pointer">
+                                                    <div class="middle left heading-bold">
+                                                        <img class="profile-menu-img mrgn-right-s"
+                                                             src="~/HotMall/img/myreferral.png" alt="">
+                                                        <!-- <a href="interest.html" class="text-dark">Interest</a> -->
+                                                        @resSharedPB.lblReferrals
                                                     </div>
                                                     <i class="fa-solid fa-angle-down"></i>
                                                 </div>
-
                                                 <div class="profile-menu-panel">
-                                                    <a class="profile-menus width-100 padding-s"
-                                                       href="referrals.html">Referr</a>
-                                                    <a class="profile-menus width-100 padding-s" href="">Page 1</a>
-                                                    <a class="profile-menus width-100 padding-s" href="">Page 2</a>
+                                                    <a class="profile-menus width-100 padding-s referralz" href="#">@resSharedPB.lblMyReferral</a>
+                                                    <a class="profile-menus width-100 padding-s" href="./MyTeam">@resSharedPB.lblMyTeam</a>
                                                 </div>
-
                                             </div>
-
+                                            <div class="profile-p languagez">
+                                                <div class="profile-menu-accordion padding-s pointer">
+                                                    <div class="middle left heading-bold">
+                                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/setting.png" alt="">
+                                                        <!-- <a href="promotion.html" class="text-dark">Promotion</a> -->
+                                                        @resSharedPB.lblLanguage
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="profile-p logoutz">
+                                                <div class="profile-menu-accordion padding-s pointer">
+                                                    <div class="middle left heading-bold">
+                                                        <img class="profile-menu-img mrgn-right-s"
+                                                             src="~/HotMall/img/logout.png" alt="">
+                                                        <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
+                                                        @resSharedPB.lblLogOut
+                                                    </div>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -367,7 +403,7 @@
 
                                 <div class="profile-point-info-grid border-12 bg-dark display-wrap overflow-hide w-100 mx-auto">
                                     <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
-                                       href="recharge.html">
+                                       href="./Recharge">
                                         <div class="coin-p mrgn-right-xs">
                                             <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
                                         </div>
@@ -376,7 +412,7 @@
                                             <div class="text-s-m">@resSharedPB.lblTotalBalance</div>
                                         </div>
                                         <!-- <i class="fa-solid coin-icon-top pos-abs fa-angle-right hide-mobile"></i> -->
-                                        <p class="text text-white ms-auto my-auto">Recharge</p>
+                                        <p class="text text-white ms-auto my-auto">@resSharedPB.lblRecharge</p>
 
                                     </a>
                                     <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
@@ -386,9 +422,9 @@
                                         </div>
                                         <div class="coin-info">
                                             <h3 class="text-m text-wrap text-bold">@ViewBag.TotalCommission</h3>
-                                            <div class="text-s-m">Total Commission</div>
+                                            <div class="text-s-m">@resSharedPB.lblTotalCommission</div>
                                         </div>
-                                        <p class="text text-white ms-auto my-auto">View</p>
+                                        <p class="text text-white ms-auto my-auto">@resSharedPB.lblView</p>
 
                                     </a>
                                     <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
@@ -398,9 +434,9 @@
                                         </div>
                                         <div class="coin-info">
                                             <h3 class="text-m text-wrap text-bold">26,450,000</h3>
-                                            <div class="text-s-m">Total Interest</div>
+                                            <div class="text-s-m">@resSharedPB.lblTotalInterest</div>
                                         </div>
-                                        <p class="text text-white ms-auto my-auto">View</p>
+                                        <p class="text text-white ms-auto my-auto">@resSharedPB.lblView</p>
 
                                     </a>
                                 </div>

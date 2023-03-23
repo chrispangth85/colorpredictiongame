@@ -50,7 +50,7 @@
 
         $.ajax({
             type: "POST",
-            url: "/AdminGeneral/WithdrawalListing",
+            url: "/AdminGeneral/WithdrawalLogs",
             data: {
                 selectedPage: page,
                 filterType: selectedOption,
@@ -70,96 +70,14 @@
         });
     });
 
-     $("#DeleteData").click(function (e) {
-        deleteProduct($("#TemporaryOrderID").val());
-    });
-
-    function deleteProduct(id) {
-        if (confirm("@resShared.msgConfirmToReject")) {
-            $.ajax({
-                url: "/AdminGeneral/RejectWithdrawal",
-                type: "POST",
-                data: { idz: id },
-                success: function (data) {
-                    alert("@resShared.lblUpdateSuccessfully");
-                    $("#main-content").html(data);
-                    event.stopPropagation();
-                },
-                error: function (xhr, status, error) {
-             	    var errorM = xhr.responseText;
-                    errorM = errorM.replace('""', '');
-
-                    alert(errorM);
-                    $('#Loading').hide();
-                }
-            });
-        }
-
-        $("#taskmodal").modal('hide');
-    };
-
-    $("#EditData").click(function (e) {
-        manualApprove($("#TemporaryOrderID").val());
-    });
-
-    $("#btnApprove").click(function (e) {
-        Approve($("#TemporaryOrderID").val());
-    });
-
-    function Approve(id) {
-        if (confirm("@resShared.msgConfirmToApprove")) {
-            $.ajax({
-                url: "/AdminGeneral/ApproveWithdrawal",
-                type: "POST",
-                data: { idz: id },
-                success: function (data) {
-                    alert("@resShared.lblUpdateSuccessfully");
-                    $("#main-content").html(data);
-                    event.stopPropagation();
-                },
-                error: function (xhr, status, error) {
-             	    var errorM = xhr.responseText;
-                    errorM = errorM.replace('""', '');
-
-                    alert(errorM);
-                    $('#Loading').hide();
-                }
-            });
-        }
-
-        $("#taskmodal").modal('hide');
-    };
-
-    function manualApprove(id) {
-        if (confirm("@resShared.msgConfirmToApprove")) {
-            $.ajax({
-                url: "/AdminGeneral/ManualApproveWithdrawal",
-                type: "POST",
-                data: { idz: id },
-                success: function (data) {
-                    alert("@resShared.lblUpdateSuccessfully");
-                    $("#main-content").html(data);
-                    event.stopPropagation();
-                },
-                error: function (xhr, status, error) {
-             	    var errorM = xhr.responseText;
-                    errorM = errorM.replace('""', '');
-
-                    alert(errorM);
-                    $('#Loading').hide();
-                }
-            });
-        }
-
-        $("#taskmodal").modal('hide');
-    };
+   
 </script>
 
 <div class="container-fluid">
     <div class="block-header">
         <div class="row">
             <div class="col-lg-6 col-md-8 col-sm-12">
-                <h2>@resShared.mnuWithdrawalListing</h2>
+                <h2>@resShared.mnuWithdrawalLog</h2>
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
                     <li class="breadcrumb-item active">@resShared.mnuListing</li>
@@ -209,7 +127,7 @@
             </div>
 
             <div class="grid" style="margin-left: 5px;" id="grid">
-                <a href="@Url.Action("DownloadWithdrawalListing", "AdminGeneral", new {filterType= @Model.SelectedFilteringCriteria, filterValue= @Model.FilterValue, fromDate = @Model.FromDate, toDate = @Model.ToDate})" class="btn btn-primary" style="float:right;width:180px;" target="_blank">
+                <a href="@Url.Action("DownloadWithdrawalLog", "AdminGeneral", new {filterType= @Model.SelectedFilteringCriteria, filterValue= @Model.FilterValue, fromDate = @Model.FromDate, toDate = @Model.ToDate})" class="btn btn-primary" style="float:right;width:180px;" target="_blank">
                     @resShared.btnDownload
                 </a>
             </div>
@@ -393,10 +311,8 @@
                     <input class="form-control" id="email" value="" disabled />
                 </div>
             </div>
-            <div class="modal-footer justify-content-center">
-                <a href="#" class="btn btn-outline-secondary d-block w-100" data-bs-dismiss="modal" id="EditData">@resShared.lblManualApprove</a>
-                <a href="#" class="btn btn-outline-secondary d-block w-100" data-bs-dismiss="modal" id="btnApprove">@resShared.lblApprove</a>
-                <a href="#" class="btn btn-outline-secondary d-block w-100" data-bs-dismiss="modal" id="DeleteData">@resShared.lblReject</a>
+            <div class="modal-footer justify-content-center">                
+                <a href="#" class="btn btn-outline-secondary d-block w-100" data-bs-dismiss="modal">@resShared.lblClose</a>
             </div>
         </div>
     </div>

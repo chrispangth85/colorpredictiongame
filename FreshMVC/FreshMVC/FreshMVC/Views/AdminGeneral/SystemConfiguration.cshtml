@@ -7,7 +7,7 @@
         $('.page-loader-wrapper').show();
 
         let formData = new FormData($("#editAdForm")[0]);
-      
+
         $.ajax({
             type: "POST",
             url: "/AdminGeneral/EditSystemConfigurationMethod",
@@ -27,7 +27,13 @@
                 alert(errorM);
             }
         });
-     });
+       });
+
+    $("#btnBack").click(function (evt) {
+        location.href = "/Admin/Home";
+    });
+
+    
 
 </script>
 
@@ -193,7 +199,8 @@
                             </div>
                         </div>
                         <input id="btnSaveAd" type="button" class="btn btn-sm btn-primary" style="width:180px; height:35px" value="@resShared.btnSave" />
-                        <br/> 
+                        <input id="btnBack" type="button" class="btn btn-sm btn-primary" style="width:180px; height:35px" value="@resShared.btnBack" />
+                        <br />
                     </div>
                 </div>
             </div>

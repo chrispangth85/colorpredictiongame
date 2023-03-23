@@ -47,6 +47,15 @@ namespace FreshMVC.Controllers
             var sign = HttpUtility.UrlDecode(Request.Form["sign"]);
             var merchantKey = Misc.merchantKey;
 
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var paymentKey = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "GatewayPaymentKey");
+                if (paymentKey != null)
+                {
+                    merchantKey = paymentKey.CparaStringvalue;
+                }
+            }
+
             var SignTemp = string.Format("amount={0}&datetime={1}&memberid={2}&orderid={3}&returncode={4}&transaction_id={5}&key={6}",
                 amount, datetime, memberid, orderid, returncode, transaction_id, merchantKey);
 
@@ -86,5 +95,50 @@ namespace FreshMVC.Controllers
             return StatusCode((int)HttpStatusCode.OK);
         }
 
+        public IActionResult ReturnUrl()
+        {
+            // handle all the transaction successfull or failure at callback better
+            var memberid = HttpUtility.UrlDecode(Request.Form["memberid"]);
+            var orderid = HttpUtility.UrlDecode(Request.Form["orderid"]);
+            var amount = HttpUtility.UrlDecode(Request.Form["amount"]);
+            var datetime = HttpUtility.UrlDecode(Request.Form["datetime"]);
+            var returncode = HttpUtility.UrlDecode(Request.Form["returncode"]);
+            var transaction_id = HttpUtility.UrlDecode(Request.Form["transaction_id"]);            
+            var sign = HttpUtility.UrlDecode(Request.Form["sign"]);
+            var merchantKey = Misc.merchantKey;
+
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var paymentKey = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "GatewayPaymentKey");
+                if (paymentKey != null)
+                {
+                    merchantKey = paymentKey.CparaStringvalue;
+                }
+            }
+
+            var SignTemp = string.Format("amount={0}&datetime={1}&memberid={2}&orderid={3}&returncode={4}&transaction_id={5}&key={6}",
+                amount, datetime, memberid, orderid, returncode, transaction_id, merchantKey);
+
+            String md5sign = Misc.MD5(SignTemp).ToUpper();
+            if (sign == md5sign)
+            {
+                // for record
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var withdrawalInfo = dbContext.CvdCashwalletlog.FirstOrDefault(c => c.CcashAppother == orderid);
+                    withdrawalInfo.CcashStatus = 1;
+                    withdrawalInfo.CcashApprovaldate = DateTime.Now;
+
+                    dbContext.Update(withdrawalInfo);
+                    dbContext.SaveChanges();
+                }
+            }
+
+            var text = "OK";
+            byte[] data = System.Text.Encoding.UTF8.GetBytes(text);
+            Response.Body.Write(data, 0, data.Length);
+
+            return StatusCode((int)HttpStatusCode.OK);
+        }
     }
 }

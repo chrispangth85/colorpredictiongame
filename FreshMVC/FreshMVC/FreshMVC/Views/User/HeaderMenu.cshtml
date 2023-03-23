@@ -1,4 +1,6 @@
-﻿<link rel="stylesheet" href="~/HotMall/css/style.css">
+﻿@using resSharedPB = FreshMVC.Resources.PackBuddyShared;
+
+<link rel="stylesheet" href="~/HotMall/css/style.css">
 <link rel="stylesheet" href="~/HotMall/css/product.css">
 <link rel="stylesheet" href="~/HotMall/css/custome.css">
 <link rel="stylesheet" href="~/HotMall/css/custome-responsive.css">
@@ -83,12 +85,11 @@
     <!-- Logo section -->
     <div class="header-inner-wrapper">
         <div class="d-flex justify-content-between align-items-center">
-            <a class="navbar-brand" href="index.html">
+            <a class="navbar-brand" href="./User/Home">
                 <img src="~/HotMall/img/logo.jpg" alt="" class="logo">
             </a>
-            <a class="app-btn d-flex align-items-center" href="xxx.apk">
-                Open
-                With an App <i class="bi bi-cloud-arrow-down-fill ms-2 mt-1"></i>
+            <a class="app-btn d-flex align-items-center" href="hotmail.apk">
+                @resSharedPB.lblOpenWithAnApp <i class="bi bi-cloud-arrow-down-fill ms-2 mt-1"></i>
             </a>
         </div>
     </div>
@@ -101,22 +102,22 @@
                 <ul class="d-flex justify-content-around w-100 navbar-links-ul m-0">
                     <li class="nav-item">
                         <a class="nav-link homez" aria-current="page" href="#">
-                            <i class="bi bi-house-fill me-2"></i> Home
+                            <i class="bi bi-house-fill me-2"></i> @resSharedPB.lblHome
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link " aria-current="page" href="/User/ProductListing">
-                            <i class="bi bi-search me-2"></i> Search
+                            <i class="bi bi-search me-2"></i> @resSharedPB.lblSearch
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link playGamez" aria-current="page" href="#">
-                            <i class="bi bi-trophy-fill me-2"></i> Win
+                            <i class="bi bi-trophy-fill me-2"></i> @resSharedPB.lblWin
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link profilez" aria-current="page" href="#">
-                            <i class="bi bi-person-circle me-2"></i> Profile
+                            <i class="bi bi-person-circle me-2"></i> @resSharedPB.lblProfile
                         </a>
                     </li>
                 </ul>

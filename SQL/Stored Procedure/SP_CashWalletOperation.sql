@@ -56,6 +56,13 @@ AS
 		VALUES (@username, 'BetWin', @cashNum, '', '', 0, @gmt_date)
 	END
 
+	IF @cashName = 'BET_COMMISSION'
+	BEGIN
+		--This is to pass all upline total downline commission
+		INSERT INTO [dbo].[CVD_PENDING_JOB]([CUSR_USERNAME], [CJOB_CASHNAME], [CJOB_AMOUNT], [CJOB_APPOTHER1], [CJOB_APPOTHER2], [CJOB_STATUS], [CJOB_CREATEDON])
+		VALUES (@username, 'BetCommission', @cashNum, '', '', 0, @gmt_date)
+	END
+
 	SELECT @wallet = CUSR_CASHWLT
 	FROM [dbo].CVD_USER
 	WHERE CUSR_USERNAME = @username					
@@ -68,13 +75,19 @@ AS
 			declare @cardcity NVARCHAR(100)
 			declare @cardbankname NVARCHAR(100)
 			declare @cardbankaccountname NVARCHAR(100)
+			declare @cardmobile NVARCHAR(100)
+			declare @cardaddress NVARCHAR(100)
+			declare @cardemail NVARCHAR(100)
 		
-			SELECT @cardnumber = [CBANK_BANKACCOUNT],  @cardbranch = [CBANK_IFSCCODE], @cardstate= [CBANK_STATE], @cardcity=[CBANK_STATE], @cardbankname=[CBANK_NAME], @cardbankaccountname = [CBANK_BANKACCOUNTNAME]
+			SELECT @cardnumber = [CBANK_BANKACCOUNT],  @cardbranch = [CBANK_IFSCCODE], @cardstate= [CBANK_STATE], @cardcity=[CBANK_STATE], @cardbankname=[CBANK_NAME], @cardbankaccountname = [CBANK_BANKACCOUNTNAME],
+			@cardmobile = CBANK_MOBILE,
+			@cardemail = CBANK_EMAIL,
+			@cardaddress = [CBANK_ADDRESS]
 			FROM [dbo].[CVD_MEMBER_BANK]
 			WHERE [CBANK_ID] = @bankid
 
-			INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, CCASH_CARDNUMBER, CCASH_BRANCH, CCASH_STATE, CCASH_CITY, CCASH_BANKNAME ,CCASH_BANKACCOUNTNAME, [CCASH_CREATEDON])
-			VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status,@cardnumber,@cardbranch,@cardstate,@cardcity,@cardbankname,@cardbankaccountname, @gmt_date)
+			INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, CCASH_CARDNUMBER, CCASH_BRANCH, CCASH_STATE, CCASH_CITY, CCASH_BANKNAME ,CCASH_BANKACCOUNTNAME, [CCASH_CREATEDON], CCASH_ADDRESS, CCASH_MOBILE, CCASH_EMAIL)
+			VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status,@cardnumber,@cardbranch,@cardstate,@cardcity,@cardbankname,@cardbankaccountname, @gmt_date, @cardaddress, @cardmobile, @cardemail)
 		END
 	ELSE
 	BEGIN
