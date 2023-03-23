@@ -57,6 +57,24 @@
                 });
             });
 
+            $("#lanTW").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                var cId = "zh-TW";
+                $.ajax({
+                    type: "POST",
+                    url: "/Admin/ChangeLanguageFromLogin",
+                    data: { languageCode: cId },
+                    success: function (data) {
+                        //refresh page.
+                        location.reload();
+                    },
+                    error: function (xhr, status, error) {
+                        //refresh page.
+                        location.reload();
+                    }
+                });
+            });
+
             $("#lanEN").click(function (evt) {
                 $('.page-loader-wrapper').show();
                 var cId = "en-US";
@@ -83,6 +101,30 @@
                 window.location.href = url;
             });
 
+            $("#AdminPermissionSetup").click(function (evt) {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#AdminPermissionSetup').addClass('active');
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/AdminPermissionList",
+                    data: {
+                    },
+                    success: function (data) {
+                        $("#main-content").html(data);
+                        $('.page-loader-wrapper').hide();
+                    },
+                    error: function (xhr, status, error) {
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                        $('.page-loader-wrapper').hide();
+                    }
+                });
+            });
+
+
             $("#adminListing").click(function (evt) {
                 $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#adminListing').addClass('active');
@@ -105,6 +147,31 @@
                     }
                 });
             });
+
+
+            $("#systemConfiguration").click(function (evt) {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#systemConfiguration').addClass('active');
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/SystemConfiguration",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
 
             $("#lotteryBetListing").click(function (evt) {
                 $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
@@ -196,6 +263,27 @@
                 });
             });
 
+            $("#cashWalletLogs").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/CashWalletLog",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
             $("#rechargeListing").click(function (evt) {
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -238,6 +326,27 @@
                 });
             });
 
+            $("#withdrawalLogs").click(function (evt) {
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/WithdrawalLogs",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
             $("#productListing").click(function (evt) {
                 $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#productListing').addClass('active');
@@ -261,29 +370,6 @@
                 });
             });
 
-
-            $("#systemConfiguration").click(function (evt) {
-                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
-                $('#systemConfiguration').addClass('active');
-                $('.page-loader-wrapper').show();
-                evt.preventDefault();
-                $.ajax({
-                    type: "POST",
-                    url: "/AdminGeneral/SystemConfiguration",
-                    data: {
-                    },
-                    success: function (data) {
-                        $('.page-loader-wrapper').hide();
-                        $("#main-content").html(data);
-                    },
-                    error: function (xhr, status, error) {
-                        $('.page-loader-wrapper').hide();
-                        var errorM = xhr.responseText;
-                        errorM = errorM.replace('""', '');
-                        alert(errorM);
-                    }
-                });
-            });
             
             $("#userListing").click(function (evt) {
                 $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
@@ -379,11 +465,17 @@
                                                     </h3>
                                                 </a>
                                             </li>
-                                            <!-- end task item -->
                                             <li style="list-style-type: none; ">
-                                                <a id="lanCN"  href="#">
+                                                <a id="lanCN" href="#">
                                                     <h3 style="font-size: 14px; padding: 0; margin: 0 0 10px; color: #666;">
                                                         简体
+                                                    </h3>
+                                                </a>
+                                            </li>
+                                            <li style="list-style-type: none; ">
+                                                <a id="lanTW" href="#">
+                                                    <h3 style="font-size: 14px; padding: 0; margin: 0 0 10px; color: #666;">
+                                                        簡體
                                                     </h3>
                                                 </a>
                                             </li>
@@ -422,57 +514,107 @@
                                     <li>
                                         <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuAdmin</span></a>
                                         <ul class="mainMenuKH">
-                                            <li id="adminListing" style="cursor:pointer"><a>@resShared.mnuAdminListing</a></li>
+                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewAdminListing") == "true")
+                                            {
+                                                <li id="adminListing" style="cursor:pointer"><a>@resShared.mnuAdminListing</a></li>
+                                            }
+                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewAdminAccessControl") == "true")
+                                            {
+                                                <li id="AdminPermissionSetup" style="cursor:pointer"><a>@resShared.mnuAccessControl</a></li>
+                                            }
                                         </ul>
                                     </li>
                                 }
-                                <li>
-                                    <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuUser</span></a>
-                                    <ul class="mainMenuKH">
-                                        <li id="userListing" style="cursor:pointer"><a>@resShared.mnuUserListing</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuProduct</span></a>
-                                    <ul class="mainMenuKH">
-                                        <li id="productListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuGame</span></a>
-                                    <ul class="mainMenuKH">
-                                        <li id="gameListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
-                                        <li id="sessionListing" style="cursor:pointer"><a>@resShared.mnuSessionListing</a></li>
-                                        <li id="lotteryBetListing" style="cursor:pointer"><a>@resShared.mnuLotteryBetListing</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuRedPacket</span></a>
-                                    <ul class="mainMenuKH">
-                                        <li id="redpacketListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuBanner</span></a>
-                                    <ul class="mainMenuKH">
-                                        <li id="bannerListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
-                                    </ul>
-                                </li>
-                                <li>
-                                    <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuTransaction</span></a>
-                                    <ul class="mainMenuKH">
-                                        <li id="rechargeListing" style="cursor:pointer"><a>@resShared.mnuRechargeListing</a></li>
-                                        <li id="withdrawalListing" style="cursor:pointer"><a>@resShared.mnuWithdrawalListing</a></li>
-                                    </ul>
-                                </li>
-
-                                <li>
-                                    <a class="has-arrow" id="systemConfiguration"><i class="icon-speedometer"></i><span>@resShared.mnuSystemConfiguration</span></a>
-                                    @*<ul class="mainMenuKH">
-                                        <li id="rechargeListing" style="cursor:pointer"><a>@resShared.mnuRechargeListing</a></li>
-                                        <li id="withdrawalListing" style="cursor:pointer"><a>@resShared.mnuWithdrawalListing</a></li>
-                                    </ul>*@
-                                </li>
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewUserListing") == "true")
+                                {
+                                    <li>
+                                        <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuUser</span></a>
+                                        <ul class="mainMenuKH">
+                                            <li id="userListing" style="cursor:pointer"><a>@resShared.mnuUserListing</a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewProductListing") == "true")
+                                {
+                                    <li>
+                                        <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuProduct</span></a>
+                                        <ul class="mainMenuKH">
+                                            <li id="productListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewProductListing") == "true" ||
+                                  @HttpContextAccessor.HttpContext.Session.GetString("ViewSessionListing") == "true" ||
+                                  @HttpContextAccessor.HttpContext.Session.GetString("ViewLotteryBetListing") == "true")
+                                {
+                                    <li>
+                                        <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuGame</span></a>
+                                        <ul class="mainMenuKH">
+                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewGameListing") == "true")
+                                            {
+                                                <li id="gameListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
+                                            }
+                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewSessionListing") == "true")
+                                            {
+                                                <li id="sessionListing" style="cursor:pointer"><a>@resShared.mnuSessionListing</a></li>
+                                            }
+                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewLotteryBetListing") == "true")
+                                            {
+                                                <li id="lotteryBetListing" style="cursor:pointer"><a>@resShared.mnuLotteryBetListing</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewRedPacket") == "true")
+                                {
+                                    <li>
+                                        <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuRedPacket</span></a>
+                                        <ul class="mainMenuKH">
+                                            <li id="redpacketListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewBannerListing") == "true")
+                                {
+                                    <li>
+                                        <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuBanner</span></a>
+                                        <ul class="mainMenuKH">
+                                            <li id="bannerListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
+                                        </ul>
+                                    </li>
+                                }
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewRechargeListing") == "true" ||
+                                 @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalListing") == "true" ||
+                                 @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalLog") == "true")
+                                {
+                                    <li>
+                                        <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuTransaction</span></a>
+                                        <ul class="mainMenuKH">
+                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewCashWalletLog") == "true")
+                                            {
+                                                <li id="cashWalletLogs" style="cursor:pointer"><a>@resShared.mnuCashWalletLog</a></li>
+                                            }
+                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewRechargeListing") == "true")
+                                            {
+                                                <li id="rechargeListing" style="cursor:pointer"><a>@resShared.mnuRechargeListing</a></li>
+                                            }
+                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalListing") == "true")
+                                            {
+                                                <li id="withdrawalListing" style="cursor:pointer"><a>@resShared.mnuWithdrawalListing</a></li>
+                                            }
+                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalLog") == "true")
+                                            {
+                                                <li id="withdrawalLogs" style="cursor:pointer"><a>@resShared.mnuWithdrawalLog</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                }
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewConfiguration") == "true")
+                                {
+                                    <li>
+                                        <a class="has-arrow" id="systemConfiguration"><i class="icon-speedometer"></i><span>@resShared.mnuSystemConfiguration</span></a>
+                                    </li>
+                                }
                             </ul>
                         </nav>
                     </div>

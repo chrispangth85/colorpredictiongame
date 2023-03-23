@@ -244,7 +244,7 @@ namespace FreshMVC.Component
 
             SqlParameter pOthers = sqlComm.Parameters.Add("@appother", SqlDbType.NVarChar);
             pOthers.Direction = ParameterDirection.Input;
-            pOthers.Value = orderId;
+            pOthers.Value = referenceNo;
 
             //SqlParameter pPaymentType = sqlComm.Parameters.Add("@paymentMethod", SqlDbType.NVarChar);
             //pPaymentType.Direction = ParameterDirection.Input;
@@ -469,6 +469,47 @@ namespace FreshMVC.Component
             var pUsername = sqlComm.Parameters.Add("@Username", SqlDbType.VarChar, 50);
             pUsername.Direction = ParameterDirection.Input;
             pUsername.Value = Username;
+
+            da.SelectCommand = sqlComm;
+            var ds = new DataSet();
+
+            sqlConn.Open();
+            da.Fill(ds);
+
+            sqlConn.Close();
+
+            return ds;
+        }
+        #endregion
+
+        #region InsertPendingJob
+        public static DataSet InsertPendingJob(string Username, string Cashname, decimal amount, string appother1, string appother2)
+        {
+            var sqlConn = DBConn.GetConnection();
+            var da = new SqlDataAdapter();
+
+            var sqlComm = new SqlCommand("SP_InsertPendingJob", sqlConn);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+
+            var pUsername = sqlComm.Parameters.Add("@Username", SqlDbType.VarChar, 200);
+            pUsername.Direction = ParameterDirection.Input;
+            pUsername.Value = Username;
+
+            var pCashname = sqlComm.Parameters.Add("@Cashname", SqlDbType.VarChar, 200);
+            pCashname.Direction = ParameterDirection.Input;
+            pCashname.Value = Cashname;
+
+            var pAmount = sqlComm.Parameters.Add("@Amount", SqlDbType.Decimal);
+            pAmount.Direction = ParameterDirection.Input;
+            pAmount.Value = amount;
+
+            var pAppother1 = sqlComm.Parameters.Add("@Appother1", SqlDbType.VarChar, 200);
+            pAppother1.Direction = ParameterDirection.Input;
+            pAppother1.Value = appother1;
+
+            var pAppother2 = sqlComm.Parameters.Add("@Appother2", SqlDbType.VarChar, 200);
+            pAppother2.Direction = ParameterDirection.Input;
+            pAppother2.Value = appother2;
 
             da.SelectCommand = sqlComm;
             var ds = new DataSet();

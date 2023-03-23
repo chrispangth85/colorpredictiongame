@@ -41,10 +41,22 @@ AS
 		BEGIN
 			EXEC [SP_PassUpSales] @username, @amount, @cashName
 		END
+		ELSE IF @cashName = 'PlaceBetReferralBonus'
+		BEGIN
+			EXEC [SP_CalculateSponsorBonus] @username, @amount, @appOther1
+		END
+		ELSE IF @cashName = 'BetCommission'
+		BEGIN
+			EXEC [SP_PassUpSales] @username, @amount, @cashName
+		END
+		ELSE IF @cashName = 'UpdateTotalSponsor'
+		BEGIN
+			EXEC [SP_PassUpSales] @username, @amount, @cashName
+		END
 
 		UPDATE [dbo].[CVD_PENDING_JOB]
-			SET [CJOB_STATUS] = 1
-			WHERE [CJOB_ID] = @id
+		SET [CJOB_STATUS] = 1
+		WHERE [CJOB_ID] = @id
 
 	FETCH NEXT FROM tzCurPendingJob INTO @id, @username, @cashName, @amount, @appOther1, @appOther2
 	END

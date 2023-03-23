@@ -1,4 +1,6 @@
-﻿<script>
+﻿@using resSharedPB = FreshMVC.Resources.PackBuddyShared;
+
+<script>
     $(document).ready(function () {
         //Just to make the menu to have active line and color black
         if ('@ViewBag.HeaderPage' == "Home") {
@@ -12,30 +14,37 @@
         }
     });
 </script>
+<style>
+    .buttom {
+        display: block;
+        position: absolute;
+        bottom: 0;
+    }
+</style>
 <!-- Footer -->
 <footer class="footer ">
     <div class="footer-menu">
         <ul class="d-flex justify-content-around w-100  m-0 navbar-links-ul">
             <li class="nav-item nav-item-f homez">
                 <i class="bi bi-house-fill "></i>
-                <a class="nav-link homez" aria-current="page" href="#"> Home</a>
+                <a class="nav-link homez" aria-current="page" href="#"> @resSharedPB.lblHome</a>
             </li>
             <li class="nav-item nav-item-f ">
                 <i class="bi bi-search "></i>
-                <a class="nav-link " aria-current="page" href="search.html"> Search</a>
+                <a class="nav-link " aria-current="page" href="search.html">  @resSharedPB.lblSearch</a>
             </li>
             <li class="nav-item nav-item-f playGamez">
                 <i class="bi bi-trophy-fill "></i>
-                <a class="nav-link playGamez" aria-current="page" href="#"> Win</a>
+                <a class="nav-link playGamez" aria-current="page" href="#"> @resSharedPB.lblWin</a>
             </li>
             <li class="nav-item nav-item-f profilez">
                 <i class="bi bi-person-circle "></i>
-                <a class="nav-link profilez" aria-current="page" href="#"> Profile</a>
+                <a class="nav-link profilez" aria-current="page" href="#"> @resSharedPB.lblProfile</a>
             </li>
         </ul>
     </div>
 </footer>
-<div class="section-wrap bg-primary text-white py-0">
+<div class="section-wrap bg-primary text-white py-0 buttom">
     <div class="section-inner-wrapper center-block padding-section py-0 pb-2">
         <div>HotMall © 2023 | ALL RIGHTS RESERVED </div>
     </div>

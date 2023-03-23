@@ -28,7 +28,6 @@ namespace FreshMVC.Controllers
             HttpContext.Session.SetString("LanguageChosen", languageCode);
 
             var cultureInfo = new CultureInfo(languageCode);
-            cultureInfo.NumberFormat.CurrencySymbol = "€";
 
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;

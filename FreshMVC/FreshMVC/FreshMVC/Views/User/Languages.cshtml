@@ -1,0 +1,109 @@
+﻿@using resSharedPB = FreshMVC.Resources.PackBuddyShared;
+
+<script>
+    
+    $("#flexCheckDefault1").click(function (evt) {
+        var cId = "en-US";
+        $.ajax({
+            type: "POST",
+            url: "/User/ChangeLanguageFromLogin",
+            data: { languageCode: cId },
+            success: function (data) {
+                //refresh page.
+                location.href = "/User/Profile";
+            },
+            error: function (xhr, status, error) {
+                //refresh page.
+                location.href = "/User/Profile";
+            }
+        });
+    });
+
+    $("#flexCheckDefault2").click(function (evt) {
+        var cId = "zh-CN";
+        $.ajax({
+            type: "POST",
+            url: "/User/ChangeLanguageFromLogin",
+            data: { languageCode: cId },
+            success: function (data) {
+                //refresh page.
+                location.href = "/User/Profile";
+            },
+            error: function (xhr, status, error) {
+                //refresh page.
+                location.href = "/User/Profile";
+            }
+        });
+    });
+
+    $("#flexCheckDefault3").click(function (evt) {
+        var cId = "zh-TW";
+        $.ajax({
+            type: "POST",
+            url: "/User/ChangeLanguageFromLogin",
+            data: { languageCode: cId },
+            success: function (data) {
+                //refresh page.
+                location.href = "/User/Profile";
+            },
+            error: function (xhr, status, error) {
+                //refresh page.
+                location.href = "/User/Profile";
+            }
+        });
+    });
+</script>
+
+<div class="row" style="height:600px">
+    <div class="col-lg-6 mx-auto my-lg-3 my-3" >
+        <form action="">
+            <div class="form-check d-flex align-items-center mt-3" style="margin-left:10px">
+                @if (ViewBag.CurrentLanguage == "en-US")
+                {
+                    <input class="form-check-input red-checkbox" name="flexRadioDefault"
+                           type="radio" value="" checked="checked" id="flexCheckDefault1">
+                }
+                else
+                {
+                    <input class="form-check-input red-checkbox" name="flexRadioDefault"
+                           type="radio" value="" id="flexCheckDefault1">
+                }
+                <label class="form-check-label ms-2 mt-1 " for="flexCheckDefault1">
+                    English
+                </label>
+            </div>
+
+            <div class="form-check d-flex align-items-center mt-3" style="margin-left:10px">
+                @if (ViewBag.CurrentLanguage == "zh-CN")
+                {
+                    <input class="form-check-input red-checkbox" name="flexRadioDefault"
+                           type="radio" value="" checked="checked" id="flexCheckDefault2">
+                }
+                else
+                {
+                    <input class="form-check-input red-checkbox" name="flexRadioDefault"
+                           type="radio" value="" id="flexCheckDefault2">
+                }
+                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault2">
+                    简体
+                </label>
+            </div>
+
+            <div class="form-check d-flex align-items-center mt-3" style="margin-left:10px">
+                @if (ViewBag.CurrentLanguage == "zh-TW")
+                {
+                    <input class="form-check-input red-checkbox" name="flexRadioDefault"
+                           type="radio" value="" checked="checked" id="flexCheckDefault3">
+                }
+                else
+                {
+                    <input class="form-check-input red-checkbox" name="flexRadioDefault"
+                           type="radio" value="" id="flexCheckDefault3">
+                }
+                <label class="form-check-label ms-2 mt-1" for="flexCheckDefault3">
+                    簡體
+                </label>
+            </div>
+        </form>
+    </div>
+</div>

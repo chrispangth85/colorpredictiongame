@@ -3557,12 +3557,12 @@ namespace FreshMVC.Component
 
         #region GetAllWithdrawalList
 
-        public static DataSet GetAllWithdrawalList(int viewPage, string filterType, string filterValue, string fromDate, string toDate, out int pages, out int ok, out string msg)
+        public static DataSet GetAllWithdrawalList(string storeProcedure, int viewPage, string filterType, string filterValue, string fromDate, string toDate, out int pages, out int ok, out string msg)
         {
             SqlConnection sqlConn = DBConn.GetConnection();
             SqlDataAdapter da = new SqlDataAdapter();
 
-            SqlCommand sqlComm = new SqlCommand("SP_GetAllWithdrawal", sqlConn);
+            SqlCommand sqlComm = new SqlCommand(storeProcedure, sqlConn);
             sqlComm.CommandType = CommandType.StoredProcedure;
 
             SqlParameter pViewPage = sqlComm.Parameters.Add("@viewPage", SqlDbType.Int);
@@ -3807,6 +3807,59 @@ namespace FreshMVC.Component
             SqlParameter pViewPage = sqlComm.Parameters.Add("@viewPage", SqlDbType.Int);
             pViewPage.Direction = ParameterDirection.Input;
             pViewPage.Value = viewPage;
+
+            SqlParameter pPages = sqlComm.Parameters.Add("@pages", SqlDbType.Int);
+            pPages.Direction = ParameterDirection.Output;
+
+            SqlParameter pOk = sqlComm.Parameters.Add("@ok", SqlDbType.Int);
+            pOk.Direction = ParameterDirection.Output;
+
+            SqlParameter pMessage = sqlComm.Parameters.Add("@msg", SqlDbType.VarChar, 50);
+            pMessage.Direction = ParameterDirection.Output;
+
+            da.SelectCommand = sqlComm;
+            DataSet ds = new DataSet();
+
+            sqlConn.Open();
+            da.Fill(ds);
+
+            ok = (int)pOk.Value;
+            msg = pMessage.Value.ToString();
+            pages = (int)pPages.Value;
+            sqlConn.Close();
+
+            return ds;
+        }
+        #endregion
+
+        #region GetAllCashWalletLog
+        public static DataSet GetAllCashWalletLog(int viewPage, string filterType, string filterValue, string fromDate, string toDate, out int pages, out int ok, out string msg)
+        {
+            SqlConnection sqlConn = DBConn.GetConnection();
+            SqlDataAdapter da = new SqlDataAdapter();
+
+            SqlCommand sqlComm = new SqlCommand("SP_GetAllCashWalletLog", sqlConn);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter pViewPage = sqlComm.Parameters.Add("@viewPage", SqlDbType.Int);
+            pViewPage.Direction = ParameterDirection.Input;
+            pViewPage.Value = viewPage;
+
+            SqlParameter pFilterType = sqlComm.Parameters.Add("@filterType", SqlDbType.VarChar, 200);
+            pFilterType.Direction = ParameterDirection.Input;
+            pFilterType.Value = filterType;
+
+            SqlParameter pUsername = sqlComm.Parameters.Add("@keyword", SqlDbType.VarChar, 200);
+            pUsername.Direction = ParameterDirection.Input;
+            pUsername.Value = Helper.NVL(filterValue);
+
+            SqlParameter pFromDate = sqlComm.Parameters.Add("@fromDate", SqlDbType.NVarChar, 200);
+            pFromDate.Direction = ParameterDirection.Input;
+            pFromDate.Value = fromDate;
+
+            SqlParameter pToDate = sqlComm.Parameters.Add("@toDate", SqlDbType.NVarChar, 200);
+            pToDate.Direction = ParameterDirection.Input;
+            pToDate.Value = toDate;
 
             SqlParameter pPages = sqlComm.Parameters.Add("@pages", SqlDbType.Int);
             pPages.Direction = ParameterDirection.Output;

@@ -1,18 +1,18 @@
 USE [ColorPrediction]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GetAllWithdrawal]    Script Date: 19/3/2023 11:38:59 AM ******/
-DROP PROCEDURE [dbo].[SP_GetAllWithdrawal]
+/****** Object:  StoredProcedure [dbo].[SP_GetAllWithdrawalLogs]    Script Date: 19/3/2023 11:38:59 AM ******/
+DROP PROCEDURE [dbo].[SP_GetAllWithdrawalLogs]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_GetAllWithdrawal]    Script Date: 19/3/2023 11:38:59 AM ******/
+/****** Object:  StoredProcedure [dbo].[SP_GetAllWithdrawalLogs]    Script Date: 19/3/2023 11:38:59 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[SP_GetAllWithdrawal]
+CREATE PROCEDURE [dbo].[SP_GetAllWithdrawalLogs]
 (
 	@viewPage	INT,
 	@filterType nvarchar(200),
@@ -39,8 +39,7 @@ AS
 		SELECT @pages = COUNT(CCASH_ID)
 		FROM dbo.CVD_CASHWALLETLOG
 		WHERE CCASH_CASHNAME = 'WDR'
-		AND CCASH_DELETIONSTATE = 0
-		AND CCASH_STATUS = 0
+		AND CCASH_DELETIONSTATE = 0 AND CCASH_STATUS != 0
 	END
 	ELSE IF @filterType = 'Name' AND @keyword != '' AND @fromDate='' AND @toDate= ''
 	BEGIN
@@ -48,8 +47,7 @@ AS
 		FROM dbo.CVD_CASHWALLETLOG mem, CVD_USER usr
 		WHERE mem.CUSR_USERNAME = usr.CUSR_USERNAME
 		AND mem.CCASH_DELETIONSTATE = 0
-		AND mem.CCASH_CASHNAME = 'WDR'
-		AND CCASH_STATUS = 0
+		AND mem.CCASH_CASHNAME = 'WDR' AND CCASH_STATUS != 0
 		AND (@filterType = 'Name' AND @keyword != '' AND  usr.CUSR_FIRSTNAME like '%' + @keyword + '%')
 	END
 	ELSE IF @keyword = '' AND @fromDate!='' AND @toDate!= ''
@@ -57,8 +55,7 @@ AS
 		SELECT @pages = COUNT(CCASH_ID)
 		FROM dbo.CVD_CASHWALLETLOG
 		WHERE CCASH_CASHNAME = 'WDR'
-		AND CCASH_DELETIONSTATE = 0
-		AND CCASH_STATUS = 0
+		AND CCASH_DELETIONSTATE = 0 AND CCASH_STATUS != 0
 		AND CCASH_CREATEDON between @fromDate and @toDate
 	END
 	ELSE IF @filterType = 'Name' AND @keyword != '' AND @fromDate!='' AND @toDate!= ''
@@ -67,8 +64,7 @@ AS
 		FROM dbo.CVD_CASHWALLETLOG mem, CVD_USER usr
 		WHERE mem.CUSR_USERNAME = usr.CUSR_USERNAME
 		AND mem.CCASH_DELETIONSTATE = 0
-		AND mem.CCASH_CASHNAME = 'WDR'
-		AND CCASH_STATUS = 0
+		AND mem.CCASH_CASHNAME = 'WDR' AND CCASH_STATUS != 0
 		AND (@filterType = 'Name' AND @keyword != '' AND  usr.CUSR_FIRSTNAME like '%' + @keyword + '%')
 		AND CCASH_CREATEDON between @fromDate and @toDate
 	END
@@ -98,7 +94,7 @@ AS
 			FROM dbo.CVD_CASHWALLETLOG mem, CVD_USER usr
 			WHERE mem.CUSR_USERNAME = usr.CUSR_USERNAME
 			AND mem.CCASH_CASHNAME = 'WDR'
-			AND CCASH_STATUS = 0
+			AND CCASH_STATUS != 0
 			AND mem.CCASH_DELETIONSTATE = 0
 		) AS FOO
 		WHERE rownumber > ((@viewPage - 1) * @tableRows) AND rownumber < (((@viewPage - 1) * @tableRows) + @tableRows) + 1
@@ -112,8 +108,8 @@ AS
 			FROM dbo.CVD_CASHWALLETLOG mem, CVD_USER usr
 			WHERE mem.CUSR_USERNAME = usr.CUSR_USERNAME
 			AND mem.CCASH_DELETIONSTATE = 0
+			AND CCASH_STATUS != 0
 			AND mem.CCASH_CASHNAME = 'WDR'
-			AND CCASH_STATUS = 0
 			AND @filterType = 'Name' AND @keyword != '' AND  usr.CUSR_FIRSTNAME like '%' + @keyword + '%'
 		) AS FOO
 		WHERE rownumber > ((@viewPage - 1) * @tableRows) AND rownumber < (((@viewPage - 1) * @tableRows) + @tableRows) + 1
@@ -127,8 +123,8 @@ AS
 			FROM dbo.CVD_CASHWALLETLOG mem, CVD_USER usr
 			WHERE mem.CUSR_USERNAME = usr.CUSR_USERNAME
 			AND mem.CCASH_CASHNAME = 'WDR'
+			AND CCASH_STATUS != 0
 			AND mem.CCASH_DELETIONSTATE = 0
-			AND CCASH_STATUS = 0
 			AND CCASH_CREATEDON between @fromDate and @toDate
 		) AS FOO
 		WHERE rownumber > ((@viewPage - 1) * @tableRows) AND rownumber < (((@viewPage - 1) * @tableRows) + @tableRows) + 1
@@ -142,8 +138,8 @@ AS
 			FROM dbo.CVD_CASHWALLETLOG mem, CVD_USER usr
 			WHERE mem.CUSR_USERNAME = usr.CUSR_USERNAME
 			AND mem.CCASH_DELETIONSTATE = 0
+			AND CCASH_STATUS != 0
 			AND mem.CCASH_CASHNAME = 'WDR'
-			AND CCASH_STATUS = 0
 			AND @filterType = 'Name' AND @keyword != '' AND  usr.CUSR_FIRSTNAME like '%' + @keyword + '%'
 			AND CCASH_CREATEDON between @fromDate and @toDate
 		) AS FOO

@@ -19,6 +19,11 @@ namespace Entity.Context
 
                 entity.Property(e => e.CcashId).HasColumnName("CCASH_ID");
 
+                entity.Property(e => e.CcashAddress)
+                    .HasMaxLength(1000)
+                    .HasColumnName("CCASH_ADDRESS")
+                    .HasDefaultValueSql("('')");
+
                 entity.Property(e => e.CcashAppnumber)
                     .HasColumnType("decimal(15, 2)")
                     .HasColumnName("CCASH_APPNUMBER");
@@ -30,6 +35,11 @@ namespace Entity.Context
                 entity.Property(e => e.CcashApprate)
                     .HasColumnType("decimal(15, 2)")
                     .HasColumnName("CCASH_APPRATE");
+
+                entity.Property(e => e.CcashApprovaldate)
+                    .HasColumnType("datetime")
+                    .HasColumnName("CCASH_APPROVALDATE")
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.CcashAppuser)
                     .HasMaxLength(200)
@@ -85,6 +95,26 @@ namespace Entity.Context
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.CcashDeletionstate).HasColumnName("CCASH_DELETIONSTATE");
+
+                entity.Property(e => e.CcashEmail)
+                    .HasMaxLength(500)
+                    .HasColumnName("CCASH_EMAIL")
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.CcashMobile)
+                    .HasMaxLength(500)
+                    .HasColumnName("CCASH_MOBILE")
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.CcashPaymentmsg)
+                    .HasMaxLength(1000)
+                    .HasColumnName("CCASH_PAYMENTMSG")
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.CcashPaymenttrandid)
+                    .HasMaxLength(1000)
+                    .HasColumnName("CCASH_PAYMENTTRANDID")
+                    .HasDefaultValueSql("('')");
 
                 entity.Property(e => e.CcashState)
                     .HasMaxLength(100)

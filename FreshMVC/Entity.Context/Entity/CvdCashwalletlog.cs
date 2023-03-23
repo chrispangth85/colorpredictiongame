@@ -26,5 +26,11 @@ namespace Entity.Context
         public string CcashCity { get; set; }
         public string CcashBankname { get; set; }
         public string CcashBankaccountname { get; set; }
+        public string CcashMobile { get; set; }
+        public string CcashEmail { get; set; }
+        public string CcashAddress { get; set; }
+        public DateTime? CcashApprovaldate { get; set; }
+        public string CcashPaymentmsg { get; set; }
+        public string CcashPaymenttrandid { get; set; }
     }
 }

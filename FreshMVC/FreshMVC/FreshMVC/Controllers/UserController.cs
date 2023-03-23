@@ -24,6 +24,7 @@ using System.Drawing.Imaging;
 using RestSharp;
 using System.Text;
 using System.Web;
+using System.Globalization;
 
 namespace FreshMVC.Controllers
 {
@@ -1417,9 +1418,9 @@ namespace FreshMVC.Controllers
         private string getRandomProductStatus()
         {
             List<string> firstNames = new List<string>();
-            firstNames.Add("SOLD");
+            //firstNames.Add("SOLD");
             firstNames.Add("DEAL");
-            firstNames.Add("NEW");
+            //firstNames.Add("NEW");
 
             Random randNum = new Random();
             int aRandomPos = randNum.Next(firstNames.Count);//Returns a nonnegative random number less than the specified maximum (firstNames.Count).
@@ -1932,6 +1933,7 @@ namespace FreshMVC.Controllers
                 {
                     am.Amount = userFound.CusrCashwlt.Value.ToString("0.00");
                 }
+
                 var serviceFeeFound = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "WithdrawalServiceFee");
                 if (serviceFeeFound != null)
                 {
@@ -2016,37 +2018,52 @@ namespace FreshMVC.Controllers
                 var withdrawalSettingFound = dbContext.CvdParameter.Where(c => c.CparaName == "WithdrawalMinAmount" || c.CparaName == "WithdrawalMaxAmount").ToList();
                 decimal minWithdrawalAmount = 0;
                 decimal maxWithdrawalAmount = 0;
+
                 if (withdrawalSettingFound != null)
                 {
-                    foreach(CvdParameter withdrawalSetting in withdrawalSettingFound)
+                    foreach (CvdParameter withdrawalSetting in withdrawalSettingFound)
                     {
                         if (withdrawalSetting.CparaName == "WithdrawalMinAmount")
                         {
                             minWithdrawalAmount = withdrawalSetting.CparaDecimalvalue;
                         }
+
                         if (withdrawalSetting.CparaName == "WithdrawalMaxAmount")
                         {
                             maxWithdrawalAmount = withdrawalSetting.CparaDecimalvalue;
                         }
                     }
                 }
+
                 if (minWithdrawalAmount > withdrawalAmount)
                 {
                     Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     return Json(new
                     {
                         status = false,
-                        message = Resources.PackBuddyShared.msgLessMinWithdrawalAmount
-                    }); ;
+                        message = string.Format("{0} {1}", Resources.PackBuddyShared.msgMinWithdrawalAmount, minWithdrawalAmount)
+                    });
                 }
+
                 if (withdrawalAmount > maxWithdrawalAmount)
                 {
                     Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     return Json(new
                     {
                         status = false,
-                        message = Resources.PackBuddyShared.msgExceedMaxWithdrawalAmount
-                    }); ;
+                        message = string.Format("{0} {1}", Resources.PackBuddyShared.msgMaxWithdrawalAmount, maxWithdrawalAmount)
+                    });
+                }
+
+                var withdrawalStatus = dbContext.CvdCashwalletlog.FirstOrDefault(c => c.CusrUsername.ToLower() == usernameCookie.ToLower() && c.CcashStatus == 0 && c.CcashCashname == "WDR");
+                if (withdrawalStatus != null)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.msgPendingWithdrwawal
+                    });
                 }
 
                 var found = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && (c.CroleId == 3 || c.CroleId == 2));
@@ -2069,7 +2086,8 @@ namespace FreshMVC.Controllers
             if (string.IsNullOrEmpty(message))
             {
                 withdrawalAmount = 0 - withdrawalAmount;
-                AdminDB.CashWalletOperation(usernameCookie, withdrawalAmount, "WDR", 0, "", "", "0", serviceFee, bankId);
+                var paymentId = string.Format("WDR_{0}{1}", DateTime.Today.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmmss"));
+                AdminDB.CashWalletOperation(usernameCookie, withdrawalAmount, "WDR", 0, "", paymentId, "0", serviceFee, bankId);
             }
             else
             {
@@ -2104,15 +2122,7 @@ namespace FreshMVC.Controllers
                     return message;
                 }
 
-                var encryptedUsername = Authentication.Encrypt(userName);
-                if (ds.Tables[0].Rows.Count == 0)
-                {
-                    message = Resources.PackBuddyShared.msgInvalidLogin;
-                    return message;
-                }
-
                 return message;
-
             }
             catch (Exception ex)
             {
@@ -2179,7 +2189,7 @@ namespace FreshMVC.Controllers
                 });
             }
 
-            if (!decimal.TryParse(rechargeAmount, out decimal recharge) || recharge < 100)
+            if (!decimal.TryParse(rechargeAmount, out decimal recharge) || recharge < 0)
             {
                 Response.StatusCode = (int)HttpStatusCode.BadRequest;
                 return Json(new
@@ -2187,6 +2197,33 @@ namespace FreshMVC.Controllers
                     status = false,
                     message = Resources.PackBuddyShared.lblInvalidAmount
                 });
+            }
+
+
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var minRecharge = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "RechargeMinAmount");
+                var maxRecharge = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "RechargeMaxAmount");
+
+                if (minRecharge != null && minRecharge.CparaDecimalvalue > recharge)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = string.Format("{0} {1}", Resources.PackBuddyShared.lblMinRecharge, minRecharge)
+                    });
+                }
+
+                if (maxRecharge != null && maxRecharge.CparaDecimalvalue < recharge)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = string.Format("{0} {1}", Resources.PackBuddyShared.lblMaxRecharge, maxRecharge)
+                    });
+                }
             }
 
             return StatusCode((int)HttpStatusCode.OK);
@@ -2220,12 +2257,12 @@ namespace FreshMVC.Controllers
 
             var payment = new PaymentModel();
             var host = Dns.GetHostEntry(Dns.GetHostName());
-            var paymentId = string.Format("{0}{1}{2}", DateTime.Today.ToString("yyyyMMdd"), "MY", DateTime.Now.ToString("HHmmss"));
+            var paymentId = string.Format("{0}{1}  ", DateTime.Today.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmmss"));
 
             var url = this.Request.Host.Host.ToLower();
 
             try
-            {
+            {                
                 var postUrl = Misc.depositUrl;
 
                 if (url == "localhost" || url.Contains("h2init.com"))
@@ -2233,9 +2270,33 @@ namespace FreshMVC.Controllers
                     postUrl = Misc.depositUrl;
                 }
 
+                var merchantCode = Misc.merchantCode;
+                var merchantKey = Misc.merchantKey;
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var paymentHostFound = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "GatewayPaymentHost");
+                    if (paymentHostFound != null)
+                    {
+                        postUrl = paymentHostFound.CparaStringvalue;
+                    }
+
+                    var merchantCodeFound = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "GatewayMemberID");
+                    if (merchantCodeFound != null)
+                    {
+                        merchantCode = merchantCodeFound.CparaStringvalue;
+                    }
+
+                    var paymentKey = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "GatewayPaymentKey");
+                    if (paymentKey != null)
+                    {
+                        merchantKey = paymentKey.CparaStringvalue;
+                    }
+                }
+
                 var dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 var dataSign = string.Format("pay_amount={0}&pay_applydate={1}&pay_bankcode={2}&pay_callbackurl={3}&pay_memberid={4}&pay_notifyurl={5}&pay_orderid={6}&key={7}",
-                    amount.ToString("#0.00"), dateTime, Misc.bankCode, Misc._baseUrl + "/Payment/CallBackUrl", Misc.merchantCode, Misc._baseUrl + "/User/ReturnUrl", paymentId, Misc.merchantKey);
+                    amount.ToString("#0.00"), dateTime, Misc.bankCode, Misc._baseUrl + "/Payment/CallBackUrl", merchantCode, Misc._baseUrl + "/User/ReturnUrl", paymentId, merchantKey);
 
                 var dataMd5 = Misc.MD5(dataSign).ToUpper();
 
@@ -2291,6 +2352,53 @@ namespace FreshMVC.Controllers
             return View("CreatePaymentTwo", payment);
         }
 
+
+        #region Transaction
+        public ActionResult Transaction()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new PaginationPaymentModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var transactionFound = dbContext.CvdCashwalletlog.Where(t => t.CusrUsername.ToLower() == usernameCookie.ToLower()).OrderByDescending(t =>t.CcashCreatedon).Take(100);
+                foreach (var transaction in transactionFound)
+                {
+                    PaymentModel paymentModel = new PaymentModel();
+                    paymentModel.Username = transaction.CusrUsername;
+                    paymentModel.RefNo = transaction.CcashAppother;
+                    paymentModel.Remark = Misc.ConvertoReadableName(transaction.CcashCashname);
+                    paymentModel.FinalAmount = Convert.ToString(Convert.ToDecimal(transaction.CcashCashin) == 0 ? Convert.ToDecimal(transaction.CcashCashout) : Convert.ToDecimal(transaction.CcashCashin));
+                    paymentModel.Created = transaction.CcashCreatedon.ToString("dd/MM/yyyy HH:mm:ss");
+                    paymentModel.Status = transaction.CcashStatus == 0 ? Resources.PackBuddyShared.lblInProgress : transaction.CcashStatus == 1 ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+                    am.List.Add(paymentModel);
+                }
+            }
+
+            return View("Transaction", am);
+        }
+        #endregion
+
         public IActionResult ReturnUrl()
         {
             // handle all the transaction successfull or failure at callback better
@@ -2302,7 +2410,16 @@ namespace FreshMVC.Controllers
             var transaction_id = HttpUtility.UrlDecode(Request.Form["transaction_id"]);
             var attach = HttpUtility.UrlDecode(Request.Form["attach"]);
             var sign = HttpUtility.UrlDecode(Request.Form["sign"]);
-            var merchantKey = Misc.merchantKey;
+            var merchantKey = Misc.merchantKey;            
+
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {                
+                var paymentKey = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "GatewayPaymentKey");
+                if (paymentKey != null)
+                {
+                    merchantKey = paymentKey.CparaStringvalue;
+                }
+            }
 
             var SignTemp = string.Format("amount={0}&datetime={1}&memberid={2}&orderid={3}&returncode={4}&transaction_id={5}&key={6}",
                 amount, datetime, memberid, orderid, returncode, transaction_id, merchantKey);
@@ -2453,10 +2570,31 @@ namespace FreshMVC.Controllers
         }
         #endregion
 
-        #region Transaction
-        public ActionResult Transaction()
+        #region ChangeLanguageFromLogin
+        public ActionResult ChangeLanguageFromLogin(string languageCode)
+        {
+            Response.Cookies.Append("LanguageChosen", languageCode, new CookieOptions() { Expires = DateTime.Now.AddYears(1), HttpOnly = false, IsEssential = true });
+
+            var cultureInfo = new CultureInfo(languageCode);
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
+            return Profile();
+        }
+        #endregion
+
+        #region Languages
+        public ActionResult Languages()
         {
             string usernameCookie = "";
+            string currentLanguage = HttpContext.Request.Cookies["LanguageChosen"];
+
+            if(currentLanguage == null)
+            {
+                currentLanguage = "en-US";
+            }
+
             try
             {
                 string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
@@ -2470,32 +2608,18 @@ namespace FreshMVC.Controllers
                 });
             }
 
-            var am = new PaginationPaymentModel();
-
-            if (usernameCookie == "" || usernameCookie == null)
+            if (usernameCookie == "")
             {
                 return RedirectToAction("ClientLogin", "UserLogin", new
                 {
                     reloadPage = true
                 });
             }
-            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
-            {
-                var transactionFound = dbContext.CvdCashwalletlog.OrderByDescending(t => t.CcashCreatedon).Take(100);
-                foreach (var transaction in transactionFound)
-                {
-                    PaymentModel paymentModel = new PaymentModel();
-                    paymentModel.Username = transaction.CusrUsername;
-                    paymentModel.RefNo = transaction.CcashAppother;
-                    paymentModel.Remark = transaction.CcashCashname;
-                    paymentModel.FinalAmount = Convert.ToString(Convert.ToDecimal(transaction.CcashCashin) == 0 ? Convert.ToDecimal(transaction.CcashCashout) : Convert.ToDecimal(transaction.CcashCashin));
-                    paymentModel.Created = transaction.CcashCreatedon.ToString("dd/MM/yyyy HH:mm:ss");
-                    paymentModel.Status = transaction.CcashStatus == 0 ? Resources.PackBuddyShared.lblInProgress : transaction.CcashStatus == 1 ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
-                    am.List.Add(paymentModel);
-                }
-            }
-         
-            return View("Transaction", am);
+
+            var am = new MemberHomeModel();
+            ViewBag.CurrentLanguage = currentLanguage;
+
+            return PartialView("Languages", am);
         }
         #endregion
     }

@@ -35,6 +35,21 @@ namespace FreshMVC.Component
             return builder.ToString();
         }
 
+        public static string ConvertoReadableName(string remark)
+        {
+            switch (remark)
+            {
+                case "WDR":
+                    return Resources.PackBuddyShared.lblWithdrawal;
+                case "Recharge":
+                    return Resources.PackBuddyShared.lblRecharge;
+                case "RefundWdr":
+                    return Resources.PackBuddyShared.lblRefundWdr;
+                default:
+                    return remark;
+            }
+        }
+
         public static IEnumerable<SelectListItem> ConstructsRiderAccountStatus()
         {
             List<SelectListItem> filteringCriteriaList = new List<SelectListItem>();

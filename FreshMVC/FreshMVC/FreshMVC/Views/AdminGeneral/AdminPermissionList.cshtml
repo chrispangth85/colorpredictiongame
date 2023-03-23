@@ -1,0 +1,136 @@
+﻿@model PaginationAdminModel
+@using resShared = FreshMVC.Resources.PackBuddyShared;
+
+<script type="text/javascript">
+
+    $.ajaxSetup({ cache: false });
+
+    $("#btnPage").click(function (evt) {
+
+        var e = document.getElementById("page")
+        var page = e.options[e.selectedIndex].value;
+
+        $('.page-loader-wrapper').show();
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/AdminPermissionList",
+            data: { selectedPage: page },
+            success: function (data) {
+                $("#main-content").html(data);
+                $('.page-loader-wrapper').hide();
+                event.stopPropagation();
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+                $('.page-loader-wrapper').hide();
+            }
+        });
+    });
+
+    $(".EditData").click(function (e) {
+        $('.page-loader-wrapper').show();
+        //ShowProgressAnimation();
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/AdminPermissionData",
+            data: { Username: this.id },
+            success: function (data) {
+                $("#main-content").html(data);
+                $('.page-loader-wrapper').hide();
+                event.stopPropagation();
+            },
+            error: function (xhr, status, error) {
+                var errorM = xhr.responseText;
+                errorM = errorM.replace('""', '');
+                alert(errorM);
+                $('.page-loader-wrapper').hide();
+            }
+        });
+    });
+
+</script>
+
+<div class="container-fluid">
+    <div class="block-header">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <h2>@resShared.mnuAdmin</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                    <li class="breadcrumb-item active">@resShared.mnuAccessControl</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="row clearfix">
+        <div class="col-lg-12 col-md-12 col-sm-12" style="padding:10px;">
+            <div class="card" style="padding:50px;">
+                <input type="hidden" id="eliminateId" />
+
+                <br />
+                <div class="table-responsive">
+                    <table id="tablestyle" width="100%" class="table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>
+                                    @resShared.lblUsername
+                                </th>                             
+                                <th>
+                                    @resShared.lblEdit
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (Model.AdminList.Count == 0)
+                            {
+                                <tr style="height: 25px; border-top: 2px solid white;">
+                                    <td style="padding: 5px;" colspan="10">
+                                        @resShared.lblNoRecFound
+                                    </td>
+                                </tr>
+                            }
+                            @foreach (var item in Model.AdminList)
+                            {
+                                <tr style="height: 25px; border-top: 2px solid white;">
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Number)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Username)
+                                    </td>
+                                    <td>
+                                        <a class="EditData" href="#" id="@item.Username"><i class="fa fa-edit"></i></a>
+                                    </td>
+                                </tr>
+
+                            }
+                        </tbody>
+                    </table>
+                    @if (Model.AdminList.Count != 0)
+                    {
+                        <table width="auto" style="text-align:right; margin-right:0px; margin-left:auto;">
+                            <tr style="text-align: right">
+                                <td style="text-align: right">
+                                    <div class="BtnClass" style="float: right;">
+                                        @Html.DropDownList("page", @Model.Pages, new { @class = "form-control", style = "width:80px;" })
+
+                                    </div>
+                                </td>
+                                <td style="text-align: right">
+                                    <button id="btnPage" type="button" class="btn btn-sm btn-primary" style="width: 100px">
+                                        @resShared.btnView
+                                    </button>
+                                </td>
+                            </tr>
+                        </table>
+
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -632,6 +632,8 @@ namespace FreshMVC.Models
         public string SelectedFilteringCriteria { get; set; }
         public string FilterValue { get; set; }
         public IFormFile ExcelFile { get; set; }
+
+        public string TemporaryOrderID { get; set; }
         public string FromDate { get; set; }
         public string ToDate { get; set; }
         public List<PaymentModel> List
@@ -676,6 +678,31 @@ namespace FreshMVC.Models
         public string Email { get; set; }        
     }
 
+
+    public class SystemConfigurationModel
+    {
+        public decimal WithdrawalMinAmount { get; set; }
+        public decimal WithdrawalMaxAmount { get; set; }
+        public decimal WithdrawalServiceFee { get; set; }
+        public decimal FirstChargeLevel1 { get; set; }
+        public decimal FirstChargeLevel2 { get; set; }
+        public decimal RechargeMinAmount { get; set; }
+        public decimal RechargeMaxAmount { get; set; }
+        public decimal WinningLevel1 { get; set; }
+        public decimal WinningLevel2 { get; set; }
+        public decimal GameServiceFee { get; set; }
+        public decimal GameHandlingFee { get; set; }
+        public decimal SponsorBonusLevel1 { get; set; }
+        public decimal SponsorBonusLevel2 { get; set; }
+        public decimal SponsorBonusLevel3 { get; set; }
+        public string GatewayPaymentHost { get; set; }
+        public string GatewayWithdrawalHost { get; set; }
+        public string GatewayMemberID { get; set; }
+        public string GatewayPaymentKey { get; set; }
+        public string SupportPhoneNumber { get; set; }
+        public string SupportApkUrl { get; set; }
+    }
+
     public class PaymentModel
     {
         public int Number { get; set; }
@@ -687,11 +714,15 @@ namespace FreshMVC.Models
         public string MerchantCode { get; set; }
         public string id { get; set; }
         public string Status { get; set; }
+        public string State { get; set; }
         public string Amount { get; set; }
         public string FinalAmount { get; set; }
         public string Currency { get; set; }
         public string ProductDesc { get; set; }
         public string Username { get; set; }
+        public string CashName { get; set; }
+        public string CashIn { get; set; }
+        public string CashOut { get; set; }
         public string Contact { get; set; }
         public string Email { get; set; }
         public string Remark { get; set; }
@@ -709,6 +740,8 @@ namespace FreshMVC.Models
         public string City { get; set; }
         public string PayMd5 { get; set; }
         public string PaymentUrl { get; set; }
+        public string Address { get; set; }
+        public string Mobile { get; set; }        
         public IEnumerable<SelectListItem> BankList { get; set; }
         public string SelectedBank { get; set; }
     }
@@ -1617,29 +1650,5 @@ namespace FreshMVC.Models
         {
 
         }
-    }
-
-    public class SystemConfigurationModel
-    {
-        public decimal WithdrawalMinAmount { get; set; }
-        public decimal WithdrawalMaxAmount { get; set; }
-        public decimal WithdrawalServiceFee { get; set; }
-        public decimal FirstChargeLevel1 { get; set; }
-        public decimal FirstChargeLevel2 { get; set; }
-        public decimal RechargeMinAmount { get; set; }
-        public decimal RechargeMaxAmount { get; set; }
-        public decimal WinningLevel1 { get; set; }
-        public decimal WinningLevel2 { get; set; }
-        public decimal GameServiceFee { get; set; }
-        public decimal GameHandlingFee { get; set; }
-        public decimal SponsorBonusLevel1 { get; set; }
-        public decimal SponsorBonusLevel2 { get; set; }
-        public decimal SponsorBonusLevel3 { get; set; }
-        public string GatewayPaymentHost { get; set; }
-        public string GatewayWithdrawalHost { get; set; }
-        public string GatewayMemberID { get; set; }
-        public string GatewayPaymentKey { get; set; }
-        public string SupportPhoneNumber { get; set; }
-        public string SupportApkUrl { get; set; }
     }
 }

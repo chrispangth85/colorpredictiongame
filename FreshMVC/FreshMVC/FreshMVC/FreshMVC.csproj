@@ -6,6 +6,16 @@
     <UserSecretsId>b9c8d03f-542d-47c4-aff9-2096299a52e2</UserSecretsId>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Resources\PackBuddyShared.zh-CN.Designer.cs" />
+    <Compile Remove="Resources\PackBuddyShared.zh-TW.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\PackBuddyShared.zh-CN.Designer.cs" />
+    <EmbeddedResource Include="Resources\PackBuddyShared.zh-TW.Designer.cs" />
+  </ItemGroup>
+
 
   <ItemGroup>
     <PackageReference Include="Facebook" Version="7.0.6" />
@@ -37,6 +47,12 @@
   <ItemGroup>
     <EmbeddedResource Update="Resources\PackBuddyShared.resx">
       <LastGenOutput>PackBuddyShared.Designer.cs</LastGenOutput>
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\PackBuddyShared.zh-CN.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\PackBuddyShared.zh-TW.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
     </EmbeddedResource>
   </ItemGroup>

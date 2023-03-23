@@ -16,6 +16,8 @@ using Entity.Context.Models;
 using System.IO;
 using OfficeOpenXml;
 using OfficeOpenXml.Style;
+using RestSharp;
+using Newtonsoft.Json;
 
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -1189,7 +1191,7 @@ namespace FreshMVC.Controllers
                         product.CproTitle = am.Title;
                         product.CproDesc = am.Desc;
                         product.CproDescAdd = am.AdditionalDesc;
-                        product.CproImages = am.ImagePath;
+                        product.CproImages = am.ImagePath != null && am.ImagePath.Contains("//") ? product.CproImages : am.ImagePath;
                         product.CproPrice = am.Price;
 
                         dbContext.CvdProduct.Add(product);
@@ -1206,7 +1208,7 @@ namespace FreshMVC.Controllers
                             product.CproTitle = am.Title;
                             product.CproDesc = am.Desc;
                             product.CproDescAdd = am.AdditionalDesc;
-                            product.CproImages = am.ImagePath;
+                            product.CproImages = am.ImagePath != null && am.ImagePath.Contains("//") ? product.CproImages : am.ImagePath;
                             product.CproPrice = am.Price;
                             dbContext.SaveChanges();
                         }
@@ -1583,7 +1585,7 @@ namespace FreshMVC.Controllers
                     {
                         var banner = new CvdBanner();
                         banner.CbannerTitle = am.Title;
-                        banner.CbannerImages = am.ProtraitPhotoPath;
+                        banner.CbannerImages = am.ProtraitPhotoPath != null && am.ProtraitPhotoPath.Contains("//") ? banner.CbannerImages : am.ProtraitPhotoPath;
 
                         dbContext.CvdBanner.Add(banner);
                         dbContext.SaveChanges();
@@ -1597,7 +1599,7 @@ namespace FreshMVC.Controllers
                         if (banner != null)
                         {
                             banner.CbannerTitle = am.Title;
-                            banner.CbannerImages = am.ProtraitPhotoPath;
+                            banner.CbannerImages = am.ProtraitPhotoPath != null && am.ProtraitPhotoPath.Contains("//") ? banner.CbannerImages : am.ProtraitPhotoPath;
                             dbContext.SaveChanges();
                         }
                     }
@@ -1661,7 +1663,7 @@ namespace FreshMVC.Controllers
                 {
                     reloadPage = true
                 });
-            }
+            } 
 
             filterValue = Helper.NVL(filterValue);
             string fromDateInput = fromDate;
@@ -1795,7 +1797,7 @@ namespace FreshMVC.Controllers
                     {
                         product.CcashStatus = -1;
                         dbContext.CvdCashwalletlogtemp.Update(product);
-                        dbContext.SaveChanges();
+                        dbContext.SaveChanges();                     
                     }
                 }
 
@@ -1920,6 +1922,216 @@ namespace FreshMVC.Controllers
 
         #endregion
 
+        #region WithdrawalLogs
+        public IActionResult WithdrawalLogs(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            filterValue = Helper.NVL(filterValue);
+            string fromDateInput = fromDate;
+            string toDateInput = toDate;
+
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+            }
+
+            int ok;
+            string msg;
+            var model = new PaginationPaymentModel();
+            int pages = 0;
+            var dsAdmin = AdminGeneralDB.GetAllWithdrawalList("SP_GetAllWithdrawalLogs", selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new PaymentModel();
+                am.Number = int.Parse(dr["rownumber"].ToString());
+                am.id = dr["CCASH_ID"].ToString();
+                am.Username = dr["CUSR_USERNAME"].ToString();
+                am.RefNo = dr["CCASH_APPOTHER"].ToString();
+                am.Amount = dr["CCASH_CASHOUT"].ToString();
+                am.ServiceFee = dr["CCASH_APPRATE"].ToString();
+                am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - decimal.Parse(dr["CCASH_APPRATE"].ToString())).ToString("#0.00");
+                am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                am.BalanceBeforeWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString()) + decimal.Parse(dr["CCASH_CASHOUT"].ToString())).ToString("#0.00");
+                am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00"); ;
+                am.CardNo = dr["CCASH_CARDNUMBER"].ToString();
+                am.SubBranch = dr["CCASH_BRANCH"].ToString();
+                am.State = dr["CCASH_STATE"].ToString();
+                am.City = dr["CCASH_CITY"].ToString();
+                am.BankName = dr["CCASH_BANKNAME"].ToString();
+                am.AccountName = dr["CCASH_BANKACCOUNTNAME"].ToString();
+                am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
+                am.Address = dr["CCASH_ADDRESS"].ToString();
+                am.Email = dr["CCASH_EMAIL"].ToString();
+                am.Mobile = dr["CCASH_MOBILE"].ToString();
+                am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblPending : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+                model.List.Add(am);
+            }
+
+            #region filtering
+            List<SelectListItem> filterOptionList = new List<SelectListItem>();
+            List<String> filterList = new List<string> { "Name" };
+
+
+            foreach (var value in filterList)
+            {
+                filterOptionList.Add(new SelectListItem() { Text = value, Value = value });
+            }
+
+            if (filterType == null || filterType == "")
+            {
+                model.SelectedFilteringCriteria = filterOptionList.First().Value;
+
+            }
+            else
+            {
+                model.SelectedFilteringCriteria = filterType;
+            }
+            model.FilterValue = Helper.NVL(filterValue);
+
+            model.FilteringCriteria = filterOptionList;
+
+            model.FromDate = fromDateInput;
+            model.ToDate = toDateInput;
+            #endregion
+
+            return PartialView("WithdrawalLogs", model);
+        }
+
+        public IActionResult DownloadWithdrawalLog(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                filterValue = Helper.NVL(filterValue);
+                if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+                {
+                    DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                    DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                    fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                    toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+                }
+
+                int ok;
+                string msg;
+                int pages = 0;
+                var dsAdmin = AdminGeneralDB.GetAllWithdrawalList("SP_GetAllWithdrawal", selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+
+                byte[] fileContents;
+
+                //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelPackage excelPackage = new ExcelPackage();
+                var workSheet = excelPackage.Workbook.Worksheets.Add("Report");
+                workSheet.DefaultRowHeight = 12;
+
+                //Header of table  
+                //  
+                workSheet.Row(1).Height = 20;
+                workSheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Row(1).Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Value = "#";
+                workSheet.Cells[1, 2].Value = FreshMVC.Resources.PackBuddyShared.lblReferenceID;
+                workSheet.Cells[1, 3].Value = FreshMVC.Resources.PackBuddyShared.lblUsername;
+                workSheet.Cells[1, 4].Value = FreshMVC.Resources.PackBuddyShared.lblName;
+                workSheet.Cells[1, 5].Value = FreshMVC.Resources.PackBuddyShared.lblPhone;
+                workSheet.Cells[1, 6].Value = FreshMVC.Resources.PackBuddyShared.lblWithdrawalAmount;
+                workSheet.Cells[1, 7].Value = FreshMVC.Resources.PackBuddyShared.lblServiceFee;
+                workSheet.Cells[1, 8].Value = FreshMVC.Resources.PackBuddyShared.lblFinalAmount;
+                workSheet.Cells[1, 9].Value = FreshMVC.Resources.PackBuddyShared.lblApplicationTime;
+                workSheet.Cells[1, 10].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceBeforeWith;
+                workSheet.Cells[1, 11].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceAfterWith;
+                workSheet.Cells[1, 12].Value = FreshMVC.Resources.PackBuddyShared.lblStatus;
+
+                int recordIndex = 2;
+
+                foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+                {
+                    var am = new PaymentModel();
+                    am.Number = int.Parse(dr["rownumber"].ToString());
+                    am.id = dr["CCASH_ID"].ToString();
+                    am.Username = dr["CUSR_USERNAME"].ToString();
+                    am.RefNo = dr["CCASH_APPOTHER"].ToString();
+                    am.Amount = dr["CCASH_CASHOUT"].ToString();
+                    am.ServiceFee = dr["CCASH_APPRATE"].ToString();
+                    am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - decimal.Parse(dr["CCASH_APPRATE"].ToString())).ToString("#0.00");
+                    am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                    am.BalanceBeforeWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString()) + decimal.Parse(dr["CCASH_CASHOUT"].ToString())).ToString("#0.00");
+                    am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00");
+                    am.AccountName = dr["CUSR_FIRSTNAME"].ToString();
+                    am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
+                    am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblInProgress : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+
+                    workSheet.Row(recordIndex).Height = 20;
+                    workSheet.Row(recordIndex).Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+
+                    workSheet.Cells[recordIndex, 1].Value = am.Number;
+                    workSheet.Cells[recordIndex, 2].Value = am.RefNo;
+                    workSheet.Cells[recordIndex, 3].Value = am.Username;
+                    workSheet.Cells[recordIndex, 4].Value = am.AccountName;
+                    workSheet.Cells[recordIndex, 5].Value = am.Username;
+                    workSheet.Cells[recordIndex, 6].Value = am.Amount;
+                    workSheet.Cells[recordIndex, 7].Value = am.ServiceFee;
+                    workSheet.Cells[recordIndex, 8].Value = am.FinalAmount;
+                    workSheet.Cells[recordIndex, 9].Value = am.Created;
+                    workSheet.Cells[recordIndex, 10].Value = am.BalanceBeforeWdr;
+                    workSheet.Cells[recordIndex, 11].Value = am.BalanceAfterWdr;
+                    workSheet.Cells[recordIndex, 12].Value = am.Status;
+                    recordIndex++;
+                }
+                fileContents = excelPackage.GetAsByteArray();
+
+                if (fileContents == null || fileContents.Length == 0)
+                {
+                    return NotFound();
+                }
+
+                return File(
+                   fileContents: fileContents,
+                   contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                   fileDownloadName: string.Format("WithdrawalLogs_{0}.xlsx", DateTime.Now.ToString("yyyyMMddHHmmss"))
+               );
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        #endregion
+
         #region WithdrawalListing
         public IActionResult WithdrawalListing(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
         {
@@ -1948,7 +2160,7 @@ namespace FreshMVC.Controllers
             string msg;
             var model = new PaginationPaymentModel();
             int pages = 0;
-            var dsAdmin = AdminGeneralDB.GetAllWithdrawalList(selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+            var dsAdmin = AdminGeneralDB.GetAllWithdrawalList("SP_GetAllWithdrawal", selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
 
             Misc.ConstructPageList(selectedPage, pages, model);
 
@@ -1971,10 +2183,18 @@ namespace FreshMVC.Controllers
                 am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - decimal.Parse(dr["CCASH_APPRATE"].ToString())).ToString("#0.00");
                 am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
                 am.BalanceBeforeWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString()) + decimal.Parse(dr["CCASH_CASHOUT"].ToString())).ToString("#0.00");
-                am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00");
-                am.AccountName = dr["CUSR_FIRSTNAME"].ToString();
+                am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00");                ;
+                am.CardNo = dr["CCASH_CARDNUMBER"].ToString();
+                am.SubBranch = dr["CCASH_BRANCH"].ToString();
+                am.State = dr["CCASH_STATE"].ToString();
+                am.City = dr["CCASH_CITY"].ToString();
+                am.BankName = dr["CCASH_BANKNAME"].ToString();
+                am.AccountName = dr["CCASH_BANKACCOUNTNAME"].ToString();
                 am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
-                am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblInProgress : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+                am.Address = dr["CCASH_ADDRESS"].ToString();
+                am.Email = dr["CCASH_EMAIL"].ToString();
+                am.Mobile = dr["CCASH_MOBILE"].ToString();
+                am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblPending : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
                 model.List.Add(am);
             }
 
@@ -2009,7 +2229,7 @@ namespace FreshMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult ApproveWithdrawal(int idz = 0)
+        public IActionResult ManualApproveWithdrawal(int idz = 0)
         {
             try
             {
@@ -2029,6 +2249,95 @@ namespace FreshMVC.Controllers
                         product.CcashStatus = 1;
                         dbContext.CvdCashwalletlog.Update(product);
                         dbContext.SaveChanges();
+                    }
+                }
+
+                return WithdrawalListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult ApproveWithdrawal(int idz = 0)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var withdrawalUrl = "";
+                    var merchantCode = "";
+                    var paymentHostFound = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "GatewayWithdrawalHost");
+                    if (paymentHostFound != null)
+                    {
+                        withdrawalUrl  = paymentHostFound.CparaStringvalue;
+                    }
+
+                    var merchantCodeFound = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "GatewayMemberID");
+                    if (merchantCodeFound != null)
+                    {
+                        merchantCode = merchantCodeFound.CparaStringvalue;
+                    }
+
+                    var product = dbContext.CvdCashwalletlog.FirstOrDefault(c => c.CcashId == idz);
+                    if (product != null)
+                    {
+                        var client = new RestClient(withdrawalUrl);
+                        var requestor = new RestRequest();
+                        requestor.Method = Method.POST;
+                        requestor.AddHeader("Content-Type", "application/x-www-form-urlencoded");
+                        requestor.AddParameter("mchid", merchantCode);
+                        requestor.AddParameter("out_trade_no", product.CcashAppother);
+                        requestor.AddParameter("money", product.CcashCashout);
+                        requestor.AddParameter("bankname", product.CcashBankaccountname);
+                        requestor.AddParameter("accountname", product.CcashBankname);
+                        requestor.AddParameter("cardnumber", product.CcashCardnumber);
+                        requestor.AddParameter("subbranch", product.CcashBranch);
+                        requestor.AddParameter("notifyurl", Misc._baseUrl + "/Payment/ReturnUrl");
+                        requestor.AddParameter("province", product.CcashState);
+                        requestor.AddParameter("city", product.CcashCity);
+
+                        var dataSign = string.Format("mchid={0}&out_trade_no={1}&money={2}&bankname={3}&accountname={4}&cardnumber={5}&subbranch={6}&notifyurl={7}&province={8}&city={9}", merchantCode, product.CcashAppother,
+                            product.CcashCashout, product.CcashBankaccountname, product.CcashBankname, product.CcashCardnumber, product.CcashBranch, Misc._baseUrl + "/Member/ReturnUrl", product.CcashState, product.CcashCity);
+
+                        var dataMd5 = Misc.MD5(dataSign).ToUpper();
+
+                        requestor.AddParameter("pay_md5sign", dataMd5);
+                        var response = client.Execute(requestor);
+                        var result = response.Content;
+
+                        dynamic data = JsonConvert.DeserializeObject(result);
+                        
+                        if (data.status == "error")
+                        {
+                            Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            return Json(new
+                            {
+                                status = false,
+                                message = data.msg
+                            });
+                        }
+                        else if (data.status == "success")
+                        {
+                            product.CcashPaymenttrandid = data.transaction_id;
+                            dbContext.CvdCashwalletlog.Update(product);
+                            dbContext.SaveChanges();
+                        }
                     }
                 }
 
@@ -2066,6 +2375,9 @@ namespace FreshMVC.Controllers
                         product.CcashStatus = -1;
                         dbContext.CvdCashwalletlog.Update(product);
                         dbContext.SaveChanges();
+
+                        var refundWlt = product.CcashCashout;
+                        AdminDB.CashWalletOperation(product.CusrUsername, refundWlt, "RefundWdr", 0, "", product.CcashAppother, "1");
                     }
                 }
 
@@ -2107,7 +2419,7 @@ namespace FreshMVC.Controllers
                 int ok;
                 string msg;
                 int pages = 0;
-                var dsAdmin = AdminGeneralDB.GetAllWithdrawalList(selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+                var dsAdmin = AdminGeneralDB.GetAllWithdrawalList("SP_GetAllWithdrawal", selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
 
                 byte[] fileContents;
 
@@ -2193,6 +2505,8 @@ namespace FreshMVC.Controllers
                 });
             }
         }
+
+
         #endregion
 
         #region SystemConfiguration
@@ -2213,7 +2527,7 @@ namespace FreshMVC.Controllers
 
                 if (parameters != null)
                 {
-                    foreach(var parameter in parameters)
+                    foreach (var parameter in parameters)
                     {
                         switch (parameter.CparaName)
                         {
@@ -2441,6 +2755,89 @@ namespace FreshMVC.Controllers
                     message = e.ToString()
                 });
             }
+        }
+        #endregion
+
+        #region CashWalletLog
+        public IActionResult CashWalletLog(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            filterValue = Helper.NVL(filterValue);
+            string fromDateInput = fromDate;
+            string toDateInput = toDate;
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+            }
+
+            int ok;
+            string msg;
+            var model = new PaginationPaymentModel();
+            int pages = 0;
+            var dsAdmin = AdminGeneralDB.GetAllCashWalletLog(selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new PaymentModel();
+                am.Number = int.Parse(dr["rownumber"].ToString());
+                am.id = dr["CCASH_ID"].ToString();
+                am.Username = dr["CUSR_USERNAME"].ToString();
+                am.CashName = dr["CCASH_CASHNAME"].ToString();
+                am.CashIn = dr["CCASH_CASHIN"].ToString();
+                am.CashOut = dr["CCASH_CASHOUT"].ToString();
+                am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                am.AccountName = dr["CUSR_FIRSTNAME"].ToString();
+                model.List.Add(am);
+            }
+
+            #region filtering
+            List<SelectListItem> filterOptionList = new List<SelectListItem>();
+            List<String> filterList = new List<string> { "Name" };
+
+
+            foreach (var value in filterList)
+            {
+                filterOptionList.Add(new SelectListItem() { Text = value, Value = value });
+            }
+
+            if (filterType == null || filterType == "")
+            {
+                model.SelectedFilteringCriteria = filterOptionList.First().Value;
+
+            }
+            else
+            {
+                model.SelectedFilteringCriteria = filterType;
+            }
+            model.FilterValue = Helper.NVL(filterValue);
+
+            model.FilteringCriteria = filterOptionList;
+
+            model.FromDate = fromDateInput;
+            model.ToDate = toDateInput;
+            #endregion
+
+            return PartialView("CashWalletLog", model);
         }
         #endregion
     }
