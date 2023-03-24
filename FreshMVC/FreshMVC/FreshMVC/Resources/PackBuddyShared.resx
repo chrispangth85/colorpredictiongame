@@ -591,6 +591,9 @@
   <data name="lblRecharge" xml:space="preserve">
     <value>Recharge</value>
   </data>
+  <data name="lblRechargeAmount" xml:space="preserve">
+    <value>Recharge Amount</value>
+  </data>
   <data name="lblRechargeTime" xml:space="preserve">
     <value>Recharge Time</value>
   </data>
@@ -687,6 +690,9 @@
   <data name="lblTransaction" xml:space="preserve">
     <value>Transaction</value>
   </data>
+  <data name="lblTransactionDate" xml:space="preserve">
+    <value>Transaction Date</value>
+  </data>
   <data name="lblType" xml:space="preserve">
     <value>Type</value>
   </data>
@@ -726,6 +732,9 @@
   <data name="lblWin" xml:space="preserve">
     <value>Win</value>
   </data>
+  <data name="lblWinAmount" xml:space="preserve">
+    <value>Win Amount</value>
+  </data>
   <data name="lblWinning" xml:space="preserve">
     <value>Winning</value>
   </data>
@@ -755,6 +764,9 @@
   </data>
   <data name="mnuCashWalletLog" xml:space="preserve">
     <value>Cash Wallet Log</value>
+  </data>
+  <data name="mnuDailyReport" xml:space="preserve">
+    <value>Daily Report</value>
   </data>
   <data name="mnuGame" xml:space="preserve">
     <value>Game</value>

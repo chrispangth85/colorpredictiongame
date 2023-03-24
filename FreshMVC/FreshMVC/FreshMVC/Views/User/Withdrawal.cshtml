@@ -28,8 +28,14 @@
 <link rel="stylesheet" href="~/Content/assets/css/alertify.min.css" />
 <script>
     $(document).ready(function () {
-        $(".amount-btn").click(function (evt) {
-            document.getElementById("search").value = this.value;
+        $("#withdrawalAmount").change(function (evt) {
+            var netWithdrawalAmount = ($("#withdrawalAmount").val() - $("#ServiceFee").val()).toFixed(2);
+            if (!isNaN(netWithdrawalAmount)) {
+                $('#netWithdrawalAmount').text(netWithdrawalAmount);
+            }
+            else {
+                $('#netWithdrawalAmount').text("");
+            }
         });
 
         $("#btnSaveAdd").click(function (evt) {
@@ -92,7 +98,7 @@
                             </div>
                             <div class="my-4">
                                 @Html.HiddenFor(model => model.ServiceFee, new { @id = "ServiceFee" })
-                                <p>Fee: @Model.ServiceFee, to account @Model.SelectedBank</p>
+                                <p>Fee: @Model.ServiceFee, to account <label name="netWithdrawalAmount" id="netWithdrawalAmount"></label></p>
                             </div>
 
                             <h1 class="main-heading-3 text-dark">

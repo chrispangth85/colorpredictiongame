@@ -102,7 +102,7 @@
             });
 
             $("#AdminPermissionSetup").click(function (evt) {
-                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                removeActiveClass();
                 $('#AdminPermissionSetup').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -126,7 +126,7 @@
 
 
             $("#adminListing").click(function (evt) {
-                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                removeActiveClass();
                 $('#adminListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -150,7 +150,7 @@
 
 
             $("#systemConfiguration").click(function (evt) {
-                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                removeActiveClass();
                 $('#systemConfiguration').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -172,9 +172,31 @@
                 });
             });
 
+            $("#dailyReport").click(function (evt) {
+                removeActiveClass();
+                $('#dailyReport').addClass('active');
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/dailyReport",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
 
             $("#lotteryBetListing").click(function (evt) {
-                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                removeActiveClass();
                 $('#lotteryBetListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -197,7 +219,7 @@
             });
 
             $("#gameListing").click(function (evt) {
-                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                removeActiveClass();
                 $('#gameListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -220,7 +242,7 @@
             });
 
             $("#sessionListing").click(function (evt) {
-                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                removeActiveClass();
                 $('#sessionListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -243,6 +265,8 @@
             });
 
             $("#bannerListing").click(function (evt) {
+                removeActiveClass();
+                $('#bannerListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
                 $.ajax({
@@ -348,7 +372,7 @@
             });
 
             $("#productListing").click(function (evt) {
-                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                removeActiveClass();
                 $('#productListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -372,7 +396,7 @@
 
             
             $("#userListing").click(function (evt) {
-                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                removeActiveClass();
                 $('#userListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -395,7 +419,7 @@
             });
 
             $("#redpacketListing").click(function (evt) {
-                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                removeActiveClass();
                 $('#redpacketListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -416,7 +440,11 @@
                     }
                 });
             });
-
+            function removeActiveClass() {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $("#systemConfiguration").removeClass("active");
+                $("#dailyReport").removeClass("active");
+            }
         });
     </script>
 </head>
@@ -544,8 +572,8 @@
                                     </li>
                                 }
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewProductListing") == "true" ||
-                                  @HttpContextAccessor.HttpContext.Session.GetString("ViewSessionListing") == "true" ||
-                                  @HttpContextAccessor.HttpContext.Session.GetString("ViewLotteryBetListing") == "true")
+                                 @HttpContextAccessor.HttpContext.Session.GetString("ViewSessionListing") == "true" ||
+                                 @HttpContextAccessor.HttpContext.Session.GetString("ViewLotteryBetListing") == "true")
                                 {
                                     <li>
                                         <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuGame</span></a>
@@ -584,8 +612,8 @@
                                     </li>
                                 }
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewRechargeListing") == "true" ||
-                                 @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalListing") == "true" ||
-                                 @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalLog") == "true")
+                                @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalListing") == "true" ||
+                                @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalLog") == "true")
                                 {
                                     <li>
                                         <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuTransaction</span></a>
@@ -611,10 +639,13 @@
                                 }
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewConfiguration") == "true")
                                 {
-                                    <li>
-                                        <a class="has-arrow" id="systemConfiguration"><i class="icon-speedometer"></i><span>@resShared.mnuSystemConfiguration</span></a>
+                                    <li id="systemConfiguration">
+                                        <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuSystemConfiguration</span></a>
                                     </li>
                                 }
+                                <li id="dailyReport">
+                                    <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuDailyReport</span></a>
+                                </li>
                             </ul>
                         </nav>
                     </div>

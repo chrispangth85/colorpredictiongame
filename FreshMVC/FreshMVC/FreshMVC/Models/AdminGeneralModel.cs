@@ -136,7 +136,7 @@ namespace FreshMVC.Models
         public string Lng { get; set; }
         public string PostalCode { get; set; }
         public string City { get; set; }
-        
+
         public string JoinedOn { get; set; }
 
         public string Status { get; set; }
@@ -665,7 +665,7 @@ namespace FreshMVC.Models
     }
 
     public class BankModel
-    {        
+    {
         public int Id { get; set; }
         public string ActualName { get; set; }
         public string IFSCCode { get; set; }
@@ -675,7 +675,7 @@ namespace FreshMVC.Models
         public string City { get; set; }
         public string Address { get; set; }
         public string MobileNumber { get; set; }
-        public string Email { get; set; }        
+        public string Email { get; set; }
     }
 
 
@@ -741,7 +741,7 @@ namespace FreshMVC.Models
         public string PayMd5 { get; set; }
         public string PaymentUrl { get; set; }
         public string Address { get; set; }
-        public string Mobile { get; set; }        
+        public string Mobile { get; set; }
         public IEnumerable<SelectListItem> BankList { get; set; }
         public string SelectedBank { get; set; }
     }
@@ -1137,7 +1137,7 @@ namespace FreshMVC.Models
         public string AdditionalInfo { get; set; }
         public decimal Points { get; set; }
         public int OrderID { get; set; }
-        public string OrderGUID { get;set; }
+        public string OrderGUID { get; set; }
         public string OrderLink { get; set; }
         public string WhatsappLink { get; set; }
         public int Status { get; set; }//0:Ordered 1:Confirmed 2:Completed -1:Cancelled
@@ -1185,7 +1185,7 @@ namespace FreshMVC.Models
             serviceList = new List<ServiceCompanyModel>();
         }
     }
-    public class AddressSetModel 
+    public class AddressSetModel
     {
         public string Address { get; set; }
         public DateTime DeliveryDateTime { get; set; }
@@ -1651,4 +1651,34 @@ namespace FreshMVC.Models
 
         }
     }
+
+    public class PaginationDailyReportModel : PaginationBase
+    {
+        public string FromDate { get; set; }
+        public string ToDate { get; set; }
+        public List<DailyReportModel> DailyReportList
+        {
+            get; set;
+        }
+
+        public PaginationDailyReportModel()
+        {
+            DailyReportList = new List<DailyReportModel>();
+        }
+    }
+
+
+    public class DailyReportModel
+        {
+        public string Number { get; set; }
+        public string id { get; set; }
+        public string Created { get; set; }
+        public decimal RechargeAmount { get; set; }
+        public decimal BetAmount { get; set; }
+        public decimal WinAmount { get; set; }
+        public decimal WithdrawAmount { get; set; }
+
+
+    }
+
 }

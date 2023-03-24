@@ -1483,6 +1483,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Recharge Amount.
+        /// </summary>
+        public static string lblRechargeAmount {
+            get {
+                return ResourceManager.GetString("lblRechargeAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Recharge Time.
         /// </summary>
         public static string lblRechargeTime {
@@ -1771,6 +1780,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Transaction Date.
+        /// </summary>
+        public static string lblTransactionDate {
+            get {
+                return ResourceManager.GetString("lblTransactionDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Type.
         /// </summary>
         public static string lblType {
@@ -1888,6 +1906,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Win Amount.
+        /// </summary>
+        public static string lblWinAmount {
+            get {
+                return ResourceManager.GetString("lblWinAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Winning.
         /// </summary>
         public static string lblWinning {
@@ -1974,6 +2001,15 @@ namespace FreshMVC.Resources {
         public static string mnuCashWalletLog {
             get {
                 return ResourceManager.GetString("mnuCashWalletLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Daily Report.
+        /// </summary>
+        public static string mnuDailyReport {
+            get {
+                return ResourceManager.GetString("mnuDailyReport", resourceCulture);
             }
         }
         

@@ -2840,5 +2840,81 @@ namespace FreshMVC.Controllers
             return PartialView("CashWalletLog", model);
         }
         #endregion
+
+        #region DailyReport
+        public IActionResult DailyReport(int selectedPage = 1, string fromDate = "", string toDate = "")
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            string fromDateInput = fromDate;
+            string toDateInput = toDate;
+
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+            }
+
+            int ok;
+            string msg;
+            var model = new PaginationDailyReportModel();
+            int pages = 0;
+            var dsAdmin = AdminGeneralDB.GetAllDailyReport(selectedPage, fromDate, toDate, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new DailyReportModel();
+                am.Number = dr["rownumber"].ToString();
+                am.id = dr["CDAIL_ID"].ToString();
+                am.Created = DateTime.Parse(dr["CDAIL_TRANDATE"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                am.RechargeAmount = decimal.Parse(dr["CDAIL_RECHARGE"].ToString());
+                am.BetAmount = decimal.Parse(dr["CDAIL_BET"].ToString());
+                am.WinAmount = decimal.Parse(dr["CDAIL_WIN"].ToString());
+                am.WithdrawAmount = decimal.Parse(dr["CDAIL_WITHDRAW"].ToString());
+                model.DailyReportList.Add(am);
+            }
+
+            decimal totalRecharge = (decimal)0;
+            decimal totalBet = (decimal)0;
+            decimal totalWin = (decimal)0;
+            decimal totalWithdraw = (decimal)0;
+            foreach (DailyReportModel dailyReportModel in model.DailyReportList)
+            {
+                totalRecharge += dailyReportModel.RechargeAmount;
+                totalBet += dailyReportModel.BetAmount;
+                totalWin += dailyReportModel.WinAmount;
+                totalWithdraw += dailyReportModel.WithdrawAmount;
+            }
+            DailyReportModel totalDailyReportModel = new DailyReportModel();
+            totalDailyReportModel.RechargeAmount = totalRecharge;
+            totalDailyReportModel.BetAmount = totalBet;
+            totalDailyReportModel.WinAmount = totalWin;
+            totalDailyReportModel.WithdrawAmount = totalWithdraw;
+            model.DailyReportList.Add(totalDailyReportModel);
+
+            model.FromDate = fromDateInput;
+            model.ToDate = toDateInput;
+        
+            return PartialView("DailyReport", model);
+        }
+        #endregion
     }
 }
