@@ -217,14 +217,15 @@
                                                     {
                                                         <tr>
                                                             <td class="text-center">@x.Period</td>
-                                                            @if (x.TotalBet >= x.Price)
-                                                            {
-                                                                <td class="text-center" style="color:green; font-weight:bold;">@x.TotalBet</td>
-                                                            }
-                                                            else
-                                                            {
-                                                                <td class="text-center" style="color: red; font-weight: bold;">@x.Price</td>
-                                                            }
+                                                            <td class="text-center" style="color:green; font-weight:bold;">@x.TotalBet</td>
+                                                            @*@if (x.TotalBet >= x.Price)
+                                                                {
+                                                                    <td class="text-center" style="color:green; font-weight:bold;">@x.TotalBet</td>
+                                                                }
+                                                                else
+                                                                {
+                                                                    <td class="text-center" style="color: red; font-weight: bold;">@x.Price</td>
+                                                                }*@
 
                                                             <td class="green-number text-center">@x.ResultNumber</td>
                                                             <td class="text-center">

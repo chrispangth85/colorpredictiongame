@@ -29,13 +29,21 @@ AS
 	DECLARE @intro NVARCHAR(200)
 	DECLARE @level INT = 1
 	DECLARE @commission DECIMAL(15,2) = 0
+	DECLARE @gameServiceFee DECIMAL(15,2) = 0
+	DECLARE @gameHandlingFee DECIMAL(15,2) = 0
 	DECLARE @sponsorLevel1Bonus DECIMAL(15,2)
 	DECLARE @sponsorLevel2Bonus DECIMAL(15,2)
 	DECLARE @sponsorLevel3Bonus DECIMAL(15,2)
 
-	SELECT @commission = [CPARA_DECIMALVALUE]
+	SELECT @gameServiceFee = [CPARA_DECIMALVALUE]
 	FROM [dbo].[CVD_PARAMETER]
-	WHERE [CPARA_NAME] = 'BetCommission'
+	WHERE [CPARA_NAME] = 'GameServiceFee'
+
+	SELECT @gameHandlingFee = [CPARA_DECIMALVALUE]
+	FROM [dbo].[CVD_PARAMETER]
+	WHERE [CPARA_NAME] = 'GameHandlingFee'
+
+	SET @commission = @gameServiceFee + @gameHandlingFee
 
 	SELECT @sponsorLevel1Bonus = [CPARA_DECIMALVALUE]
 	FROM [dbo].[CVD_PARAMETER]

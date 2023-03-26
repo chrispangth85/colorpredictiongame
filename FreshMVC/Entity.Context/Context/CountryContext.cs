@@ -19,19 +19,24 @@ namespace Entity.Context
 
                 entity.Property(e => e.CcountryId).HasColumnName("CCOUNTRY_ID");
 
+                entity.Property(e => e.CcountryBuy)
+                    .HasColumnType("decimal(12, 2)")
+                    .HasColumnName("CCOUNTRY_BUY")
+                    .HasDefaultValueSql("((0))");
+
                 entity.Property(e => e.CcountryCode)
                     .IsRequired()
-                    .HasColumnName("CCOUNTRY_CODE")
-                    .HasMaxLength(10);
+                    .HasMaxLength(10)
+                    .HasColumnName("CCOUNTRY_CODE");
 
                 entity.Property(e => e.CcountryCreatedby)
                     .IsRequired()
-                    .HasColumnName("CCOUNTRY_CREATEDBY")
-                    .HasMaxLength(50);
+                    .HasMaxLength(50)
+                    .HasColumnName("CCOUNTRY_CREATEDBY");
 
                 entity.Property(e => e.CcountryCreatedon)
-                    .HasColumnName("CCOUNTRY_CREATEDON")
                     .HasColumnType("datetime")
+                    .HasColumnName("CCOUNTRY_CREATEDON")
                     .HasDefaultValueSql("(getdate())");
 
                 entity.Property(e => e.CcountryDeletionstate)
@@ -40,29 +45,39 @@ namespace Entity.Context
                     .HasDefaultValueSql("('0')");
 
                 entity.Property(e => e.CcountryImagepath)
-                    .HasColumnName("CCOUNTRY_IMAGEPATH")
-                    .HasMaxLength(500);
+                    .HasMaxLength(500)
+                    .HasColumnName("CCOUNTRY_IMAGEPATH");
 
                 entity.Property(e => e.CcountryMobilecode)
-                    .HasColumnName("CCOUNTRY_MOBILECODE")
-                    .HasMaxLength(10);
+                    .HasMaxLength(10)
+                    .HasColumnName("CCOUNTRY_MOBILECODE");
+
+                entity.Property(e => e.CcountryName)
+                    .HasMaxLength(100)
+                    .HasColumnName("CCOUNTRY_NAME")
+                    .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.CcountrySell)
+                    .HasColumnType("decimal(12, 2)")
+                    .HasColumnName("CCOUNTRY_SELL")
+                    .HasDefaultValueSql("((0))");
 
                 entity.Property(e => e.CcountryTaxLabel)
-                    .HasColumnName("CCOUNTRY_TAX_LABEL")
-                    .HasMaxLength(100);
+                    .HasMaxLength(100)
+                    .HasColumnName("CCOUNTRY_TAX_LABEL");
 
                 entity.Property(e => e.CcountryTaxValue)
-                    .HasColumnName("CCOUNTRY_TAX_VALUE")
-                    .HasColumnType("decimal(15, 2)");
+                    .HasColumnType("decimal(15, 2)")
+                    .HasColumnName("CCOUNTRY_TAX_VALUE");
 
                 entity.Property(e => e.CcountryUpdatedby)
                     .IsRequired()
-                    .HasColumnName("CCOUNTRY_UPDATEDBY")
-                    .HasMaxLength(50);
+                    .HasMaxLength(50)
+                    .HasColumnName("CCOUNTRY_UPDATEDBY");
 
                 entity.Property(e => e.CcountryUpdatedon)
-                    .HasColumnName("CCOUNTRY_UPDATEDON")
                     .HasColumnType("datetime")
+                    .HasColumnName("CCOUNTRY_UPDATEDON")
                     .HasDefaultValueSql("(getdate())");
             });
             

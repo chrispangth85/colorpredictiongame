@@ -17,5 +17,8 @@ namespace Entity.Context
         public string CcountryImagepath { get; set; }
         public string CcountryTaxLabel { get; set; }
         public decimal? CcountryTaxValue { get; set; }
+        public string CcountryName { get; set; }
+        public decimal? CcountryBuy { get; set; }
+        public decimal? CcountrySell { get; set; }
     }
 }

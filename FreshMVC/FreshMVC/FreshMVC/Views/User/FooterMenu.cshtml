@@ -8,19 +8,19 @@
         }
         else if ('@ViewBag.HeaderPage' == "Win") {
             $('#playGamez').addClass("active-nav");
-        }
+        } 
         else if ('@ViewBag.HeaderPage' == "Profile") {
             $('#profilez').addClass("active-nav");
         }
     });
 </script>
-<style>
+@*<style>
     .buttom {
         display: block;
         position: absolute;
         bottom: 0;
     }
-</style>
+</style>*@
 <!-- Footer -->
 <footer class="footer ">
     <div class="footer-menu">
@@ -31,7 +31,7 @@
             </li>
             <li class="nav-item nav-item-f ">
                 <i class="bi bi-search "></i>
-                <a class="nav-link " aria-current="page" href="search.html">  @resSharedPB.lblSearch</a>
+                <a class="nav-link " aria-current="page" href="/User/ProductListing">  @resSharedPB.lblSearch</a>
             </li>
             <li class="nav-item nav-item-f playGamez">
                 <i class="bi bi-trophy-fill "></i>

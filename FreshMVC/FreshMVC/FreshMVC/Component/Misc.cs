@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.Mail;
 using System.Text;
 
 namespace FreshMVC.Component
@@ -35,6 +36,21 @@ namespace FreshMVC.Component
             return builder.ToString();
         }
 
+        public static bool IsValidEmail(string email)
+        {
+            var valid = true;
+
+            try
+            {
+                var emailAddress = new MailAddress(email);
+            }
+            catch
+            {
+                valid = false;
+            }
+
+            return valid;
+        }
         public static string ConvertoReadableName(string remark)
         {
             switch (remark)
@@ -45,6 +61,13 @@ namespace FreshMVC.Component
                     return Resources.PackBuddyShared.lblRecharge;
                 case "RefundWdr":
                     return Resources.PackBuddyShared.lblRefundWdr;
+                case "TOPUP":
+                    return Resources.PackBuddyShared.lblTopUp;
+                case "DEDUCT":
+                    return Resources.PackBuddyShared.lblDeduct;
+                case "RECHARGE_COM1":
+                case "RECHARGE_COM2":
+                    return Resources.PackBuddyShared.lblRechargeCommission;
                 default:
                     return remark;
             }
@@ -728,6 +751,25 @@ namespace FreshMVC.Component
         }
         #endregion
 
+        #region GetTopupDeductOption
+        public static List<SelectListItem> GetTopupDeductOption()
+        {
+            var accounts = new List<SelectListItem>();
+
+            var firstAcc = new SelectListItem();
+            firstAcc.Text = Resources.PackBuddyShared.lblTopUp;
+            firstAcc.Value = "Topup";
+            accounts.Add(firstAcc);
+
+            var secondAcc = new SelectListItem();
+            secondAcc.Text = Resources.PackBuddyShared.lblDeduct;
+            secondAcc.Value = "Deduct";
+            accounts.Add(secondAcc);
+
+            return accounts;
+        }
+        #endregion
+
         #region MassagePhoneNumber
         public static string MassagePhoneNumber(string phone, string countryCode)
         {
@@ -799,7 +841,6 @@ namespace FreshMVC.Component
         #endregion
 
     }
-
     public static class SessionExtensions
     {
         public static void SetObject(this ISession session, string key, object value)

@@ -35,5 +35,6 @@ namespace Entity.Context.Models
         public decimal? MemberDownlineTotalBet { get; set; }
         public decimal? MemberDownlineTotalWin { get; set; }
         public decimal? MemberDownlineTotalCommission { get; set; }
+        public int? MemberTotalDownline { get; set; }
     }
 }

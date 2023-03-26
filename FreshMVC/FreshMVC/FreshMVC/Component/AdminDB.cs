@@ -222,7 +222,7 @@ namespace FreshMVC.Component
             return ds;
         }
 
-        public static void CashWalletOperation(string username, decimal netAmount, string type, int orderId, string paymentType, string referenceNo, string status, decimal serviceFee = 0, int bankId = 0)
+        public static void CashWalletOperation(string username, decimal netAmount, string type, int orderId, string paymentType, string referenceNo, string status, decimal serviceFee = 0, int bankId = 0, string actionBy = "SYS")
         {
             SqlConnection sqlConn = DBConn.GetConnection();
             sqlConn.Open();
@@ -246,14 +246,6 @@ namespace FreshMVC.Component
             pOthers.Direction = ParameterDirection.Input;
             pOthers.Value = referenceNo;
 
-            //SqlParameter pPaymentType = sqlComm.Parameters.Add("@paymentMethod", SqlDbType.NVarChar);
-            //pPaymentType.Direction = ParameterDirection.Input;
-            //pPaymentType.Value = paymentType;
-
-            //SqlParameter pReferenceNo = sqlComm.Parameters.Add("@refenceNo", SqlDbType.NVarChar);
-            //pReferenceNo.Direction = ParameterDirection.Input;
-            //pReferenceNo.Value = referenceNo;
-
             SqlParameter pAppRate = sqlComm.Parameters.Add("@apprate", SqlDbType.Decimal);
             pAppRate.Direction = ParameterDirection.Input;
             pAppRate.Value = serviceFee;
@@ -265,6 +257,10 @@ namespace FreshMVC.Component
             SqlParameter pBankId = sqlComm.Parameters.Add("@bankid", SqlDbType.NVarChar);
             pBankId.Direction = ParameterDirection.Input;
             pBankId.Value = bankId;
+
+            SqlParameter pAction = sqlComm.Parameters.Add("@actionBy", SqlDbType.NVarChar);
+            pAction.Direction = ParameterDirection.Input;
+            pAction.Value = actionBy;
 
             sqlComm.ExecuteNonQuery();
             sqlConn.Close();

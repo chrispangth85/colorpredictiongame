@@ -1730,7 +1730,7 @@ border-radius: 100px;
 
 .clock-dummy-btn {
     position: fixed;
-    bottom: 30px;
+    bottom: 80px;
     right: 40px;
     background-color: #00a243;
     padding: 10px;

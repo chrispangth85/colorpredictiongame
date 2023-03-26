@@ -25,6 +25,7 @@ using RestSharp;
 using System.Text;
 using System.Web;
 using System.Globalization;
+using System.Net.Mail;
 
 namespace FreshMVC.Controllers
 {
@@ -54,6 +55,9 @@ namespace FreshMVC.Controllers
         #region Home
         public ActionResult Home(string search)
         {
+            // manual handle here bah for language changes
+            ChangeLanguageFromLogin("en-US");
+
             string usernameCookie = "";
             try
             {
@@ -83,7 +87,7 @@ namespace FreshMVC.Controllers
                 }
             }
 
-            //Get Product Listing
+            #region Get Product Listing
             using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
             {
                 if (!string.IsNullOrEmpty(search))
@@ -139,6 +143,24 @@ namespace FreshMVC.Controllers
                     }
                 }
             }
+            #endregion
+
+            #region Get Support link
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var supportURL = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "SupportPhoneNumber");
+                if (supportURL != null)
+                {
+                    ViewBag.SupportURL = supportURL.CparaStringvalue;
+                }
+
+                var appURL = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "SupportApkUrl");
+                if (appURL != null)
+                {
+                    ViewBag.AppURL = appURL.CparaStringvalue;
+                }
+            }
+            #endregion
 
             ModelState.Clear();
             ViewBag.HeaderPage = "Home";
@@ -1203,6 +1225,7 @@ namespace FreshMVC.Controllers
             ViewBag.IsAgent = false;
             ViewBag.CashWallet = 0;
             ViewBag.TotalCommission = 0;
+            ViewBag.Username = usernameCookie;
 
             using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
             {
@@ -1213,13 +1236,19 @@ namespace FreshMVC.Controllers
                 }
 
                 var found = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && (c.CroleId == 3 || c.CroleId == 2));
+                var foundTotalDirectDownline = dbContext.CvdUser.Where(c => c.CusrReferralid == usernameCookie);
 
                 if (found != null)
                 {
                     ViewBag.CashWallet = found.CusrCashwlt;
                     ViewBag.TotalCommission = found.MemberDownlineTotalCommission;
+                    ViewBag.TotalDownline = found.MemberTotalDownline;
+                    ViewBag.TotalWin = found.MemberDownlineTotalWin;
+                    ViewBag.TotalBet = found.MemberDownlineTotalBet;
+                    ViewBag.TotalWithdrawal = found.MemberDownlineTotalWithdrawal;
+                    ViewBag.TotalRecharge = found.MemberDownlineTotalRecharge;
+                    ViewBag.TotalDirectDownline = foundTotalDirectDownline.Count();
                 }
-
             }
 
             return View("Profile", am);
@@ -1253,7 +1282,7 @@ namespace FreshMVC.Controllers
 
             var am = new MemberHomeModel();
 
-            ViewBag.Referral = string.Format("https://www.hot-mall.club/UserLogin/SignUp?referral={0}", Authentication.Encrypt(usernameCookie));
+            ViewBag.Referral = string.Format("https://www.hot-mall.club/UserLogin/SignUp?referral={0}", usernameCookie);
 
             QRCodeGenerator qrGenerator = new QRCodeGenerator();
             QRCodeData qrCodeDataAndroid = qrGenerator.CreateQrCode(ViewBag.Referral, QRCodeGenerator.ECCLevel.Q);
@@ -1803,6 +1832,93 @@ namespace FreshMVC.Controllers
                     });
                 }
 
+                if (string.IsNullOrEmpty(actualname))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.msgInvalidActualName
+                    });
+                }
+
+
+                if (string.IsNullOrEmpty(ifsccode))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.msgInvalidIFSCCode
+                    });
+                }
+
+
+                if (string.IsNullOrEmpty(bankname))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.msgInvalidBankName
+                    });
+                }
+
+                if (string.IsNullOrEmpty(bankaccount))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidBankAccount
+                    });
+                }
+
+                if (string.IsNullOrEmpty(mobile))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidMobile
+                    });
+                }
+
+
+                var mobileCode = "";
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var userFound = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername.ToLower() == usernameCookie.ToLower());
+                    if (userFound != null)
+                    {
+                        var countryObject = dbContext.CvdCountry.FirstOrDefault(c => c.CcountryId == userFound.CcountryId);
+                        if (countryObject != null)
+                        {
+                            mobileCode = countryObject.CcountryMobilecode;
+                        }
+                    }
+                }
+                 
+                if (mobileCode == "91" && mobile.Length != 10)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.msgPhoneNumberIndiaMustBe10Digit
+                    });
+                }
+
+                if (!string.IsNullOrEmpty(email) && !Misc.IsValidEmail(email))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidEmail
+                    });
+                }
+
                 if (id == 0)
                 {
                     // for record
@@ -1815,8 +1931,8 @@ namespace FreshMVC.Controllers
                         memberBank.CbankState = state;
                         memberBank.CbankBankaccountname = bankname;
                         memberBank.CbankBankaccount = bankaccount;
-                        memberBank.CbankCity = city;
-                        memberBank.CbankAddress = address;
+                        memberBank.CbankCity = Helper.NVL(city);
+                        memberBank.CbankAddress = Helper.NVL(address);
                         memberBank.CbankMobile = mobile;
                         memberBank.CbankEmail = email;                        
                         memberBank.CbankCreatedby = usernameCookie;
@@ -1837,8 +1953,8 @@ namespace FreshMVC.Controllers
                         memberBank.CbankState = state;
                         memberBank.CbankBankaccountname = bankname;
                         memberBank.CbankBankaccount = bankaccount;
-                        memberBank.CbankCity = city;
-                        memberBank.CbankAddress = address;
+                        memberBank.CbankCity = Helper.NVL(city);
+                        memberBank.CbankAddress = Helper.NVL(address);
                         memberBank.CbankMobile = mobile;
                         memberBank.CbankEmail = email;
                         memberBank.CbankCreatedby = usernameCookie;
@@ -2012,6 +2128,7 @@ namespace FreshMVC.Controllers
                 }); ;
             }
 
+            decimal withdrawwalLimit = 0;
             decimal balanceAmount = 0;
             using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
             {
@@ -2066,11 +2183,25 @@ namespace FreshMVC.Controllers
                     });
                 }
 
+
                 var found = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && (c.CroleId == 3 || c.CroleId == 2));
                 if (found != null)
                 {
-                    balanceAmount = found.CusrCashwlt.Value;                    
+                    balanceAmount = found.CusrCashwlt.Value;
+
+                    // dunno just in case bah
+                    withdrawwalLimit = found.CusrRechargewlt.Value < 0 ? 0 : found.CusrRechargewlt.Value;
                 }
+            }
+
+            if (withdrawwalLimit > 0)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = string.Format(Resources.PackBuddyShared.msgBalanceTurnOverToWithdrwal, withdrawwalLimit)
+                });
             }
 
             if (withdrawalAmount > balanceAmount)
@@ -2082,6 +2213,7 @@ namespace FreshMVC.Controllers
                     message = Resources.PackBuddyShared.msgInsufficientWalletBalance
                 });
             }
+
             string message = ValidatePassword(usernameCookie, password);
             if (string.IsNullOrEmpty(message))
             {
@@ -2211,7 +2343,7 @@ namespace FreshMVC.Controllers
                     return Json(new
                     {
                         status = false,
-                        message = string.Format("{0} {1}", Resources.PackBuddyShared.lblMinRecharge, minRecharge)
+                        message = string.Format("{0} ₹{1}", Resources.PackBuddyShared.lblMinRecharge, minRecharge.CparaDecimalvalue)
                     });
                 }
 
@@ -2221,7 +2353,7 @@ namespace FreshMVC.Controllers
                     return Json(new
                     {
                         status = false,
-                        message = string.Format("{0} {1}", Resources.PackBuddyShared.lblMaxRecharge, maxRecharge)
+                        message = string.Format("{0} ₹{1}", Resources.PackBuddyShared.lblMaxRecharge, maxRecharge.CparaDecimalvalue)
                     });
                 }
             }

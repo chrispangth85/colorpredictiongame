@@ -26,6 +26,7 @@ namespace Entity.Context
             this.OnModelCreatingCvdBankContext(modelBuilder);
             this.OnModelCreatingCvdMemberBankContext(modelBuilder);
             this.OnModelCreatingCvdDailytransContext(modelBuilder);
+            this.OnModelCreatingCvdCompanywalletContext(modelBuilder);
 
             OnModelCreatingPartial(modelBuilder);
         }

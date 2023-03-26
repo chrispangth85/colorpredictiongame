@@ -139,13 +139,13 @@
             <div class="row">
 
                 <div class="grid" style="margin-left: 15px;" id="grid">
-                    <strong>Filter option</strong>
+                    <strong>@resShared.lblFilterOption</strong>
                     @Html.DropDownListFor(model => model.SelectedFilteringCriteria, @Model.FilteringCriteria, new { @id = "SelectedFilteringCriteria", @class = "form-control", @style = "width:215px;" })
 
                 </div>
 
                 <div class="grid" style="margin-left: 5px;" id="gridFilterValue">
-                    <strong id="optionText">Value</strong>
+                    <strong id="optionText">@resShared.lblValue</strong>
                     @Html.TextBoxFor(model => model.FilterValue, new { @class = "form-control", @id = "FilterValue" })
                 </div>
             </div>

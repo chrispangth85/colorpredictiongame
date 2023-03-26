@@ -493,6 +493,7 @@ namespace FreshMVC.Controllers
                 var am = new AdminModel();
                 am.Number = dr["rownumber"].ToString();
                 am.CashWallet = dr["CUSR_CASHWLT"].ToString();
+                am.RechargeWallet = dr["CUSR_RECHARGEWLT"].ToString();
                 am.Username = dr["CUSR_USERNAME"].ToString();
                 am.Password = Authentication.Decrypt(dr["CUSR_PASSWORD"].ToString());
                 am.AccountType = dr["CROLE_ID"].ToString() == "2" ? Resources.PackBuddyShared.lblMember : Resources.PackBuddyShared.lblAgent;
@@ -1709,13 +1710,7 @@ namespace FreshMVC.Controllers
 
             #region filtering
             List<SelectListItem> filterOptionList = new List<SelectListItem>();
-            List<String> filterList = new List<string> { "Name" };
-
-
-            foreach (var value in filterList)
-            {
-                filterOptionList.Add(new SelectListItem() { Text = value, Value = value });
-            }
+            filterOptionList.Add(new SelectListItem() { Text = Resources.PackBuddyShared.lblName, Value = "Name" });
 
             if (filterType == null || filterType == "")
             {
@@ -1990,13 +1985,7 @@ namespace FreshMVC.Controllers
 
             #region filtering
             List<SelectListItem> filterOptionList = new List<SelectListItem>();
-            List<String> filterList = new List<string> { "Name" };
-
-
-            foreach (var value in filterList)
-            {
-                filterOptionList.Add(new SelectListItem() { Text = value, Value = value });
-            }
+            filterOptionList.Add(new SelectListItem() { Text = Resources.PackBuddyShared.lblName, Value = "Name" });
 
             if (filterType == null || filterType == "")
             {
@@ -2200,13 +2189,7 @@ namespace FreshMVC.Controllers
 
             #region filtering
             List<SelectListItem> filterOptionList = new List<SelectListItem>();
-            List<String> filterList = new List<string> { "Name" };
-
-
-            foreach (var value in filterList)
-            {
-                filterOptionList.Add(new SelectListItem() { Text = value, Value = value });
-            }
+            filterOptionList.Add(new SelectListItem() { Text = Resources.PackBuddyShared.lblName, Value = "Name" });
 
             if (filterType == null || filterType == "")
             {
@@ -2249,6 +2232,9 @@ namespace FreshMVC.Controllers
                         product.CcashStatus = 1;
                         dbContext.CvdCashwalletlog.Update(product);
                         dbContext.SaveChanges();
+
+
+                        AdminDB.InsertPendingJob(product.CusrUsername, "WDR", product.CcashCashout, "", "");
                     }
                 }
 
@@ -2353,6 +2339,84 @@ namespace FreshMVC.Controllers
                 });
             }
         }
+
+
+        #region DailyReport
+        public IActionResult DailyReport(int selectedPage = 1, string fromDate = "", string toDate = "")
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            string fromDateInput = fromDate;
+            string toDateInput = toDate;
+
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+            }
+
+            int ok;
+            string msg;
+            var model = new PaginationDailyReportModel();
+            int pages = 0;
+            var dsAdmin = AdminGeneralDB.GetAllDailyReport(selectedPage, fromDate, toDate, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new DailyReportModel();
+                am.Number = dr["rownumber"].ToString();
+                am.id = dr["CDAIL_ID"].ToString();
+                am.Created = DateTime.Parse(dr["CDAIL_TRANDATE"].ToString()).ToString("dd/MM/yyyy");
+                am.RechargeAmount = decimal.Parse(dr["CDAIL_RECHARGE"].ToString());
+                am.BetAmount = decimal.Parse(dr["CDAIL_BET"].ToString());
+                am.WinAmount = decimal.Parse(dr["CDAIL_WIN"].ToString());
+                am.WithdrawAmount = decimal.Parse(dr["CDAIL_WITHDRAW"].ToString());
+                model.DailyReportList.Add(am);
+            }
+
+            decimal totalRecharge = (decimal)0;
+            decimal totalBet = (decimal)0;
+            decimal totalWin = (decimal)0;
+            decimal totalWithdraw = (decimal)0;
+            foreach (DailyReportModel dailyReportModel in model.DailyReportList)
+            {
+                totalRecharge += dailyReportModel.RechargeAmount;
+                totalBet += dailyReportModel.BetAmount;
+                totalWin += dailyReportModel.WinAmount;
+                totalWithdraw += dailyReportModel.WithdrawAmount;
+            }
+
+            DailyReportModel totalDailyReportModel = new DailyReportModel();
+            totalDailyReportModel.RechargeAmount = totalRecharge;
+            totalDailyReportModel.BetAmount = totalBet;
+            totalDailyReportModel.WinAmount = totalWin;
+            totalDailyReportModel.WithdrawAmount = totalWithdraw;
+            model.DailyReportList.Add(totalDailyReportModel);
+
+            model.FromDate = fromDateInput;
+            model.ToDate = toDateInput;
+
+            return PartialView("DailyReport", model);
+        }
+        #endregion
 
         [HttpPost]
         public IActionResult RejectWithdrawal(int idz = 0)
@@ -2652,25 +2716,25 @@ namespace FreshMVC.Controllers
                     });
                 }
 
-                if (string.IsNullOrEmpty(model.SupportPhoneNumber))
-                {
-                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    return Json(new
-                    {
-                        status = false,
-                        message = Resources.PackBuddyShared.lblPhoneNumberIsRequired
-                    });
-                }
+                //if (string.IsNullOrEmpty(model.SupportPhoneNumber))
+                //{
+                //    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                //    return Json(new
+                //    {
+                //        status = false,
+                //        message = Resources.PackBuddyShared.lblPhoneNumberIsRequired
+                //    });
+                //}
 
-                if (string.IsNullOrEmpty(model.SupportApkUrl))
-                {
-                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    return Json(new
-                    {
-                        status = false,
-                        message = Resources.PackBuddyShared.lblApkUrlIsRequired
-                    });
-                }
+                //if (string.IsNullOrEmpty(model.SupportApkUrl))
+                //{
+                //    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                //    return Json(new
+                //    {
+                //        status = false,
+                //        message = Resources.PackBuddyShared.lblApkUrlIsRequired
+                //    });
+                //}
 
                 using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
                 {
@@ -2734,10 +2798,10 @@ namespace FreshMVC.Controllers
                                 parameter.CparaStringvalue = model.GatewayPaymentKey;
                                 break;
                             case "SupportPhoneNumber":
-                                parameter.CparaStringvalue = model.SupportPhoneNumber;
+                                parameter.CparaStringvalue = Helper.NVL(model.SupportPhoneNumber);
                                 break;
                             case "SupportApkUrl":
-                                parameter.CparaStringvalue = model.SupportApkUrl;
+                                parameter.CparaStringvalue = Helper.NVL(model.SupportApkUrl);
                                 break;
                         }
                     }
@@ -2802,7 +2866,7 @@ namespace FreshMVC.Controllers
                 am.Number = int.Parse(dr["rownumber"].ToString());
                 am.id = dr["CCASH_ID"].ToString();
                 am.Username = dr["CUSR_USERNAME"].ToString();
-                am.CashName = dr["CCASH_CASHNAME"].ToString();
+                am.CashName = Misc.ConvertoReadableName(dr["CCASH_CASHNAME"].ToString());
                 am.CashIn = dr["CCASH_CASHIN"].ToString();
                 am.CashOut = dr["CCASH_CASHOUT"].ToString();
                 am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
@@ -2812,13 +2876,7 @@ namespace FreshMVC.Controllers
 
             #region filtering
             List<SelectListItem> filterOptionList = new List<SelectListItem>();
-            List<String> filterList = new List<string> { "Name" };
-
-
-            foreach (var value in filterList)
-            {
-                filterOptionList.Add(new SelectListItem() { Text = value, Value = value });
-            }
+            filterOptionList.Add(new SelectListItem() { Text = Resources.PackBuddyShared.lblName, Value = "Name" });
 
             if (filterType == null || filterType == "")
             {
@@ -2841,8 +2899,9 @@ namespace FreshMVC.Controllers
         }
         #endregion
 
-        #region DailyReport
-        public IActionResult DailyReport(int selectedPage = 1, string fromDate = "", string toDate = "")
+        #region Cash Top Up
+
+        public IActionResult CashTopUp(string title)
         {
             if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
             {
@@ -2852,69 +2911,86 @@ namespace FreshMVC.Controllers
                 });
             }
 
-            string fromDateInput = fromDate;
-            string toDateInput = toDate;
+            var model = new TopupModel();
+            model.TopupTitle = Resources.PackBuddyShared.mnuCashTopUp;
+            model.TopupType = title;
 
-            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
-            {
-                DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
-                DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+            var options = Misc.GetTopupDeductOption();
 
-                fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
-                toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
-            }
+            model.Options = from c in options select new SelectListItem { Selected = false, Text = c.Text, Value = c.Value };
 
-            int ok;
-            string msg;
-            var model = new PaginationDailyReportModel();
-            int pages = 0;
-            var dsAdmin = AdminGeneralDB.GetAllDailyReport(selectedPage, fromDate, toDate, out pages, out ok, out msg);
-
-            Misc.ConstructPageList(selectedPage, pages, model);
-
-            //if the selected page is -1, then set the last selected page
-            if (model.Pages.Count() != 0 && selectedPage == -1)
-            {
-                model.Pages.Last().Selected = true;
-                selectedPage = int.Parse(model.Pages.Last().Value);
-            }
-
-            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
-            {
-                var am = new DailyReportModel();
-                am.Number = dr["rownumber"].ToString();
-                am.id = dr["CDAIL_ID"].ToString();
-                am.Created = DateTime.Parse(dr["CDAIL_TRANDATE"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
-                am.RechargeAmount = decimal.Parse(dr["CDAIL_RECHARGE"].ToString());
-                am.BetAmount = decimal.Parse(dr["CDAIL_BET"].ToString());
-                am.WinAmount = decimal.Parse(dr["CDAIL_WIN"].ToString());
-                am.WithdrawAmount = decimal.Parse(dr["CDAIL_WITHDRAW"].ToString());
-                model.DailyReportList.Add(am);
-            }
-
-            decimal totalRecharge = (decimal)0;
-            decimal totalBet = (decimal)0;
-            decimal totalWin = (decimal)0;
-            decimal totalWithdraw = (decimal)0;
-            foreach (DailyReportModel dailyReportModel in model.DailyReportList)
-            {
-                totalRecharge += dailyReportModel.RechargeAmount;
-                totalBet += dailyReportModel.BetAmount;
-                totalWin += dailyReportModel.WinAmount;
-                totalWithdraw += dailyReportModel.WithdrawAmount;
-            }
-            DailyReportModel totalDailyReportModel = new DailyReportModel();
-            totalDailyReportModel.RechargeAmount = totalRecharge;
-            totalDailyReportModel.BetAmount = totalBet;
-            totalDailyReportModel.WinAmount = totalWin;
-            totalDailyReportModel.WithdrawAmount = totalWithdraw;
-            model.DailyReportList.Add(totalDailyReportModel);
-
-            model.FromDate = fromDateInput;
-            model.ToDate = toDateInput;
-        
-            return PartialView("DailyReport", model);
+            return PartialView("CashTopUp", model);
         }
+
+        public IActionResult TopUpWalletNext(TopupModel passModel)
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var foundUser = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername.ToLower() == passModel.Username.ToLower());
+                if (foundUser != null)
+                {
+                    passModel.Balance = foundUser.CusrCashwlt.ToString();
+                    passModel.Name = foundUser.CusrFirstname + " " + foundUser.CusrLastname;
+                }
+                else
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblUserNotExists
+                    });
+                }
+            }
+
+            passModel.SelectedOptionText = passModel.SelectedOption == "Topup" ? Resources.PackBuddyShared.lblTopUp : Resources.PackBuddyShared.lblDeduct;
+            return PartialView("TopUpWalletNext", passModel);
+        }
+
+        [HttpPost]
+        public IActionResult TopupMethod(TopupModel passModel)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                string cashname = "TOPUP";
+                decimal amount = decimal.Parse(passModel.Amount);
+
+                if (passModel.SelectedOption == "Deduct")
+                {
+                    amount = 0 - amount;
+                    cashname = "DEDUCT";
+                }
+
+                AdminDB.CashWalletOperation(passModel.Username, amount, cashname, 0, "", passModel.Remark, "", 0, 0, HttpContext.Session.GetString("Admin"));
+                return CashWalletLog(1, passModel.Username);
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.Message
+                });
+            }
+        }
+
         #endregion
     }
 }

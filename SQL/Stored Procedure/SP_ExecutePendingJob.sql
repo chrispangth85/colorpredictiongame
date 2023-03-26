@@ -1,16 +1,17 @@
-USE ColorPrediction
+USE [ColorPrediction]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ExecutePendingJob]    Script Date: 12/4/2022 8:02:14 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ExecutePendingJob]    Script Date: 26/3/2023 7:47:17 AM ******/
 DROP PROCEDURE [dbo].[SP_ExecutePendingJob]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_ExecutePendingJob]    Script Date: 12/4/2022 8:02:14 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_ExecutePendingJob]    Script Date: 26/3/2023 7:47:17 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 CREATE PROCEDURE [dbo].[SP_ExecutePendingJob]
@@ -33,13 +34,15 @@ AS
 	WHILE @@FETCH_STATUS = 0
 		BEGIN 	
 
-		IF @cashName = 'PlaceBet'
+		IF @cashName = 'Recharge' OR @cashName = 'WDR' OR @cashName = 'PlaceBet' OR @cashName = 'BetWin'
 		BEGIN
+		    EXEC [SP_InsertDailyTrans] @cashName, @amount
 			EXEC [SP_PassUpSales] @username, @amount, @cashName
-		END
-		ELSE IF @cashName = 'BetWin'
-		BEGIN
-			EXEC [SP_PassUpSales] @username, @amount, @cashName
+
+			IF @cashName = 'Recharge'
+			BEGIN
+				EXEC [SP_CalculateRechargeBonus] @username, @amount
+			END
 		END
 		ELSE IF @cashName = 'PlaceBetReferralBonus'
 		BEGIN

@@ -1,0 +1,78 @@
+USE [ColorPrediction]
+GO
+
+/****** Object:  StoredProcedure [dbo].[SP_InsertDailyTrans]    Script Date: 24/3/2023 2:58:35 PM ******/
+DROP PROCEDURE [dbo].[SP_InsertDailyTrans]
+GO
+
+/****** Object:  StoredProcedure [dbo].[SP_InsertDailyTrans]    Script Date: 24/3/2023 2:58:35 PM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[SP_InsertDailyTrans]
+(
+	@type NVARCHAR(100),
+	@amount DECIMAL(12, 2)
+)
+AS
+
+	DECLARE @utc_date DATETIME = GETUTCDATE()
+	DECLARE @gmt_date DATETIME = SWITCHOFFSET(CONVERT(VARCHAR(20),@utc_date,100), '+08:00')
+	DECLARE @gmt_datetimewithseconds DATETIME = DATEADD(SECOND, DATEPART(SECOND, @utc_date), @gmt_date)
+
+	IF EXISTS (SELECT 1 FROM CVD_DAILYTRANS WHERE SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, CDAIL_TRANDATE ), 120 ),1,11)=  SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, @gmt_date), 120 ),1,11))
+	BEGIN
+	   IF @type = 'WDR'
+	   BEGIN
+		 UPDATE CVD_DAILYTRANS
+		 SET CDAIL_WITHDRAW += @amount
+		 WHERE SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, CDAIL_TRANDATE ), 120 ),1,11) =  SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, @gmt_date), 120 ),1,11)
+	   END
+	   ELSE  IF @type = 'Recharge'
+	   BEGIN
+		 UPDATE CVD_DAILYTRANS
+		 SET CDAIL_RECHARGE += @amount
+		 WHERE SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, CDAIL_TRANDATE ), 120 ),1,11)=  SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, @gmt_date), 120 ),1,11)
+	   END
+	   ELSE  IF @type = 'PlaceBet'
+	   BEGIN
+		 UPDATE CVD_DAILYTRANS
+		 SET [CDAIL_BET] += @amount
+		 WHERE SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, CDAIL_TRANDATE ), 120 ),1,11)=  SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, @gmt_date), 120 ),1,11)
+	   END
+	   ELSE  IF @type = 'BetWin'
+	   BEGIN
+		 UPDATE CVD_DAILYTRANS
+		 SET CDAIL_WIN += @amount
+		 WHERE SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, CDAIL_TRANDATE ), 120 ),1,11)=  SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, @gmt_date), 120 ),1,11)
+	   END
+	END
+	ELSE
+	BEGIN
+	   IF @type = 'WDR'
+	   BEGIN
+		 INSERT INTO [dbo].[CVD_DAILYTRANS]([CDAIL_TRANDATE],[CDAIL_RECHARGE],[CDAIL_BET],[CDAIL_WIN],[CDAIL_WITHDRAW])
+		 VALUES(SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, @gmt_date), 120 ),1,11), 0, 0, 0, @amount)
+	   END
+	   ELSE  IF @type = 'Recharge'
+	   BEGIN
+		 INSERT INTO [dbo].[CVD_DAILYTRANS]([CDAIL_TRANDATE],[CDAIL_RECHARGE],[CDAIL_BET],[CDAIL_WIN],[CDAIL_WITHDRAW])
+		 VALUES(SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, @gmt_date), 120 ),1,11), @amount, 0, 0, 0)
+	   END
+	   ELSE  IF @type = 'PlaceBet'
+	   BEGIN
+		INSERT INTO [dbo].[CVD_DAILYTRANS]([CDAIL_TRANDATE],[CDAIL_RECHARGE],[CDAIL_BET],[CDAIL_WIN],[CDAIL_WITHDRAW])
+		  VALUES(SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, @gmt_date), 120 ),1,11), 0, @amount, 0, 0)
+	   END
+	   ELSE  IF @type = 'BetWin'
+	   BEGIN
+		INSERT INTO [dbo].[CVD_DAILYTRANS]([CDAIL_TRANDATE],[CDAIL_RECHARGE],[CDAIL_BET],[CDAIL_WIN],[CDAIL_WITHDRAW])
+		  VALUES(SUBSTRING(CONVERT(varchar(12), DATEADD(DAY, 0, @gmt_date), 120 ),1,11), 0, 0, @amount, 0)
+	   END
+	END
+GO
+
+

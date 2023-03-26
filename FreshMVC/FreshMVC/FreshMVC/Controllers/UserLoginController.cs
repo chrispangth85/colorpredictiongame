@@ -248,7 +248,7 @@ namespace FreshMVC.Controllers
 
                 try
                 {
-                    intro = Authentication.Decrypt(introcode);
+                    intro = introcode;
                 }
                 catch(Exception e)
                 {

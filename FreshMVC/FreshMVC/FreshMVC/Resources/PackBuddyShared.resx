@@ -129,6 +129,9 @@
   <data name="btnLogIn" xml:space="preserve">
     <value>Login</value>
   </data>
+  <data name="btnNext" xml:space="preserve">
+    <value>Next</value>
+  </data>
   <data name="btnRequestOTP" xml:space="preserve">
     <value>Request OTP</value>
   </data>
@@ -273,6 +276,9 @@
   <data name="lblCreatedOn" xml:space="preserve">
     <value>Created On</value>
   </data>
+  <data name="lblCurrentBalance" xml:space="preserve">
+    <value>Current Balance</value>
+  </data>
   <data name="lblCurrentPasswordIsRequired" xml:space="preserve">
     <value>Current password is required</value>
   </data>
@@ -284,6 +290,9 @@
   </data>
   <data name="lblDeal" xml:space="preserve">
     <value>Deal</value>
+  </data>
+  <data name="lblDeduct" xml:space="preserve">
+    <value>Deduct</value>
   </data>
   <data name="lblDelete" xml:space="preserve">
     <value>Delete</value>
@@ -314,6 +323,9 @@
   </data>
   <data name="lblFifthLevel" xml:space="preserve">
     <value>Fifth Level</value>
+  </data>
+  <data name="lblFilterOption" xml:space="preserve">
+    <value>Filter Option</value>
   </data>
   <data name="lblFinalAmount" xml:space="preserve">
     <value>Final Amount</value>
@@ -384,8 +396,17 @@
   <data name="lblInvalidAmount" xml:space="preserve">
     <value>Invalid Amount</value>
   </data>
+  <data name="lblInvalidBankAccount" xml:space="preserve">
+    <value>Invalid Bank Account</value>
+  </data>
+  <data name="lblInvalidEmail" xml:space="preserve">
+    <value>Invalid Email</value>
+  </data>
   <data name="lblInvalidImage" xml:space="preserve">
     <value>Invalid Picture</value>
+  </data>
+  <data name="lblInvalidMobile" xml:space="preserve">
+    <value>Invalid Mobile</value>
   </data>
   <data name="lblInvalidTitle" xml:space="preserve">
     <value>Invalid Title</value>
@@ -431,6 +452,9 @@
   </data>
   <data name="lblMemberType" xml:space="preserve">
     <value>Member Type</value>
+  </data>
+  <data name="lblMethod" xml:space="preserve">
+    <value>Available Option</value>
   </data>
   <data name="lblMinAmount" xml:space="preserve">
     <value>Min Amount</value>
@@ -594,6 +618,9 @@
   <data name="lblRechargeAmount" xml:space="preserve">
     <value>Recharge Amount</value>
   </data>
+  <data name="lblRechargeCommission" xml:space="preserve">
+    <value>Recharge Commission</value>
+  </data>
   <data name="lblRechargeTime" xml:space="preserve">
     <value>Recharge Time</value>
   </data>
@@ -620,6 +647,9 @@
   </data>
   <data name="lblReject" xml:space="preserve">
     <value>Reject</value>
+  </data>
+  <data name="lblRemark" xml:space="preserve">
+    <value>Remark</value>
   </data>
   <data name="lblRememberMe" xml:space="preserve">
     <value>Remember Me</value>
@@ -648,6 +678,9 @@
   <data name="lblShowPassword" xml:space="preserve">
     <value>Show Password</value>
   </data>
+  <data name="lblSignUpNow" xml:space="preserve">
+    <value>Sign up now!</value>
+  </data>
   <data name="lblSoldOut" xml:space="preserve">
     <value>SOLD OUT</value>
   </data>
@@ -669,6 +702,9 @@
   <data name="lblSupport" xml:space="preserve">
     <value>Support</value>
   </data>
+  <data name="lblSupportTelegram" xml:space="preserve">
+    <value>Support Telegram</value>
+  </data>
   <data name="lblThirdLevel" xml:space="preserve">
     <value>Third Level</value>
   </data>
@@ -678,14 +714,38 @@
   <data name="lblTo" xml:space="preserve">
     <value>To</value>
   </data>
+  <data name="lblTopUp" xml:space="preserve">
+    <value>TopUp</value>
+  </data>
   <data name="lblTotalBalance" xml:space="preserve">
     <value>Total Balance</value>
   </data>
   <data name="lblTotalCommission" xml:space="preserve">
     <value>Total Commission</value>
   </data>
+  <data name="lblTotalDirectDownline" xml:space="preserve">
+    <value>Total Direct Downline</value>
+  </data>
+  <data name="lblTotalDownline" xml:space="preserve">
+    <value>Total Downline</value>
+  </data>
+  <data name="lblTotalDownlineBet" xml:space="preserve">
+    <value>Total Downline Bet</value>
+  </data>
+  <data name="lblTotalDownlineCommission" xml:space="preserve">
+    <value>Total Downline Commission</value>
+  </data>
+  <data name="lblTotalDownlineWin" xml:space="preserve">
+    <value>Total Downline Win</value>
+  </data>
   <data name="lblTotalInterest" xml:space="preserve">
     <value>Total Interest</value>
+  </data>
+  <data name="lblTotalRecharge" xml:space="preserve">
+    <value>Total Recharge</value>
+  </data>
+  <data name="lblTotalWithdrawal" xml:space="preserve">
+    <value>Total Withdrawal</value>
   </data>
   <data name="lblTransaction" xml:space="preserve">
     <value>Transaction</value>
@@ -711,6 +771,12 @@
   <data name="lblUsernameIsRequired" xml:space="preserve">
     <value>Username is required</value>
   </data>
+  <data name="lblUserNotExists" xml:space="preserve">
+    <value>User does not exists</value>
+  </data>
+  <data name="lblValue" xml:space="preserve">
+    <value>Value</value>
+  </data>
   <data name="lblVerificationCode" xml:space="preserve">
     <value>Verification Code</value>
   </data>
@@ -728,6 +794,9 @@
   </data>
   <data name="lblWelcomeBack" xml:space="preserve">
     <value>Welcome Back</value>
+  </data>
+  <data name="lblWelcomeToMall" xml:space="preserve">
+    <value>Welcome to Hot Mall!</value>
   </data>
   <data name="lblWin" xml:space="preserve">
     <value>Win</value>
@@ -761,6 +830,9 @@
   </data>
   <data name="mnuBanner" xml:space="preserve">
     <value>Banners</value>
+  </data>
+  <data name="mnuCashTopUp" xml:space="preserve">
+    <value>Recharge TopUp</value>
   </data>
   <data name="mnuCashWalletLog" xml:space="preserve">
     <value>Cash Wallet Log</value>
@@ -804,11 +876,17 @@
   <data name="mnuUserListing" xml:space="preserve">
     <value>User Listing</value>
   </data>
+  <data name="mnuWallet" xml:space="preserve">
+    <value>Wallet</value>
+  </data>
   <data name="mnuWithdrawalListing" xml:space="preserve">
     <value>Withdrawal Listing</value>
   </data>
   <data name="mnuWithdrawalLog" xml:space="preserve">
     <value>Withdrawal Logs</value>
+  </data>
+  <data name="msgBalanceTurnOverToWithdrwal" xml:space="preserve">
+    <value>You still have balance turn over {0}, before you are allow to do withdrawal</value>
   </data>
   <data name="msgClaimSuccessfully" xml:space="preserve">
     <value>Claimed successfully</value>
@@ -843,14 +921,23 @@
   <data name="msgInsufficientWalletBalance" xml:space="preserve">
     <value>Insufficient wallet balance</value>
   </data>
+  <data name="msgInvalidActualName" xml:space="preserve">
+    <value>Invalid Actual name</value>
+  </data>
   <data name="msgInvalidAmount" xml:space="preserve">
     <value>Invalid Amount</value>
   </data>
   <data name="msgInvalidBankId" xml:space="preserve">
     <value>Please select the Bank Account</value>
   </data>
+  <data name="msgInvalidBankName" xml:space="preserve">
+    <value>Invalid Bank Name</value>
+  </data>
   <data name="msgInvalidFromDate" xml:space="preserve">
     <value>Invalid From Date</value>
+  </data>
+  <data name="msgInvalidIFSCCode" xml:space="preserve">
+    <value>Invalid IFSC Code</value>
   </data>
   <data name="msgInvalidLogin" xml:space="preserve">
     <value>Invalid Login</value>

@@ -152,7 +152,7 @@
     @Html.Partial("HeaderMenu")
 
     <section class="section-wrap padding-btm-section section-inner-wrapper p-0">
-        <div class="display-flex">
+        <div class="display-flex" style="min-height:615px;">
             <div class="width-20 hide-mobile h-100">
                 <div id="navigation-sidebar" class="border-grey h-100">
                     <div id="profile-info" class="padding-s display-flex align-items-center">
@@ -162,7 +162,7 @@
                         </div>
                         <div style="width: 65%" class="ms-2">
                             <h2>@resSharedPB.lblUsername</h2>
-                            <div> ID: @Model.Username</div>
+                            <div> ID: @ViewBag.Username</div>
                         </div>
                     </div>
                     <div id="profile-nav">
@@ -291,7 +291,7 @@
                             </div>
                             <div>
                                 <h2>@resSharedPB.lblUsername</h2>
-                                <div>ID: @Model.Username</div>
+                                <div>ID: @ViewBag.Username</div>
 
                             </div>
                             <div style="margin-left: auto;">
@@ -300,6 +300,15 @@
                                        style="padding: 16px"></i>
                                     <div class="overflow-hide border-12 box-shadow-std profile-mobile z-index-99 bg-grey">
                                         <div id="profile-nav">
+                                            <div class="profile-p mainprofile">
+                                                <div class="profile-menu-accordion padding-s pointer">
+                                                    <div class="middle left heading-bold">
+                                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/invite-friends.jpeg" alt="">
+                                                        <!-- <a href="referrals.html" class="text-dark">Referrals</a> -->
+                                                        @resSharedPB.lblProfile
+                                                    </div>
+                                                </div>
+                                            </div>
                                             <div class="profile-p">
                                                 <div class="profile-menu-accordion padding-s pointer">
                                                     <div class="middle left heading-bold">
@@ -396,49 +405,149 @@
                         </div>
                     </div>
                 </section>
-                <section id="main-content" class="section-wrap">
-                    <div class="section-inner-wrapper">
+                <section id="main-content" class="section-wrap" style="min-height:100%;">
+                    <div class="section-inner-wrapper" style="overflow:hidden !important;">
                         <div id="profile-content width-100 padding-s">
                             <div class=" mrgn-btm-m">
+                                <div class="row justify-content-center">
+                                    <div class="col-lg-6 col-md-6 col-6 ">
+                                        <div class="profile-point-info-grid border-12 bg-dark display-wrap overflow-hide w-100 mx-auto">
 
-                                <div class="profile-point-info-grid border-12 bg-dark display-wrap overflow-hide w-100 mx-auto">
-                                    <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
-                                       href="./Recharge">
-                                        <div class="coin-p mrgn-right-xs">
-                                            <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
-                                        </div>
-                                        <div class="coin-info">
-                                            <h3 class="text-m text-wrap text-bold text-light">@ViewBag.CashWallet</h3>
-                                            <div class="text-s-m">@resSharedPB.lblTotalBalance</div>
-                                        </div>
-                                        <!-- <i class="fa-solid coin-icon-top pos-abs fa-angle-right hide-mobile"></i> -->
-                                        <p class="text text-white ms-auto my-auto">@resSharedPB.lblRecharge</p>
+                                            <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
+                                               href="Recharge">
+                                                <div class="coin-p mrgn-right-xs">
+                                                    <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
+                                                </div>
+                                                <div class="coin-info">
+                                                    <h3 class="text-m text-wrap text-bold text-light">@ViewBag.CashWallet</h3>
+                                                    <div class="text-s-m">@resSharedPB.lblTotalBalance</div>
+                                                </div>
+                                                <!-- <i class="fa-solid coin-icon-top pos-abs fa-angle-right hide-mobile"></i> -->
+                                                <p class="text text-white ms-auto my-auto">@resSharedPB.lblRecharge</p>
 
-                                    </a>
-                                    <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
-                                       href="commission.html">
-                                        <div class="coin-p mrgn-right-xs">
-                                            <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
+                                            </a>
                                         </div>
-                                        <div class="coin-info">
-                                            <h3 class="text-m text-wrap text-bold">@ViewBag.TotalCommission</h3>
-                                            <div class="text-s-m">@resSharedPB.lblTotalCommission</div>
-                                        </div>
-                                        <p class="text text-white ms-auto my-auto">@resSharedPB.lblView</p>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-6 ">
+                                        <div class="profile-point-info-grid border-12 bg-dark display-wrap overflow-hide w-100 mx-auto">
 
-                                    </a>
-                                    <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
-                                       href="interest.html">
-                                        <div class="coin-p mrgn-right-xs">
-                                            <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
-                                        </div>
-                                        <div class="coin-info">
-                                            <h3 class="text-m text-wrap text-bold">26,450,000</h3>
-                                            <div class="text-s-m">@resSharedPB.lblTotalInterest</div>
-                                        </div>
-                                        <p class="text text-white ms-auto my-auto">@resSharedPB.lblView</p>
+                                            <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
+                                               href="#">
+                                                <div class="coin-p mrgn-right-xs">
+                                                    <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
+                                                </div>
+                                                <div class="coin-info">
+                                                    <h3 class="text-m text-wrap text-bold">@ViewBag.TotalRecharge</h3>
+                                                    <div class="text-s-m">@resSharedPB.lblTotalRecharge</div>
+                                                </div>
+                                                @*<p class="text text-white ms-auto my-auto">@resSharedPB.lblView</p>*@
 
-                                    </a>
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-6 ">
+                                        <div class="profile-point-info-grid border-12 bg-dark display-wrap overflow-hide w-100 mx-auto">
+                                            <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
+                                               href="#">
+                                                <div class="coin-p mrgn-right-xs">
+                                                    <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
+                                                </div>
+                                                <div class="coin-info">
+                                                    <h3 class="text-m text-wrap text-bold">@ViewBag.TotalWithdrawal</h3>
+                                                    <div class="text-s-m">@resSharedPB.lblTotalWithdrawal</div>
+                                                </div>
+                                                @*<p class="text text-white ms-auto my-auto">@resSharedPB.lblView</p>*@
+
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-6 ">
+                                        <div class="profile-point-info-grid border-12 bg-dark display-wrap overflow-hide w-100 mx-auto">
+                                            <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
+                                               href="#">
+                                                <div class="coin-p mrgn-right-xs">
+                                                    <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
+                                                </div>
+                                                <div class="coin-info">
+                                                    <h3 class="text-m text-wrap text-bold">@ViewBag.TotalCommission</h3>
+                                                    <div class="text-s-m">@resSharedPB.lblTotalDownlineCommission</div>
+                                                </div>
+                                                @*<p class="text text-white ms-auto my-auto">@resSharedPB.lblView</p>*@
+
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-6 ">
+                                        <div class="profile-point-info-grid border-12 bg-dark display-wrap overflow-hide w-100 mx-auto">
+                                            <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
+                                               href="#">
+                                                <div class="coin-p mrgn-right-xs">
+                                                    <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
+                                                </div>
+                                                <div class="coin-info">
+                                                    <h3 class="text-m text-wrap text-bold">@ViewBag.TotalDownline</h3>
+                                                    <div class="text-s-m">@resSharedPB.lblTotalDownline</div>
+                                                </div>
+                                                @*<p class="text text-white ms-auto my-auto">@resSharedPB.lblView</p>*@
+
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-6 ">
+                                        <div class="profile-point-info-grid border-12 bg-dark display-wrap overflow-hide w-100 mx-auto">
+                                            <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
+                                               href="#">
+                                                <div class="coin-p mrgn-right-xs">
+                                                    <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
+                                                </div>
+                                                <div class="coin-info">
+                                                    <h3 class="text-m text-wrap text-bold">@ViewBag.TotalDirectDownline</h3>
+                                                    <div class="text-s-m">@resSharedPB.lblTotalDirectDownline</div>
+                                                </div>
+                                                @*<p class="text text-white ms-auto my-auto">@resSharedPB.lblView</p>*@
+
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-6 ">
+                                        <div class="profile-point-info-grid border-12 bg-dark display-wrap overflow-hide w-100 mx-auto">
+                                            <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
+                                               href="#">
+                                                <div class="coin-p mrgn-right-xs">
+                                                    <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
+                                                </div>
+                                                <div class="coin-info">
+                                                    <h3 class="text-m text-wrap text-bold">@ViewBag.TotalWin</h3>
+                                                    <div class="text-s-m">@resSharedPB.lblTotalDownlineWin</div>
+                                                </div>
+                                                @*<p class="text text-white ms-auto my-auto">@resSharedPB.lblView</p>*@
+
+                                            </a>
+
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-6 ">
+                                        <div class="profile-point-info-grid border-12 bg-dark display-wrap overflow-hide w-100 mx-auto">
+                                            <a class="profile-point-info padding-s width-100 display-flex pos-rel text-light"
+                                               href="#">
+                                                <div class="coin-p mrgn-right-xs">
+                                                    <img class="coin-logo" src="~/HotMall/img/usd_today.png" alt="">
+                                                </div>
+                                                <div class="coin-info">
+                                                    <h3 class="text-m text-wrap text-bold">@ViewBag.TotalBet</h3>
+                                                    <div class="text-s-m">@resSharedPB.lblTotalDownlineBet</div>
+                                                </div>
+                                                @*<p class="text text-white ms-auto my-auto">@resSharedPB.lblView</p>*@
+
+                                            </a>
+
+                                        </div>
+                                    </div>
+
                                 </div>
                             </div>
 
@@ -447,11 +556,10 @@
                 </section>
             </div>
         </div>
+        @Html.Partial("FooterMenu")
     </section>
 
     <script src="~/HotMall/main.js" type="text/javascript"></script>
-
-    @Html.Partial("FooterMenu")
 
     <script>
         $(window).on("load", function (e) {

@@ -502,7 +502,7 @@
     <value>充電時間：</value>
   </data>
   <data name="lblRechargeWallet" xml:space="preserve">
-    <value>钱包充值</value>
+    <value>取款余额周转</value>
   </data>
   <data name="lblRed0Return" xml:space="preserve">
     <value>回收率</value>
@@ -700,7 +700,7 @@
     <value>无效密码</value>
   </data>
   <data name="msgInvalidPhoneNumber" xml:space="preserve">
-    <value>InvalidPhoneNumber!</value>
+    <value>无效的电话号码!</value>
   </data>
   <data name="msgInvalidRedPacket" xml:space="preserve">
     <value>红包无效！</value>
@@ -884,5 +884,80 @@
   </data>
   <data name="msgPendingWithdrwawal" xml:space="preserve">
     <value>您还有待处理的提款尚未批准</value>
+  </data>
+  <data name="lblInvalidBankAccount" xml:space="preserve">
+    <value>银行账户无效</value>
+  </data>
+  <data name="lblInvalidEmail" xml:space="preserve">
+    <value>不合规电邮</value>
+  </data>
+  <data name="lblInvalidMobile" xml:space="preserve">
+    <value>手机号码无效</value>
+  </data>
+  <data name="lblTransactionDate" xml:space="preserve">
+    <value>交易日期</value>
+  </data>
+  <data name="lblWinAmount" xml:space="preserve">
+    <value>获胜金额</value>
+  </data>
+  <data name="mnuDailyReport" xml:space="preserve">
+    <value>每日报告</value>
+  </data>
+  <data name="msgBalanceTurnOverToWithdrwal" xml:space="preserve">
+    <value>在您可以提款之前，您还需要打{0}的流水</value>
+  </data>
+  <data name="msgInvalidActualName" xml:space="preserve">
+    <value>实际姓名无效</value>
+  </data>
+  <data name="msgInvalidBankName" xml:space="preserve">
+    <value>银行名称无效</value>
+  </data>
+  <data name="msgInvalidIFSCCode" xml:space="preserve">
+    <value> IFSC 代码无效</value>
+  </data>
+  <data name="lblSignUpNow" xml:space="preserve">
+    <value>立即注册！</value>
+  </data>
+  <data name="lblWelcomeToMall" xml:space="preserve">
+    <value>欢迎来到 Hot Mall!</value>
+  </data>
+  <data name="btnNext" xml:space="preserve">
+    <value>下一页</value>
+  </data>
+  <data name="lblCurrentBalance" xml:space="preserve">
+    <value>当前余额</value>
+  </data>
+  <data name="lblDeduct" xml:space="preserve">
+    <value>扣除</value>
+  </data>
+  <data name="lblFilterOption" xml:space="preserve">
+    <value>选项</value>
+  </data>
+  <data name="lblMethod" xml:space="preserve">
+    <value>可用选项</value>
+  </data>
+  <data name="lblRechargeCommission" xml:space="preserve">
+    <value>充值佣金</value>
+  </data>
+  <data name="lblRemark" xml:space="preserve">
+    <value>备注</value>
+  </data>
+  <data name="lblTopUp" xml:space="preserve">
+    <value>充值</value>
+  </data>
+  <data name="lblUserNotExists" xml:space="preserve">
+    <value>用户不存在</value>
+  </data>
+  <data name="lblValue" xml:space="preserve">
+    <value>过滤值</value>
+  </data>
+  <data name="mnuCashTopUp" xml:space="preserve">
+    <value>充值钱包</value>
+  </data>
+  <data name="mnuCashWalletLog" xml:space="preserve">
+    <value>錢包交易記錄</value>
+  </data>
+  <data name="mnuWallet" xml:space="preserve">
+    <value>钱包</value>
   </data>
 </root>

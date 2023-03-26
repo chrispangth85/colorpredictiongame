@@ -1,16 +1,17 @@
 USE [ColorPrediction]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_CashWalletOperation]    Script Date: 23/3/2023 12:17:03 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_CashWalletOperation]    Script Date: 26/3/2023 6:53:09 AM ******/
 DROP PROCEDURE [dbo].[SP_CashWalletOperation]
 GO
 
-/****** Object:  StoredProcedure [dbo].[SP_CashWalletOperation]    Script Date: 23/3/2023 12:17:03 PM ******/
+/****** Object:  StoredProcedure [dbo].[SP_CashWalletOperation]    Script Date: 26/3/2023 6:53:09 AM ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
+
 
 
 CREATE PROCEDURE [dbo].[SP_CashWalletOperation]
@@ -23,7 +24,8 @@ CREATE PROCEDURE [dbo].[SP_CashWalletOperation]
 	@apprate		DECIMAL(15,2) = 0,
 	@appother		NVARCHAR(200) = '',
 	@bankid			INT = 0,
-	@status			INT = 0
+	@status			INT = 0,
+	@actionBy		NVARCHAR(200) = 'SYS'
 )
 AS
 	SET NOCOUNT ON
@@ -102,19 +104,19 @@ AS
 			WHERE [CBANK_ID] = @bankid
 
 			INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, CCASH_CARDNUMBER, CCASH_BRANCH, CCASH_STATE, CCASH_CITY, CCASH_BANKNAME ,CCASH_BANKACCOUNTNAME, [CCASH_CREATEDON], CCASH_ADDRESS, CCASH_MOBILE, CCASH_EMAIL)
-			VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status,@cardnumber,@cardbranch,@cardstate,@cardcity,@cardbankname,@cardbankaccountname, @gmt_date, @cardaddress, @cardmobile, @cardemail)
+			VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, @actionBy, @status,@cardnumber,@cardbranch,@cardstate,@cardcity,@cardbankname,@cardbankaccountname, @gmt_date, @cardaddress, @cardmobile, @cardemail)
 		END
 	ELSE
 	BEGIN
 		IF @cashNum < 0
 		BEGIN
 			INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, [CCASH_CREATEDON])
-			VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status, @gmt_date)
+			VALUES(@username, 0, 0 - @cashNum, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, @actionBy, @status, @gmt_date)
 		END
 		ELSE
 		BEGIN
 			INSERT INTO CVD_CASHWALLETLOG(CUSR_USERNAME, CCASH_CASHIN, CCASH_CASHOUT, CCASH_CASHNAME, CCASH_WALLET, CCASH_APPUSER, CCASH_APPNUMBER, CCASH_APPRATE, CCASH_APPOTHER, CCASH_CREATEDBY, CCASH_STATUS, [CCASH_CREATEDON])
-			VALUES(@username, @cashNum, 0, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, 'SYS', @status, @gmt_date)
+			VALUES(@username, @cashNum, 0, @cashName, @wallet, @appuser, @appnumber, @apprate, @appother, @actionBy, @status, @gmt_date)
 		END	
 	END
 

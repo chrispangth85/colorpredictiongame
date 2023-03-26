@@ -156,6 +156,10 @@ namespace Entity.Context
                     .HasMaxLength(200)
                     .HasColumnName("MEMBER_LEVEL5_INTRO")
                     .HasDefaultValueSql("('')");
+
+                entity.Property(e => e.MemberTotalDownline)
+                    .HasColumnName("MEMBER_TOTAL_DOWNLINE")
+                    .HasDefaultValueSql("((0))");
             });
 
             OnModelCreatingPartial(modelBuilder);

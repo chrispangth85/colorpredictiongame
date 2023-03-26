@@ -1,0 +1,112 @@
+﻿@using resShared = FreshMVC.Resources.PackBuddyShared;
+@using FreshMVC.Models
+@model TopupModel
+
+<script type="text/javascript">
+
+    $("#btnNext").click(function (evt) {
+        $.ajax({
+            type: "POST",
+            url: "/AdminGeneral/TopUpWalletNext",
+            data: $("#editBSForm").serialize(),
+            success: function (data) {
+                $("#main-content").html(data);
+            },
+            error: function (xhr, status, error) {
+                let r = jQuery.parseJSON(xhr.responseText);
+                var errorM = r.message;
+                alert(errorM);
+            }
+        });
+    });
+
+</script>
+
+<style>
+    .form-signin {
+        width: 100%;
+        max-width: 630px;
+        padding: 15px;
+        margin: 0 auto;
+    }
+
+    .flex-container {
+        display: flex;
+        justify-content: center;
+    }
+
+    .flex-containerSpaceAround {
+        display: flex;
+        justify-content: space-around;
+    }
+
+        .flex-containerSpaceAround > div {
+            width: 100%;
+        }
+</style>
+
+
+
+<div class="page-content-wrapper custom-scrollbar">
+    @Html.ValidationSummary(true)
+    <!-- HEADER -->
+    <div class="block-header">
+        <div class="row">
+
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <h2>@resShared.mnuWallet</h2>
+                <ul class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
+                    <li class="breadcrumb-item active">@Model.TopupTitle</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    @using (Html.BeginForm("null", "AdminWallet", FormMethod.Post, new
+    {
+        name = "editBSForm",
+        id = "editBSForm"
+    }))
+    {
+        @Html.HiddenFor(m => m.TopupTitle)
+        @Html.HiddenFor(m => m.TopupType)
+        <div class="grid" style="margin-left: 10px; margin-right: 10px;" id="grid">
+            <div class="page-content p-6 flex-container">
+                <div style="width: 75%;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="form-group">
+                                <strong>@resShared.lblMethod <span style="color: Red">*</span></strong>
+                                @Html.DropDownListFor(model => model.SelectedOption, @Model.Options, new { @class = "form-control" })
+                            </div>
+                            <div class="form-group">
+                                <strong>@resShared.lblUsername <span style="color: Red">*</span></strong>
+                                @Html.TextBoxFor(model => model.Username, new
+                               {
+                                   @class = "form-control"
+                               })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="page-content p-6 flex-container">
+
+                <div style="width: 75%;">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="flex-containerSpaceAround">
+                                <div>
+                                    <input id="btnNext" type="button" class="btn btn-sm btn-primary" style="width:180px; height:35px" value="@resShared.btnNext" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+
+</div>

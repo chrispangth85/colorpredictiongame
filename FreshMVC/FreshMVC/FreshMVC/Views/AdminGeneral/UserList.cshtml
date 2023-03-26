@@ -179,17 +179,14 @@
                             @resShared.lblPhone
                         </th>
                         <th>
-                            @resShared.lblRechargeWallet
-                        </th>
-                        <th>
                             @resShared.lblMemberType
                         </th>
                         <th>
                             @resShared.lblCashWallet
                         </th>
-                        @*<th>
-
-                    </th>*@
+                        <th>
+                            @resShared.lblRechargeWallet
+                        </th>
                         <th style="width: 5%; color: White; ">
                             @resShared.lblEdit
                         </th>
@@ -209,32 +206,30 @@
                     }
                     @foreach (var item in Model.AdminList)
                     {
-                        <tr style="height: 25px; border-top: 1px solid white;">
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Number)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.Username)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.CashWallet)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.AccountType)
-                            </td>
-                            <td>
-                                @Html.DisplayFor(modelItem => item.CashWallet)
-                            </td>
-                            @*<td>
-                            <a class="DeleteUser" href="#" id="@item.Username">@resShared.lblDelete</a>
-                        </td>*@
-                            <td>
-                                <a class="EditData" href="#" id="@item.Username" isagentz="@item.IsAgent"><i class="fa fa-edit"></i></a>
-                            </td>
-                            <td>
-                                <a class="ShowPassword" href="#" id="@item.Password"><i class="fa fa-key"></i></a>
-                            </td>
-                        </tr>
+                <tr style="height: 25px; border-top: 1px solid white;">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Number)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Username)
+                    </td>
+
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AccountType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CashWallet)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.RechargeWallet)
+                    </td>
+                    <td>
+                        <a class="EditData" href="#" id="@item.Username" isagentz="@item.IsAgent"><i class="fa fa-edit"></i></a>
+                    </td>
+                    <td>
+                        <a class="ShowPassword" href="#" id="@item.Password"><i class="fa fa-key"></i></a>
+                    </td>
+                </tr>
                     }
                 </tbody>
             </table>

@@ -173,13 +173,13 @@
             <div class="row">
 
                 <div class="grid" style="margin-left: 15px;" id="grid">
-                    <strong>Filter option</strong>
+                    <strong>@resShared.lblFilterOption</strong>
                     @Html.DropDownListFor(model => model.SelectedFilteringCriteria, @Model.FilteringCriteria, new { @id = "SelectedFilteringCriteria", @class = "form-control", @style = "width:215px;" })
 
                 </div>
 
                 <div class="grid" style="margin-left: 5px;" id="gridFilterValue">
-                    <strong id="optionText">Value</strong>
+                    <strong id="optionText">@resShared.lblValue</strong>
                     @Html.TextBoxFor(model => model.FilterValue, new { @class = "form-control", @id = "FilterValue" })
                 </div>
             </div>
@@ -313,6 +313,9 @@
                                    address="@item.Address"
                                    mobile="@item.Mobile"
                                    username="@item.Username"
+                                   amount="@item.Amount"
+                                   fee="@item.ServiceFee"
+                                   finalamount="@item.FinalAmount"
                                    email="@item.Email"
                                    href="#">@resShared.lblView</a>
                             </td>                        
@@ -355,6 +358,18 @@
                 <div class="form-floating mb-3">
                     <label class="form-control-label">@resShared.lblUsername</label>
                     <input class="form-control" id="username" value="" disabled />
+                </div>
+                <div class="form-floating mb-3">
+                    <label class="form-control-label">@resShared.lblAmount</label>
+                    <input class="form-control" id="amount" value="" disabled />
+                </div>
+                <div class="form-floating mb-3">
+                    <label class="form-control-label">@resShared.lblServiceFee</label>
+                    <input class="form-control" id="fee" value="" disabled />
+                </div>
+                <div class="form-floating mb-3">
+                    <label class="form-control-label">@resShared.lblFinalAmount</label>
+                    <input class="form-control" id="finalamount" value="" disabled />
                 </div>
                 <div class="form-floating mb-3">
                     <label class="form-control-label">@resShared.lblActualName</label>
@@ -420,10 +435,14 @@
         $("#bankaccount").val($(this).attr("cardno"));
         $("#city").val($(this).attr("city"));
         $("#state").val($(this).attr("state"));
-        
+
         $("#address").val($(this).attr("address"));
         $("#mobile").val($(this).attr("mobile"));
         $("#email").val($(this).attr("email"));
+
+        $("#amount").val($(this).attr("amount"));
+        $("#fee").val($(this).attr("fee"));
+        $("#finalamount").val($(this).attr("finalamount"));
 
         $("#taskmodal").modal('show');
     });

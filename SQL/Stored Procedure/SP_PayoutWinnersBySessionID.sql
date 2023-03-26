@@ -27,14 +27,22 @@ AS
 	DECLARE @gmt_date DATETIME = SWITCHOFFSET(CONVERT(VARCHAR(20),@utc_date,100), '+08:00')
 	SET @gmt_date = DATEADD(SECOND, DATEPART(SECOND, @utc_date), @gmt_date)
 	DECLARE @commission DECIMAL(15,2) = 0
+	DECLARE @gameServiceFee DECIMAL(15,2) = 0
+	DECLARE @gameHandlingFee DECIMAL(15,2) = 0
 	DECLARE @gameSessionStartDT DATETIME
 	DECLARE @totalPayout DECIMAL(15,2) = 0
 	DECLARE @gameID INT = 0
 	DECLARE @period NVARCHAR(200) = ''
 
-	SELECT @commission = [CPARA_DECIMALVALUE]
+	SELECT @gameServiceFee = [CPARA_DECIMALVALUE]
 	FROM [dbo].[CVD_PARAMETER]
-	WHERE [CPARA_NAME] = 'BetCommission'
+	WHERE [CPARA_NAME] = 'GameServiceFee'
+
+	SELECT @gameHandlingFee = [CPARA_DECIMALVALUE]
+	FROM [dbo].[CVD_PARAMETER]
+	WHERE [CPARA_NAME] = 'GameHandlingFee'
+
+	SET @commission = @gameServiceFee + @gameHandlingFee
 
 	--Check if this session status = 1(Already started and not yet complete) + EndTime <= Now
 	DECLARE @exists INT = 0

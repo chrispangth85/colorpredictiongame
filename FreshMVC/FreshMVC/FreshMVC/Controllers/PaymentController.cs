@@ -131,6 +131,8 @@ namespace FreshMVC.Controllers
 
                     dbContext.Update(withdrawalInfo);
                     dbContext.SaveChanges();
+
+                    AdminDB.InsertPendingJob(withdrawalInfo.CusrUsername, "WDR", withdrawalInfo.CcashCashout, "", "");
                 }
             }
 
