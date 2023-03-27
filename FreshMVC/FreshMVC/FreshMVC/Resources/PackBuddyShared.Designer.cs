@@ -655,6 +655,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Ethereum.
+        /// </summary>
+        public static string lblEtherum {
+            get {
+                return ResourceManager.GetString("lblEtherum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Extra Info.
         /// </summary>
         public static string lblExtraInfo {
@@ -1965,6 +1974,15 @@ namespace FreshMVC.Resources {
         public static string lblTransactionDate {
             get {
                 return ResourceManager.GetString("lblTransactionDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Tron.
+        /// </summary>
+        public static string lblTron {
+            get {
+                return ResourceManager.GetString("lblTron", resourceCulture);
             }
         }
         

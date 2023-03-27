@@ -315,6 +315,9 @@
   <data name="lblEnd" xml:space="preserve">
     <value>End</value>
   </data>
+  <data name="lblEtherum" xml:space="preserve">
+    <value>Ethereum</value>
+  </data>
   <data name="lblExtraInfo" xml:space="preserve">
     <value>Extra Info</value>
   </data>
@@ -752,6 +755,9 @@
   </data>
   <data name="lblTransactionDate" xml:space="preserve">
     <value>Transaction Date</value>
+  </data>
+  <data name="lblTron" xml:space="preserve">
+    <value>Tron</value>
   </data>
   <data name="lblType" xml:space="preserve">
     <value>Type</value>

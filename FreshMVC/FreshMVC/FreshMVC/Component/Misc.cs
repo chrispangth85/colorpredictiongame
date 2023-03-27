@@ -90,6 +90,22 @@ namespace FreshMVC.Component
             return filteringCriteriaList;
         }
 
+        public static IEnumerable<SelectListItem> ConstructsWalletNetworkType()
+        {
+            List<SelectListItem> filteringCriteriaList = new List<SelectListItem>();
+
+            SelectListItem fcAll = new SelectListItem();
+            fcAll.Text = Resources.PackBuddyShared.lblTron;
+            fcAll.Value = Resources.PackBuddyShared.lblTron;
+            filteringCriteriaList.Add(fcAll);
+
+            SelectListItem fcMoto = new SelectListItem();
+            fcMoto.Text = Resources.PackBuddyShared.lblEtherum;
+            fcMoto.Value = Resources.PackBuddyShared.lblEtherum;
+            filteringCriteriaList.Add(fcMoto);
+
+            return filteringCriteriaList;
+        }
         public static string GenerateRandomDigit(int length)
         {
             StringBuilder builder = new StringBuilder(length);
