@@ -172,6 +172,53 @@
                 });
             });
 
+            $("#companyWallet").click(function (evt) {
+                removeActiveClass();
+                $('#systemConfiguration').addClass('active');
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/CompanyWalletListing",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
+
+            $("#countryExchangeRate").click(function (evt) {
+                removeActiveClass();
+                $('#systemConfiguration').addClass('active');
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/CountryListing",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
             $("#dailyReport").click(function (evt) {
                 removeActiveClass();
                 $('#dailyReport').addClass('active');
@@ -572,8 +619,8 @@
                                     </li>
                                 }
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewProductListing") == "true" ||
-                                 @HttpContextAccessor.HttpContext.Session.GetString("ViewSessionListing") == "true" ||
-                                 @HttpContextAccessor.HttpContext.Session.GetString("ViewLotteryBetListing") == "true")
+                                @HttpContextAccessor.HttpContext.Session.GetString("ViewSessionListing") == "true" ||
+                                @HttpContextAccessor.HttpContext.Session.GetString("ViewLotteryBetListing") == "true")
                                 {
                                     <li>
                                         <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuGame</span></a>
@@ -612,8 +659,8 @@
                                     </li>
                                 }
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewRechargeListing") == "true" ||
-                                @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalListing") == "true" ||
-                                @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalLog") == "true")
+                               @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalListing") == "true" ||
+                               @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalLog") == "true")
                                 {
                                     <li>
                                         <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuTransaction</span></a>
@@ -639,8 +686,17 @@
                                 }
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewConfiguration") == "true")
                                 {
-                                    <li id="systemConfiguration">
+                                    <li>
                                         <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuSystemConfiguration</span></a>
+                                        <ul class="mainMenuKH">
+                                            <li id="systemConfiguration" style="cursor:pointer"><a>@resShared.mnuSettings</a></li>
+                                        </ul>
+                                        <ul class="mainMenuKH">
+                                            <li id="companyWallet" style="cursor:pointer"><a>@resShared.mnuCompanyWallet</a></li>
+                                        </ul>
+                                        <ul class="mainMenuKH">
+                                            <li id="countryExchangeRate" style="cursor:pointer"><a>@resShared.mnuCountryExchangeRate</a></li>
+                                        </ul>
                                     </li>
                                 }
                                 <li id="dailyReport">

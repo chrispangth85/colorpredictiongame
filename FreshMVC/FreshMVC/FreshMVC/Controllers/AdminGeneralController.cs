@@ -2637,6 +2637,15 @@ namespace FreshMVC.Controllers
                             case "SponsorBonusLevel3":
                                 model.SponsorBonusLevel3 = parameter.CparaDecimalvalue;
                                 break;
+                            case "CoinMinWithdrawal":
+                                model.CoinMinWithdrawal = parameter.CparaDecimalvalue;
+                                break;
+                            case "CoinMaxWithdrawal":
+                                model.CoinMaxWithdrawal = parameter.CparaDecimalvalue;
+                                break;
+                            case "CoinWithdrawalCharges":
+                                model.CoinWithdrawalCharges = parameter.CparaDecimalvalue;
+                                break;
                             case "GatewayPaymentHost":
                                 model.GatewayPaymentHost = parameter.CparaStringvalue;
                                 break;
@@ -2784,6 +2793,15 @@ namespace FreshMVC.Controllers
                                 break;
                             case "SponsorBonusLevel3":
                                 parameter.CparaDecimalvalue = model.SponsorBonusLevel3;
+                                break;
+                            case "CoinMinWithdrawal":
+                                parameter.CparaDecimalvalue = model.CoinMinWithdrawal;
+                                break;
+                            case "CoinMaxWithdrawal":
+                                parameter.CparaDecimalvalue = model.CoinMaxWithdrawal;
+                                break;
+                            case "CoinWithdrawalCharges":
+                                parameter.CparaDecimalvalue = model.CoinWithdrawalCharges;
                                 break;
                             case "GatewayPaymentHost":
                                 parameter.CparaStringvalue = model.GatewayPaymentHost;
@@ -2992,5 +3010,426 @@ namespace FreshMVC.Controllers
         }
 
         #endregion
+
+        #region CompanyWalletListing
+        public IActionResult CompanyWalletListing(int selectedPage = 1, string filterType = "", string filterValue = "")
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            filterValue = Helper.NVL(filterValue);
+
+            int ok;
+            string msg;
+            int pages = 0;
+            var model = new PaginationCompanyWalletModel();
+            var dsAdmin = AdminGeneralDB.GetAllCompanyWallets(selectedPage, filterType, filterValue, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new CompanyWalletModel();
+                am.Number = int.Parse(dr["rownumber"].ToString());
+                am.id = int.Parse(dr["CCOM_ID"].ToString());
+                am.Name = dr["CCOM_NAME"].ToString();
+                am.NetworkType = dr["CCOM_NETWORKTYPE"].ToString();
+                am.WalletAddress = dr["CCOM_WALLETADDRESS"].ToString();
+                am.IsActive = Convert.ToBoolean(dr["CCOM_ISACTIVE"]);
+
+                model.List.Add(am);
+            }
+
+            #region filtering
+            List<SelectListItem> filterOptionList = new List<SelectListItem>();
+            filterOptionList.Add(new SelectListItem() { Text = Resources.PackBuddyShared.lblName, Value = "Name" });
+            filterOptionList.Add(new SelectListItem() { Text = Resources.PackBuddyShared.lblWalletAddress, Value = "Address" });
+
+            if (filterType == null || filterType == "")
+            {
+                model.SelectedFilteringCriteria = filterOptionList.First().Value;
+
+            }
+            else
+            {
+                model.SelectedFilteringCriteria = filterType;
+            }
+            model.FilterValue = Helper.NVL(filterValue);
+
+            model.FilteringCriteria = filterOptionList;
+
+
+            #endregion
+
+            return PartialView("CompanyWalletListing", model);
+        }
+
+        public ActionResult ModalEditCompanyWalletData(int id = 0)
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new CompanyWalletModel();
+
+            if (id != 0)
+            {
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var companyWalletFound = dbContext.CvdCompanywallet.FirstOrDefault(c => c.CcomId == id);
+                    am.Name = companyWalletFound.CcomName;
+                    am.NetworkType = companyWalletFound.CcomNetworktype;
+                    am.WalletAddress = companyWalletFound.CcomWalletaddress;
+                    am.IsActive = companyWalletFound.CcomIsactive;
+                }
+            }
+
+            var options = Misc.ConstructsWalletNetworkType();
+
+            am.NetworkTypeOptions = from c in options select new SelectListItem { Selected = false, Text = c.Text, Value = c.Value };
+
+            return PartialView("ModalEditCompanyWalletData", am);
+        }
+
+        [HttpPost]
+        public IActionResult ModalEditCompanyWalletDataMethod(CompanyWalletModel am)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                if (string.IsNullOrEmpty(am.Name))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblNameIsRequired
+                    });
+                }
+                if (string.IsNullOrEmpty(am.WalletAddress))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblWalletAddressIsRequired
+                    });
+                }
+                if (am.id == 0)
+                {
+                    using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                    {
+                        var companyWallet = new CvdCompanywallet();
+
+                        companyWallet.CcomName = am.Name;
+                        companyWallet.CcomNetworktype = am.NetworkType;
+                        companyWallet.CcomWalletaddress = am.WalletAddress;
+                        companyWallet.CcomIsactive = am.IsActive;
+                     
+                        dbContext.CvdCompanywallet.Add(companyWallet);
+                        dbContext.SaveChanges();
+                    }
+                }
+                else
+                {
+                    using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                    {
+                        var companyWallet = dbContext.CvdCompanywallet.FirstOrDefault(c => c.CcomId == am.id);
+                        if (companyWallet != null)
+                        {
+                            companyWallet.CcomName = am.Name;
+                            companyWallet.CcomNetworktype = am.NetworkType;
+                            companyWallet.CcomWalletaddress = am.WalletAddress;
+                            companyWallet.CcomIsactive = am.IsActive;
+                            dbContext.SaveChanges();
+                        }
+                    }
+                }
+
+                return CompanyWalletListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult DeleteCompanyWallet(int idz = 0)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var companyWallet = dbContext.CvdCompanywallet.FirstOrDefault(c => c.CcomId == idz);
+                    if (companyWallet != null)
+                    {
+                        companyWallet.CcomDeletionstate = true;
+                        dbContext.SaveChanges();
+                    }
+                }
+
+                return CompanyWalletListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+        #endregion
+
+        #region CountryListing
+        public IActionResult CountryListing(int selectedPage = 1)
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            int ok;
+            string msg;
+            int pages = 0;
+            var model = new PaginationCountryModel();
+            var dsAdmin = AdminGeneralDB.GetAllCountrys(selectedPage, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new CountryModel();
+                am.Number = int.Parse(dr["rownumber"].ToString());
+                am.id = int.Parse(dr["CCOUNTRY_ID"].ToString());
+                am.Code = dr["CCOUNTRY_CODE"].ToString();
+                am.Name = dr["CCOUNTRY_NAME"].ToString();
+                am.Buy = Decimal.Parse(dr["CCOUNTRY_BUY"].ToString());
+                am.Sell = Decimal.Parse(dr["CCOUNTRY_SELL"].ToString());
+
+                model.List.Add(am);
+            }
+
+            return PartialView("CountryListing", model);
+        }
+
+        public ActionResult ModalEditCountryData(int id = 0)
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new CountryModel();
+
+            if (id != 0)
+            {
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var countryFound = dbContext.CvdCountry.FirstOrDefault(c => c.CcountryId == id);
+                    am.Name = countryFound.CcountryName;
+                    am.Code = countryFound.CcountryCode;
+                    am.Buy = Decimal.Parse(countryFound.CcountryBuy.ToString());
+                    am.Sell = Decimal.Parse(countryFound.CcountrySell.ToString());
+                }
+            }
+
+            return PartialView("ModalEditCountryData", am);
+        }
+
+        [HttpPost]
+        public IActionResult ModalEditCountryDataMethod(CountryModel am)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                if (string.IsNullOrEmpty(am.Code))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblCountryCodeIsRequired
+                    });
+                }
+
+                if (string.IsNullOrEmpty(am.Name))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblCountryNameIsRequired
+                    });
+                }
+                if (am.Buy == 0)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblBuyRateIsRequired
+                    });
+                }
+
+
+                if (am.Sell == 0)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblSellRateIsRequired
+                    });
+                }
+                if (am.id == 0)
+                {
+                    using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                    {
+                        var countryFound = dbContext.CvdCountry.FirstOrDefault(c => c.CcountryCode == am.Code);
+                        if (countryFound != null)
+                        {
+                            Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                            return Json(new
+                            {
+                                status = false,
+                                message = Resources.PackBuddyShared.msgCountryCodeExists
+                            });
+                        }
+                    
+                        var country = new CvdCountry();
+
+                        country.CcountryName = am.Name;
+                        country.CcountryCode = am.Code;
+                        country.CcountryBuy = am.Buy;
+                        country.CcountrySell = am.Sell;
+
+                        dbContext.CvdCountry.Add(country);
+                        dbContext.SaveChanges();
+                    }
+                }
+                else
+                {
+                    using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                    {
+                        var country = dbContext.CvdCountry.FirstOrDefault(c => c.CcountryId == am.id);
+                        if (country != null)
+                        {
+                            country.CcountryName = am.Name;
+                            country.CcountryBuy = am.Buy;
+                            country.CcountrySell = am.Sell;
+                            dbContext.SaveChanges();
+                        }
+                    }
+                }
+
+                return CountryListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult DeleteCountry(int idz = 0)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var country = dbContext.CvdCountry.FirstOrDefault(c => c.CcountryId == idz);
+                    if (country != null)
+                    {
+                        country.CcountryDeletionstate = true;
+                        dbContext.SaveChanges();
+                    }
+                }
+
+                return CountryListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+        #endregion
+
     }
 }

@@ -394,6 +394,24 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Buy Rate.
+        /// </summary>
+        public static string lblBuy {
+            get {
+                return ResourceManager.GetString("lblBuy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Buy Rate is required.
+        /// </summary>
+        public static string lblBuyRateIsRequired {
+            get {
+                return ResourceManager.GetString("lblBuyRateIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string lblCancel {
@@ -475,6 +493,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to USDT Withdrawal Charges.
+        /// </summary>
+        public static string lblCoinWithdrawalCharges {
+            get {
+                return ResourceManager.GetString("lblCoinWithdrawalCharges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Completed.
         /// </summary>
         public static string lblCompleted {
@@ -525,6 +552,42 @@ namespace FreshMVC.Resources {
         public static string lblCopyrightz {
             get {
                 return ResourceManager.GetString("lblCopyrightz", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country Code.
+        /// </summary>
+        public static string lblCountryCode {
+            get {
+                return ResourceManager.GetString("lblCountryCode", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country Code is required.
+        /// </summary>
+        public static string lblCountryCodeIsRequired {
+            get {
+                return ResourceManager.GetString("lblCountryCodeIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country Name.
+        /// </summary>
+        public static string lblCountryName {
+            get {
+                return ResourceManager.GetString("lblCountryName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country Name is required.
+        /// </summary>
+        public static string lblCountryNameIsRequired {
+            get {
+                return ResourceManager.GetString("lblCountryNameIsRequired", resourceCulture);
             }
         }
         
@@ -961,6 +1024,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Is Active.
+        /// </summary>
+        public static string lblIsActive {
+            get {
+                return ResourceManager.GetString("lblIsActive", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Join Green.
         /// </summary>
         public static string lblJoinGreen {
@@ -1164,6 +1236,15 @@ namespace FreshMVC.Resources {
         public static string lblNavigate {
             get {
                 return ResourceManager.GetString("lblNavigate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Network Type.
+        /// </summary>
+        public static string lblNetworkType {
+            get {
+                return ResourceManager.GetString("lblNetworkType", resourceCulture);
             }
         }
         
@@ -1726,6 +1807,24 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Sell Rate.
+        /// </summary>
+        public static string lblSell {
+            get {
+                return ResourceManager.GetString("lblSell", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sell Rate is required.
+        /// </summary>
+        public static string lblSellRateIsRequired {
+            get {
+                return ResourceManager.GetString("lblSellRateIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Service Fee.
         /// </summary>
         public static string lblServiceFee {
@@ -2095,6 +2194,33 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Wallet Address.
+        /// </summary>
+        public static string lblWalletAddress {
+            get {
+                return ResourceManager.GetString("lblWalletAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wallet Address is required.
+        /// </summary>
+        public static string lblWalletAddressIsRequired {
+            get {
+                return ResourceManager.GetString("lblWalletAddressIsRequired", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Wallet Name.
+        /// </summary>
+        public static string lblWalletName {
+            get {
+                return ResourceManager.GetString("lblWalletName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Warning.
         /// </summary>
         public static string lblWarning {
@@ -2239,6 +2365,33 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Company Wallet.
+        /// </summary>
+        public static string mnuCompanyWallet {
+            get {
+                return ResourceManager.GetString("mnuCompanyWallet", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country Exchange Rate.
+        /// </summary>
+        public static string mnuCountry {
+            get {
+                return ResourceManager.GetString("mnuCountry", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country Exchange Rate.
+        /// </summary>
+        public static string mnuCountryExchangeRate {
+            get {
+                return ResourceManager.GetString("mnuCountryExchangeRate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Daily Report.
         /// </summary>
         public static string mnuDailyReport {
@@ -2316,6 +2469,15 @@ namespace FreshMVC.Resources {
         public static string mnuSessionListing {
             get {
                 return ResourceManager.GetString("mnuSessionListing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Settings.
+        /// </summary>
+        public static string mnuSettings {
+            get {
+                return ResourceManager.GetString("mnuSettings", resourceCulture);
             }
         }
         
@@ -2433,6 +2595,15 @@ namespace FreshMVC.Resources {
         public static string msgConfirmToReject {
             get {
                 return ResourceManager.GetString("msgConfirmToReject", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Country Code Existed.
+        /// </summary>
+        public static string msgCountryCodeExists {
+            get {
+                return ResourceManager.GetString("msgCountryCodeExists", resourceCulture);
             }
         }
         

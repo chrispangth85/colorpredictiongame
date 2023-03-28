@@ -695,6 +695,9 @@ namespace FreshMVC.Models
         public decimal SponsorBonusLevel1 { get; set; }
         public decimal SponsorBonusLevel2 { get; set; }
         public decimal SponsorBonusLevel3 { get; set; }
+        public decimal CoinWithdrawalCharges { get; set; }
+        public decimal CoinMinWithdrawal { get; set; }
+        public decimal CoinMaxWithdrawal { get; set; }
         public string GatewayPaymentHost { get; set; }
         public string GatewayWithdrawalHost { get; set; }
         public string GatewayMemberID { get; set; }
@@ -1693,5 +1696,60 @@ namespace FreshMVC.Models
         public string SelectedOption { get; set; }
         public string SelectedOptionText { get; set; }
     }
+
+    public class PaginationCompanyWalletModel : PaginationBase
+    {
+        public IFormFile ExcelFile { get; set; }
+        public IEnumerable<SelectListItem> FilteringCriteria { get; set; }
+        public string SelectedFilteringCriteria { get; set; }
+        public string FilterValue { get; set; }
+
+        public List<CompanyWalletModel> List
+        {
+            get; set;
+        }
+
+        public PaginationCompanyWalletModel()
+        {
+            List = new List<CompanyWalletModel>();
+        }
+    }
+
+    public class CompanyWalletModel
+    {
+        public int Number { get; set; }
+        public int id { get; set; }
+        public string Name { get; set; }
+        public IEnumerable<SelectListItem> NetworkTypeOptions { get; set; }
+        public string NetworkType { get; set; }
+        public string WalletAddress { get; set; }
+        public Boolean IsActive { get; set; }
+    }
+
+
+    public class PaginationCountryModel : PaginationBase
+    {
+        public List<CountryModel> List
+        {
+            get; set;
+        }
+
+        public PaginationCountryModel()
+        {
+            List = new List<CountryModel>();
+        }
+    }
+
+    public class CountryModel
+    {
+        public int Number { get; set; }
+        public int id { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public decimal Sell { get; set; }
+        public decimal Buy { get; set; }
+
+    }
+
 
 }
