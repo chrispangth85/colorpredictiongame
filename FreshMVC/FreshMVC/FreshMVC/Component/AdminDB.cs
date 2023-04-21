@@ -33,6 +33,34 @@ namespace FreshMVC.Component
             msg = pMessage.Value.ToString();
             sqlConn.Close();
         }
+
+        public static DataSet GetAdminHomeData(out int ok, out string msg)
+        {
+            SqlConnection sqlConn = DBConn.GetConnection();
+            SqlDataAdapter da = new SqlDataAdapter();
+
+            SqlCommand sqlComm = new SqlCommand("SP_GetAdminHomeData", sqlConn);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter pOk = sqlComm.Parameters.Add("@ok", SqlDbType.Int);
+            pOk.Direction = ParameterDirection.Output;
+
+            SqlParameter pMessage = sqlComm.Parameters.Add("@msg", SqlDbType.VarChar, 50);
+            pMessage.Direction = ParameterDirection.Output;
+
+            da.SelectCommand = sqlComm;
+            DataSet ds = new DataSet();
+
+            sqlConn.Open();
+            da.Fill(ds);
+
+            ok = (int)pOk.Value;
+            msg = pMessage.Value.ToString();
+            sqlConn.Close();
+
+            return ds;
+        }
+
         public static void UpdateAdminAccessRight(string Username, string UserAccess, bool isClear, string createdBy, string updatedBy, out int ok, out string msg)
         {
             SqlConnection sqlConn = DBConn.GetConnection();
@@ -221,8 +249,8 @@ namespace FreshMVC.Component
 
             return ds;
         }
-
-        public static void CashWalletOperation(string username, decimal netAmount, string type, int orderId, string paymentType, string referenceNo, string status, decimal serviceFee = 0, int bankId = 0, string actionBy = "SYS")
+        
+        public static void CashWalletOperation(string username, decimal netAmount, string type, string referenceNo, string status, decimal serviceFee = 0, int bankId = 0, string actionBy = "SYS", string walletAddress = "", string coinOption = "")
         {
             SqlConnection sqlConn = DBConn.GetConnection();
             sqlConn.Open();
@@ -261,6 +289,14 @@ namespace FreshMVC.Component
             SqlParameter pAction = sqlComm.Parameters.Add("@actionBy", SqlDbType.NVarChar);
             pAction.Direction = ParameterDirection.Input;
             pAction.Value = actionBy;
+
+            SqlParameter pAddress = sqlComm.Parameters.Add("@walletAdd", SqlDbType.NVarChar);
+            pAddress.Direction = ParameterDirection.Input;
+            pAddress.Value = walletAddress;
+
+            SqlParameter pCoin = sqlComm.Parameters.Add("@coinOption", SqlDbType.NVarChar);
+            pCoin.Direction = ParameterDirection.Input;
+            pCoin.Value = coinOption;
 
             sqlComm.ExecuteNonQuery();
             sqlConn.Close();

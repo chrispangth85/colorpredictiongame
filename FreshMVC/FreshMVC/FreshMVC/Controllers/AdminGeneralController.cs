@@ -649,6 +649,14 @@ namespace FreshMVC.Controllers
                         dbContext.CvdUser.Add(usr);
                         dbContext.SaveChanges();
 
+                        CvdUserInfo usrInfo = new CvdUserInfo();
+                        usrInfo.CusrUsername = am.Username;
+                        usrInfo.MemberWalletAddress = "";
+                        usrInfo.MemberWalletNetwork = "";
+
+                        dbContext.CvdUserInfo.Add(usrInfo);
+                        dbContext.SaveChanges();
+
                         //update the level 2-5
                         AdminDB.UpdateUserLevel2To5Data(am.Username);
                     }
@@ -1754,7 +1762,7 @@ namespace FreshMVC.Controllers
                         dbContext.CvdCashwalletlogtemp.Update(product);
                         dbContext.SaveChanges();
 
-                        AdminDB.CashWalletOperation(product.CusrUsername, product.CcashCashin, "Recharge", 0, "", product.CcashAppother, "1");
+                        AdminDB.CashWalletOperation(product.CusrUsername, product.CcashCashin, "Recharge", product.CcashAppother, "1");
 
                     }
                 }
@@ -1917,8 +1925,303 @@ namespace FreshMVC.Controllers
 
         #endregion
 
+        #region RechargeUSDTListing
+        public IActionResult RechargeUSDTListing(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            filterValue = Helper.NVL(filterValue);
+            string fromDateInput = fromDate;
+            string toDateInput = toDate;
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+            }
+
+            int ok;
+            string msg;
+            var model = new PaginationPaymentModel();
+            int pages = 0;
+            var dsAdmin = AdminGeneralDB.GetAllRechargeUSDTList(selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new PaymentModel();
+                am.Number = int.Parse(dr["rownumber"].ToString());
+                am.id = dr["CDEPO_ID"].ToString();
+                am.Username = dr["CUSR_USERNAME"].ToString();
+                am.RefNo = dr["CDEPO_TRANSACTION_ID"].ToString();
+                am.Amount = dr["CDEPO_AMOUNT"].ToString();
+                am.Created = DateTime.Parse(dr["CDEPO_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                am.AccountName = dr["CUSR_FIRSTNAME"].ToString();
+                am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
+                am.Status = dr["CDEPO_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblPending : dr["CDEPO_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblRejected;
+                model.List.Add(am);
+            }
+
+            #region filtering
+            List<SelectListItem> filterOptionList = new List<SelectListItem>();
+            filterOptionList.Add(new SelectListItem() { Text = Resources.PackBuddyShared.lblWalletAddress, Value = "Wallet" });
+            filterOptionList.Add(new SelectListItem() { Text = Resources.PackBuddyShared.lblNetwork, Value = "Network" });
+
+            if (filterType == null || filterType == "")
+            {
+                model.SelectedFilteringCriteria = filterOptionList.First().Value;
+
+            }
+            else
+            {
+                model.SelectedFilteringCriteria = filterType;
+            }
+            model.FilterValue = Helper.NVL(filterValue);
+
+            model.FilteringCriteria = filterOptionList;
+
+            model.FromDate = fromDateInput;
+            model.ToDate = toDateInput;
+            #endregion
+
+            return PartialView("RechargeUSDTListing", model);
+        }
+
+        public ActionResult ModalEditRechargeUSDT(int id = 0)
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new PaymentModel();
+
+            if (id != 0)
+            {
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var found = dbContext.CvdDepositUsdt.FirstOrDefault(c => c.CdepoId == id);
+                    am.id = id.ToString();
+                    am.Username = found.CusrUsername;
+                    am.Amount = found.CdepoAmount.ToString();
+                    am.RefNo = found.CdepoTransactionId;
+                    am.ImagePath = string.Format("{0}/Uploads/PaymentUSDT/{1}", Misc._baseUrl, found.CdepoImagepath);
+                    am.CompanyWalletAddress = found.CdepoWalletCompanyAddress;
+                    am.CompanyNetwork = found.CdepoWalletCompanyNetwork;
+                    am.Status = found.CdepoStatus == 0 ? Resources.PackBuddyShared.lblPending : found.CdepoStatus == 1 ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblRejected;
+                    am.StatusInt = found.CdepoStatus;
+                }
+            }
+
+            return PartialView("ModalEditRechargeUSDT", am);
+        }
+
+        [HttpPost]
+        public IActionResult ApproveUSDTTransaction(int idz = 0)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var product = dbContext.CvdDepositUsdt.FirstOrDefault(c => c.CdepoId == idz);
+                    var rate = dbContext.CvdExchangerate.FirstOrDefault(c => c.CexchangeCode == product.CdepoWalletCompanyNetwork);
+                    if (product != null && rate != null)
+                    {
+                        product.CdepoStatus = 1;
+                        dbContext.SaveChanges();
+
+                        Decimal amount = product.CdepoAmount * (decimal)rate.CexchangeBuy;
+
+                        AdminDB.CashWalletOperation(product.CusrUsername, amount, "RechargeUSDT", HttpContext.Session.GetString("Admin"), "1");
+
+                    }
+                }
+
+                return RechargeUSDTListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        [HttpPost]
+        public IActionResult RejectUSDTTransaction(int idz = 0)
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var product = dbContext.CvdDepositUsdt.FirstOrDefault(c => c.CdepoId == idz);
+                    if (product != null)
+                    {
+                        product.CdepoStatus = -1;
+                        dbContext.SaveChanges();
+                    }
+                }
+
+                return RechargeUSDTListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+
+        public IActionResult DownloadRechargeUSDTListing(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
+        {
+            try
+            {
+                if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+                {
+                    return RedirectToAction("Login", "Admin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                filterValue = Helper.NVL(filterValue);
+                if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+                {
+                    DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                    DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                    fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                    toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+                }
+
+                int ok;
+                string msg;
+                var model = new PaginationPaymentModel();
+                int pages = 0;
+                var dsAdmin = AdminGeneralDB.GetAllRechargeList(selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+
+                byte[] fileContents;
+
+                //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                ExcelPackage excelPackage = new ExcelPackage();
+                var workSheet = excelPackage.Workbook.Worksheets.Add("Report");
+                workSheet.DefaultRowHeight = 12;
+
+                //Header of table  
+                //  
+                workSheet.Row(1).Height = 20;
+                workSheet.Row(1).Style.HorizontalAlignment = ExcelHorizontalAlignment.Center;
+                workSheet.Row(1).Style.Font.Bold = true;
+                workSheet.Cells[1, 1].Value = "#";
+                workSheet.Cells[1, 2].Value = FreshMVC.Resources.PackBuddyShared.lblReferenceID;
+                workSheet.Cells[1, 3].Value = FreshMVC.Resources.PackBuddyShared.lblUsername;
+                workSheet.Cells[1, 4].Value = FreshMVC.Resources.PackBuddyShared.lblName;
+                workSheet.Cells[1, 5].Value = FreshMVC.Resources.PackBuddyShared.lblPhone;
+                workSheet.Cells[1, 6].Value = FreshMVC.Resources.PackBuddyShared.lblRecharge;
+                workSheet.Cells[1, 7].Value = FreshMVC.Resources.PackBuddyShared.lblRechargeTime;
+                workSheet.Cells[1, 8].Value = FreshMVC.Resources.PackBuddyShared.lblAgent;
+                workSheet.Cells[1, 9].Value = FreshMVC.Resources.PackBuddyShared.lblStatus;
+
+                int recordIndex = 2;
+                string message = string.Empty;
+
+                foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+                {
+                    var am = new PaymentModel();
+                    am.Number = int.Parse(dr["rownumber"].ToString());
+                    am.id = dr["CCASH_ID"].ToString();
+                    am.Username = dr["CUSR_USERNAME"].ToString();
+                    am.RefNo = dr["CCASH_APPOTHER"].ToString();
+                    am.Amount = dr["CCASH_CASHIN"].ToString();
+                    am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                    am.AccountName = dr["CUSR_FIRSTNAME"].ToString();
+                    am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
+                    am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblInProgress : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+
+                    workSheet.Row(recordIndex).Height = 20;
+                    workSheet.Row(recordIndex).Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+
+                    workSheet.Cells[recordIndex, 1].Value = am.Number;
+                    workSheet.Cells[recordIndex, 2].Value = am.RefNo;
+                    workSheet.Cells[recordIndex, 3].Value = am.Username;
+                    workSheet.Cells[recordIndex, 4].Value = am.AccountName;
+                    workSheet.Cells[recordIndex, 5].Value = am.Username;
+                    workSheet.Cells[recordIndex, 6].Value = am.Amount;
+                    workSheet.Cells[recordIndex, 7].Value = am.Created;
+                    workSheet.Cells[recordIndex, 8].Value = am.MerchantCode;
+                    workSheet.Cells[recordIndex, 9].Value = am.Status;
+
+                    recordIndex++;
+                }
+
+                fileContents = excelPackage.GetAsByteArray();
+
+                if (fileContents == null || fileContents.Length == 0)
+                {
+                    return NotFound();
+                }
+
+                return File(
+                   fileContents: fileContents,
+                   contentType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                   fileDownloadName: string.Format("RechargeUSDTListing_{0}.xlsx", DateTime.Now.ToString("yyyyMMddHHmmss"))
+               );
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+        #endregion
+
         #region WithdrawalLogs
-        public IActionResult WithdrawalLogs(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
+        public IActionResult WithdrawalLogs(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "", string type = "normal")
         {
             if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
             {
@@ -1945,7 +2248,14 @@ namespace FreshMVC.Controllers
             string msg;
             var model = new PaginationPaymentModel();
             int pages = 0;
-            var dsAdmin = AdminGeneralDB.GetAllWithdrawalList("SP_GetAllWithdrawalLogs", selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+
+            var storeProcedure = "SP_GetAllWithdrawalLogs";
+            if (type == "coin")
+            {
+                storeProcedure = "SP_GetAllCoinWithdrawalLogs";
+            }
+
+            var dsAdmin = AdminGeneralDB.GetAllWithdrawalList(storeProcedure, selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
 
             Misc.ConstructPageList(selectedPage, pages, model);
 
@@ -1965,7 +2275,7 @@ namespace FreshMVC.Controllers
                 am.RefNo = dr["CCASH_APPOTHER"].ToString();
                 am.Amount = dr["CCASH_CASHOUT"].ToString();
                 am.ServiceFee = dr["CCASH_APPRATE"].ToString();
-                am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - decimal.Parse(dr["CCASH_APPRATE"].ToString())).ToString("#0.00");
+                am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) * decimal.Parse(dr["CCASH_APPRATE"].ToString()) / 100)).ToString("#0.00");
                 am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
                 am.BalanceBeforeWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString()) + decimal.Parse(dr["CCASH_CASHOUT"].ToString())).ToString("#0.00");
                 am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00"); ;
@@ -1979,6 +2289,13 @@ namespace FreshMVC.Controllers
                 am.Address = dr["CCASH_ADDRESS"].ToString();
                 am.Email = dr["CCASH_EMAIL"].ToString();
                 am.Mobile = dr["CCASH_MOBILE"].ToString();
+
+                if (type == "coin")
+                {
+                    am.ExchangeRate = dr["CCASH_APPNUMBER"].ToString();
+                    am.ConvertedAmount = (Math.Truncate((decimal.Parse(am.FinalAmount) / decimal.Parse(dr["CCASH_APPNUMBER"].ToString())) * 100) / 100).ToString("#0.00");
+                }
+
                 am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblPending : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
                 model.List.Add(am);
             }
@@ -2004,10 +2321,11 @@ namespace FreshMVC.Controllers
             model.ToDate = toDateInput;
             #endregion
 
+            ViewBag.type = type;            
             return PartialView("WithdrawalLogs", model);
         }
 
-        public IActionResult DownloadWithdrawalLog(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
+        public IActionResult DownloadWithdrawalLog(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "", string type = "normal")
         {
             try
             {
@@ -2032,7 +2350,14 @@ namespace FreshMVC.Controllers
                 int ok;
                 string msg;
                 int pages = 0;
-                var dsAdmin = AdminGeneralDB.GetAllWithdrawalList("SP_GetAllWithdrawal", selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+
+                var storeProcedure = "SP_GetAllWithdrawalLogs";
+                if (type == "coin")
+                {
+                    storeProcedure = "SP_GetAllCoinWithdrawalLogs";
+                }
+
+                var dsAdmin = AdminGeneralDB.GetAllWithdrawalList(storeProcedure, selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
 
                 byte[] fileContents;
 
@@ -2054,10 +2379,25 @@ namespace FreshMVC.Controllers
                 workSheet.Cells[1, 6].Value = FreshMVC.Resources.PackBuddyShared.lblWithdrawalAmount;
                 workSheet.Cells[1, 7].Value = FreshMVC.Resources.PackBuddyShared.lblServiceFee;
                 workSheet.Cells[1, 8].Value = FreshMVC.Resources.PackBuddyShared.lblFinalAmount;
-                workSheet.Cells[1, 9].Value = FreshMVC.Resources.PackBuddyShared.lblApplicationTime;
-                workSheet.Cells[1, 10].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceBeforeWith;
-                workSheet.Cells[1, 11].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceAfterWith;
-                workSheet.Cells[1, 12].Value = FreshMVC.Resources.PackBuddyShared.lblStatus;
+
+                if (type == "coin")
+                {
+                    workSheet.Cells[1, 9].Value = FreshMVC.Resources.PackBuddyShared.lblExchangeRate;
+                    workSheet.Cells[1, 10].Value = FreshMVC.Resources.PackBuddyShared.lblConvertedAmount;
+                    workSheet.Cells[1, 11].Value = FreshMVC.Resources.PackBuddyShared.lblApplicationTime;
+                    workSheet.Cells[1, 12].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceBeforeWith;
+                    workSheet.Cells[1, 13].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceAfterWith;
+                    workSheet.Cells[1, 14].Value = FreshMVC.Resources.PackBuddyShared.lblStatus;
+                    workSheet.Cells[1, 15].Value = FreshMVC.Resources.PackBuddyShared.lblNetworkType;
+                    workSheet.Cells[1, 16].Value = FreshMVC.Resources.PackBuddyShared.lblWalletAddress;
+                }
+                else
+                {
+                    workSheet.Cells[1, 9].Value = FreshMVC.Resources.PackBuddyShared.lblApplicationTime;
+                    workSheet.Cells[1, 10].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceBeforeWith;
+                    workSheet.Cells[1, 11].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceAfterWith;
+                    workSheet.Cells[1, 12].Value = FreshMVC.Resources.PackBuddyShared.lblStatus;
+                }
 
                 int recordIndex = 2;
 
@@ -2070,13 +2410,19 @@ namespace FreshMVC.Controllers
                     am.RefNo = dr["CCASH_APPOTHER"].ToString();
                     am.Amount = dr["CCASH_CASHOUT"].ToString();
                     am.ServiceFee = dr["CCASH_APPRATE"].ToString();
-                    am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - decimal.Parse(dr["CCASH_APPRATE"].ToString())).ToString("#0.00");
+                    am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) * decimal.Parse(dr["CCASH_APPRATE"].ToString()) / 100)).ToString("#0.00");
                     am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
                     am.BalanceBeforeWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString()) + decimal.Parse(dr["CCASH_CASHOUT"].ToString())).ToString("#0.00");
                     am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00");
                     am.AccountName = dr["CUSR_FIRSTNAME"].ToString();
                     am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
                     am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblInProgress : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+
+                    if (type == "coin")
+                    {
+                        am.ExchangeRate = dr["CCASH_APPNUMBER"].ToString();
+                        am.ConvertedAmount = (Math.Truncate((decimal.Parse(am.FinalAmount) / decimal.Parse(dr["CCASH_APPNUMBER"].ToString())) * 100) / 100).ToString("#0.00");
+                    }
 
                     workSheet.Row(recordIndex).Height = 20;
                     workSheet.Row(recordIndex).Style.VerticalAlignment = ExcelVerticalAlignment.Top;
@@ -2089,10 +2435,26 @@ namespace FreshMVC.Controllers
                     workSheet.Cells[recordIndex, 6].Value = am.Amount;
                     workSheet.Cells[recordIndex, 7].Value = am.ServiceFee;
                     workSheet.Cells[recordIndex, 8].Value = am.FinalAmount;
-                    workSheet.Cells[recordIndex, 9].Value = am.Created;
-                    workSheet.Cells[recordIndex, 10].Value = am.BalanceBeforeWdr;
-                    workSheet.Cells[recordIndex, 11].Value = am.BalanceAfterWdr;
-                    workSheet.Cells[recordIndex, 12].Value = am.Status;
+
+                    if (type == "coin")
+                    {
+                        workSheet.Cells[recordIndex, 9].Value = am.ExchangeRate;
+                        workSheet.Cells[recordIndex, 10].Value = am.ConvertedAmount;
+                        workSheet.Cells[recordIndex, 11].Value = am.Created;
+                        workSheet.Cells[recordIndex, 12].Value = am.BalanceBeforeWdr;
+                        workSheet.Cells[recordIndex, 13].Value = am.BalanceAfterWdr;
+                        workSheet.Cells[recordIndex, 14].Value = am.Status;
+                        workSheet.Cells[recordIndex, 15].Value = dr["CCASH_BRANCH"].ToString();
+                        workSheet.Cells[recordIndex, 16].Value = dr["CCASH_CARDNUMBER"].ToString();
+                    }
+                    else
+                    {
+                        workSheet.Cells[recordIndex, 9].Value = am.Created;
+                        workSheet.Cells[recordIndex, 10].Value = am.BalanceBeforeWdr;
+                        workSheet.Cells[recordIndex, 11].Value = am.BalanceAfterWdr;
+                        workSheet.Cells[recordIndex, 12].Value = am.Status;
+                    }
+
                     recordIndex++;
                 }
                 fileContents = excelPackage.GetAsByteArray();
@@ -2119,6 +2481,99 @@ namespace FreshMVC.Controllers
             }
         }
 
+        #endregion
+
+        #region Coin Withdrawal Listing
+        public IActionResult CoinWithdrawalListing(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
+        {
+            if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
+            {
+                return RedirectToAction("Login", "Admin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            filterValue = Helper.NVL(filterValue);
+            string fromDateInput = fromDate;
+            string toDateInput = toDate;
+
+            if (!string.IsNullOrEmpty(fromDate) && !string.IsNullOrEmpty(toDate))
+            {
+                DateTime sd = Convert.ToDateTime(DateTime.ParseExact(fromDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+                DateTime ed = Convert.ToDateTime(DateTime.ParseExact(toDate, "dd/MM/yyyy", CultureInfo.InvariantCulture));
+
+                fromDate = sd.ToString("yyyy-MM-dd 00:00:00.000");
+                toDate = ed.ToString("yyyy-MM-dd 23:59:59.999");
+            }
+
+            int ok;
+            string msg;
+            var model = new PaginationPaymentModel();
+            int pages = 0;
+            var dsAdmin = AdminGeneralDB.GetAllWithdrawalList("SP_GetAllCoinWithdrawal", selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+
+            Misc.ConstructPageList(selectedPage, pages, model);
+
+            //if the selected page is -1, then set the last selected page
+            if (model.Pages.Count() != 0 && selectedPage == -1)
+            {
+                model.Pages.Last().Selected = true;
+                selectedPage = int.Parse(model.Pages.Last().Value);
+            }
+
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                var am = new PaymentModel();
+                am.Number = int.Parse(dr["rownumber"].ToString());
+                am.id = dr["CCASH_ID"].ToString();
+                am.Username = dr["CUSR_USERNAME"].ToString();
+                am.RefNo = dr["CCASH_APPOTHER"].ToString();
+                am.Amount = dr["CCASH_CASHOUT"].ToString();
+                am.ServiceFee = dr["CCASH_APPRATE"].ToString();
+                am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) * decimal.Parse(dr["CCASH_APPRATE"].ToString()) / 100)).ToString("#0.00");
+                am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
+                am.BalanceBeforeWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString()) + decimal.Parse(dr["CCASH_CASHOUT"].ToString())).ToString("#0.00");
+                am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00"); ;
+                am.CardNo = dr["CCASH_CARDNUMBER"].ToString();
+                am.SubBranch = dr["CCASH_BRANCH"].ToString();
+                am.State = dr["CCASH_STATE"].ToString();
+                am.City = dr["CCASH_CITY"].ToString();
+                am.BankName = dr["CCASH_BANKNAME"].ToString();
+                am.AccountName = dr["CCASH_BANKACCOUNTNAME"].ToString();
+                am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
+                am.Address = dr["CCASH_ADDRESS"].ToString();
+                am.Email = dr["CCASH_EMAIL"].ToString();
+                am.Mobile = dr["CCASH_MOBILE"].ToString();
+                am.ExchangeRate = dr["CCASH_APPNUMBER"].ToString();
+                am.ConvertedAmount = (Math.Truncate((decimal.Parse(am.FinalAmount) / decimal.Parse(dr["CCASH_APPNUMBER"].ToString())) * 100) / 100).ToString("#0.00");
+                am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblPending : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+                model.List.Add(am);
+            }
+
+            #region filtering
+            List<SelectListItem> filterOptionList = new List<SelectListItem>();
+            filterOptionList.Add(new SelectListItem() { Text = Resources.PackBuddyShared.lblName, Value = "Name" });
+
+            if (filterType == null || filterType == "")
+            {
+                model.SelectedFilteringCriteria = filterOptionList.First().Value;
+
+            }
+            else
+            {
+                model.SelectedFilteringCriteria = filterType;
+            }
+            model.FilterValue = Helper.NVL(filterValue);
+
+            model.FilteringCriteria = filterOptionList;
+
+            model.FromDate = fromDateInput;
+            model.ToDate = toDateInput;
+            #endregion
+
+            return PartialView("CoinWithdrawalListing", model);
+        }
         #endregion
 
         #region WithdrawalListing
@@ -2169,10 +2624,10 @@ namespace FreshMVC.Controllers
                 am.RefNo = dr["CCASH_APPOTHER"].ToString();
                 am.Amount = dr["CCASH_CASHOUT"].ToString();
                 am.ServiceFee = dr["CCASH_APPRATE"].ToString();
-                am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - decimal.Parse(dr["CCASH_APPRATE"].ToString())).ToString("#0.00");
+                am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) * decimal.Parse(dr["CCASH_APPRATE"].ToString()) / 100)).ToString("#0.00");
                 am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
                 am.BalanceBeforeWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString()) + decimal.Parse(dr["CCASH_CASHOUT"].ToString())).ToString("#0.00");
-                am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00");                ;
+                am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00");
                 am.CardNo = dr["CCASH_CARDNUMBER"].ToString();
                 am.SubBranch = dr["CCASH_BRANCH"].ToString();
                 am.State = dr["CCASH_STATE"].ToString();
@@ -2212,7 +2667,7 @@ namespace FreshMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult ManualApproveWithdrawal(int idz = 0)
+        public IActionResult ManualApproveWithdrawal(int idz = 0, string type = "normal")
         {
             try
             {
@@ -2236,6 +2691,11 @@ namespace FreshMVC.Controllers
 
                         AdminDB.InsertPendingJob(product.CusrUsername, "WDR", product.CcashCashout, "", "");
                     }
+                }
+
+                if (type == "coin")
+                {
+                    return CoinWithdrawalListing();
                 }
 
                 return WithdrawalListing();
@@ -2283,13 +2743,14 @@ namespace FreshMVC.Controllers
                     var product = dbContext.CvdCashwalletlog.FirstOrDefault(c => c.CcashId == idz);
                     if (product != null)
                     {
+                        var withdrawalAmount = product.CcashCashout - (product.CcashCashout * product.CcashApprate / 100);
                         var client = new RestClient(withdrawalUrl);
                         var requestor = new RestRequest();
                         requestor.Method = Method.POST;
                         requestor.AddHeader("Content-Type", "application/x-www-form-urlencoded");
                         requestor.AddParameter("mchid", merchantCode);
                         requestor.AddParameter("out_trade_no", product.CcashAppother);
-                        requestor.AddParameter("money", product.CcashCashout);
+                        requestor.AddParameter("money", withdrawalAmount);
                         requestor.AddParameter("bankname", product.CcashBankaccountname);
                         requestor.AddParameter("accountname", product.CcashBankname);
                         requestor.AddParameter("cardnumber", product.CcashCardnumber);
@@ -2299,7 +2760,7 @@ namespace FreshMVC.Controllers
                         requestor.AddParameter("city", product.CcashCity);
 
                         var dataSign = string.Format("mchid={0}&out_trade_no={1}&money={2}&bankname={3}&accountname={4}&cardnumber={5}&subbranch={6}&notifyurl={7}&province={8}&city={9}", merchantCode, product.CcashAppother,
-                            product.CcashCashout, product.CcashBankaccountname, product.CcashBankname, product.CcashCardnumber, product.CcashBranch, Misc._baseUrl + "/Member/ReturnUrl", product.CcashState, product.CcashCity);
+                            withdrawalAmount, product.CcashBankaccountname, product.CcashBankname, product.CcashCardnumber, product.CcashBranch, Misc._baseUrl + "/Member/ReturnUrl", product.CcashState, product.CcashCity);
 
                         var dataMd5 = Misc.MD5(dataSign).ToUpper();
 
@@ -2419,7 +2880,7 @@ namespace FreshMVC.Controllers
         #endregion
 
         [HttpPost]
-        public IActionResult RejectWithdrawal(int idz = 0)
+        public IActionResult RejectWithdrawal(int idz = 0, string type = "normal")
         {
             try
             {
@@ -2441,8 +2902,13 @@ namespace FreshMVC.Controllers
                         dbContext.SaveChanges();
 
                         var refundWlt = product.CcashCashout;
-                        AdminDB.CashWalletOperation(product.CusrUsername, refundWlt, "RefundWdr", 0, "", product.CcashAppother, "1");
+                        AdminDB.CashWalletOperation(product.CusrUsername, refundWlt, "RefundWdr", product.CcashAppother, "1");
                     }
+                }
+
+                if (type == "coin")
+                {
+                    return CoinWithdrawalListing();
                 }
 
                 return WithdrawalListing();
@@ -2458,7 +2924,7 @@ namespace FreshMVC.Controllers
             }
         }
 
-        public IActionResult DownloadWithdrawalListing(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "")
+        public IActionResult DownloadWithdrawalListing(int selectedPage = 1, string filterType = "", string filterValue = "", string fromDate = "", string toDate = "", string type = "normal")
         {
             try
             {
@@ -2483,8 +2949,14 @@ namespace FreshMVC.Controllers
                 int ok;
                 string msg;
                 int pages = 0;
-                var dsAdmin = AdminGeneralDB.GetAllWithdrawalList("SP_GetAllWithdrawal", selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
+                var storeProcedure = "SP_GetAllWithdrawal";
 
+                if (type == "coin")
+                {
+                    storeProcedure = "SP_GetAllCoinWithdrawal";
+                }
+
+                var dsAdmin = AdminGeneralDB.GetAllWithdrawalList(storeProcedure, selectedPage, filterType, filterValue, fromDate, toDate, out pages, out ok, out msg);
                 byte[] fileContents;
 
                 //ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
@@ -2505,10 +2977,25 @@ namespace FreshMVC.Controllers
                 workSheet.Cells[1, 6].Value = FreshMVC.Resources.PackBuddyShared.lblWithdrawalAmount;
                 workSheet.Cells[1, 7].Value = FreshMVC.Resources.PackBuddyShared.lblServiceFee;
                 workSheet.Cells[1, 8].Value = FreshMVC.Resources.PackBuddyShared.lblFinalAmount;
-                workSheet.Cells[1, 9].Value = FreshMVC.Resources.PackBuddyShared.lblApplicationTime;
-                workSheet.Cells[1, 10].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceBeforeWith;
-                workSheet.Cells[1, 11].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceAfterWith;
-                workSheet.Cells[1, 12].Value = FreshMVC.Resources.PackBuddyShared.lblStatus;
+
+                if (type == "coin")
+                {
+                    workSheet.Cells[1, 9].Value = FreshMVC.Resources.PackBuddyShared.lblExchangeRate;
+                    workSheet.Cells[1, 10].Value = FreshMVC.Resources.PackBuddyShared.lblConvertedAmount;
+                    workSheet.Cells[1, 11].Value = FreshMVC.Resources.PackBuddyShared.lblApplicationTime;
+                    workSheet.Cells[1, 12].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceBeforeWith;
+                    workSheet.Cells[1, 13].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceAfterWith;
+                    workSheet.Cells[1, 14].Value = FreshMVC.Resources.PackBuddyShared.lblStatus;
+                    workSheet.Cells[1, 15].Value = FreshMVC.Resources.PackBuddyShared.lblNetworkType;
+                    workSheet.Cells[1, 16].Value = FreshMVC.Resources.PackBuddyShared.lblWalletAddress;
+                }
+                else
+                {
+                    workSheet.Cells[1, 9].Value = FreshMVC.Resources.PackBuddyShared.lblApplicationTime;
+                    workSheet.Cells[1, 10].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceBeforeWith;
+                    workSheet.Cells[1, 11].Value = FreshMVC.Resources.PackBuddyShared.lblBalanceAfterWith;
+                    workSheet.Cells[1, 12].Value = FreshMVC.Resources.PackBuddyShared.lblStatus;
+                }                    
 
                 int recordIndex = 2;
 
@@ -2521,12 +3008,19 @@ namespace FreshMVC.Controllers
                     am.RefNo = dr["CCASH_APPOTHER"].ToString();
                     am.Amount = dr["CCASH_CASHOUT"].ToString();
                     am.ServiceFee = dr["CCASH_APPRATE"].ToString();
-                    am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - decimal.Parse(dr["CCASH_APPRATE"].ToString())).ToString("#0.00");
+                    am.FinalAmount = (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) - (decimal.Parse(dr["CCASH_CASHOUT"].ToString()) * decimal.Parse(dr["CCASH_APPRATE"].ToString()) / 100)).ToString("#0.00");
                     am.Created = DateTime.Parse(dr["CCASH_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm:ss");
                     am.BalanceBeforeWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString()) + decimal.Parse(dr["CCASH_CASHOUT"].ToString())).ToString("#0.00");
                     am.BalanceAfterWdr = (decimal.Parse(dr["CCASH_WALLET"].ToString())).ToString("#0.00");
                     am.AccountName = dr["CUSR_FIRSTNAME"].ToString();
                     am.MerchantCode = dr["CUSR_REFERRALID"].ToString();
+
+                    if (type == "coin")
+                    {
+                        am.ExchangeRate = dr["CCASH_APPNUMBER"].ToString();
+                        am.ConvertedAmount = (Math.Truncate((decimal.Parse(am.FinalAmount) / decimal.Parse(dr["CCASH_APPNUMBER"].ToString())) * 100) / 100).ToString("#0.00");
+                    }
+
                     am.Status = dr["CCASH_STATUS"].ToString() == "0" ? Resources.PackBuddyShared.lblInProgress : dr["CCASH_STATUS"].ToString() == "1" ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
 
                     workSheet.Row(recordIndex).Height = 20;
@@ -2540,10 +3034,27 @@ namespace FreshMVC.Controllers
                     workSheet.Cells[recordIndex, 6].Value = am.Amount;
                     workSheet.Cells[recordIndex, 7].Value = am.ServiceFee;
                     workSheet.Cells[recordIndex, 8].Value = am.FinalAmount;
-                    workSheet.Cells[recordIndex, 9].Value = am.Created;
-                    workSheet.Cells[recordIndex, 10].Value = am.BalanceBeforeWdr;
-                    workSheet.Cells[recordIndex, 11].Value = am.BalanceAfterWdr;
-                    workSheet.Cells[recordIndex, 12].Value = am.Status;
+                    
+
+                    if (type == "coin")
+                    {
+                        workSheet.Cells[recordIndex, 9].Value = am.ExchangeRate;
+                        workSheet.Cells[recordIndex, 10].Value = am.ConvertedAmount;
+                        workSheet.Cells[recordIndex, 11].Value = am.Created;
+                        workSheet.Cells[recordIndex, 12].Value = am.BalanceBeforeWdr;
+                        workSheet.Cells[recordIndex, 13].Value = am.BalanceAfterWdr;
+                        workSheet.Cells[recordIndex, 14].Value = am.Status;
+                        workSheet.Cells[recordIndex, 15].Value = dr["CCASH_BRANCH"].ToString();
+                        workSheet.Cells[recordIndex, 16].Value = dr["CCASH_CARDNUMBER"].ToString();
+                    }
+                    else
+                    {
+                        workSheet.Cells[recordIndex, 9].Value = am.Created;
+                        workSheet.Cells[recordIndex, 10].Value = am.BalanceBeforeWdr;
+                        workSheet.Cells[recordIndex, 11].Value = am.BalanceAfterWdr;
+                        workSheet.Cells[recordIndex, 12].Value = am.Status;
+                    }
+
                     recordIndex++;
                 }
                 fileContents = excelPackage.GetAsByteArray();
@@ -2995,7 +3506,7 @@ namespace FreshMVC.Controllers
                     cashname = "DEDUCT";
                 }
 
-                AdminDB.CashWalletOperation(passModel.Username, amount, cashname, 0, "", passModel.Remark, "", 0, 0, HttpContext.Session.GetString("Admin"));
+                AdminDB.CashWalletOperation(passModel.Username, amount, cashname, passModel.Remark, "", 0, 0, HttpContext.Session.GetString("Admin"));
                 return CashWalletLog(1, passModel.Username);
             }
             catch (Exception e)
@@ -3148,7 +3659,7 @@ namespace FreshMVC.Controllers
                         companyWallet.CcomNetworktype = am.NetworkType;
                         companyWallet.CcomWalletaddress = am.WalletAddress;
                         companyWallet.CcomIsactive = am.IsActive;
-                     
+
                         dbContext.CvdCompanywallet.Add(companyWallet);
                         dbContext.SaveChanges();
                     }
@@ -3219,8 +3730,8 @@ namespace FreshMVC.Controllers
         }
         #endregion
 
-        #region CountryListing
-        public IActionResult CountryListing(int selectedPage = 1)
+        #region ExchangeRate
+        public IActionResult ExchangeRate(int selectedPage = 1)
         {
             if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
             {
@@ -3233,8 +3744,8 @@ namespace FreshMVC.Controllers
             int ok;
             string msg;
             int pages = 0;
-            var model = new PaginationCountryModel();
-            var dsAdmin = AdminGeneralDB.GetAllCountrys(selectedPage, out pages, out ok, out msg);
+            var model = new PaginationCurrencyModel();
+            var dsAdmin = AdminGeneralDB.GetAllExchangeRate(selectedPage, out pages, out ok, out msg);
 
             Misc.ConstructPageList(selectedPage, pages, model);
 
@@ -3247,21 +3758,20 @@ namespace FreshMVC.Controllers
 
             foreach (DataRow dr in dsAdmin.Tables[0].Rows)
             {
-                var am = new CountryModel();
+                var am = new CurrencyModel();
                 am.Number = int.Parse(dr["rownumber"].ToString());
-                am.id = int.Parse(dr["CCOUNTRY_ID"].ToString());
-                am.Code = dr["CCOUNTRY_CODE"].ToString();
-                am.Name = dr["CCOUNTRY_NAME"].ToString();
-                am.Buy = Decimal.Parse(dr["CCOUNTRY_BUY"].ToString());
-                am.Sell = Decimal.Parse(dr["CCOUNTRY_SELL"].ToString());
+                am.id = int.Parse(dr["CEXCHANGE_ID"].ToString());
+                am.Code = dr["CEXCHANGE_CODE"].ToString();                
+                am.Buy = Decimal.Parse(dr["CEXCHANGE_BUY"].ToString());
+                am.Sell = Decimal.Parse(dr["CEXCHANGE_SELL"].ToString());
 
                 model.List.Add(am);
             }
 
-            return PartialView("CountryListing", model);
+            return PartialView("ExchangeRate", model);
         }
 
-        public ActionResult ModalEditCountryData(int id = 0)
+        public ActionResult ModalEditExchangeRateData(int id = 0)
         {
             if (HttpContext.Session.GetString("Admin") == null || HttpContext.Session.GetString("Admin") == "")
             {
@@ -3271,25 +3781,24 @@ namespace FreshMVC.Controllers
                 });
             }
 
-            var am = new CountryModel();
+            var am = new CurrencyModel();
 
             if (id != 0)
             {
                 using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
                 {
-                    var countryFound = dbContext.CvdCountry.FirstOrDefault(c => c.CcountryId == id);
-                    am.Name = countryFound.CcountryName;
-                    am.Code = countryFound.CcountryCode;
-                    am.Buy = Decimal.Parse(countryFound.CcountryBuy.ToString());
-                    am.Sell = Decimal.Parse(countryFound.CcountrySell.ToString());
+                    var countryFound = dbContext.CvdExchangerate.FirstOrDefault(c => c.CexchangeId == id);                    
+                    am.Code = countryFound.CexchangeCode;
+                    am.Buy = Decimal.Parse(countryFound.CexchangeBuy.ToString());
+                    am.Sell = Decimal.Parse(countryFound.CexchangeSell.ToString());
                 }
             }
 
-            return PartialView("ModalEditCountryData", am);
+            return PartialView("ModalEditExchangeRateData", am);
         }
 
         [HttpPost]
-        public IActionResult ModalEditCountryDataMethod(CountryModel am)
+        public IActionResult ModalEditExchangeRateDataMethod(CurrencyModel am)
         {
             try
             {
@@ -3307,19 +3816,10 @@ namespace FreshMVC.Controllers
                     return Json(new
                     {
                         status = false,
-                        message = Resources.PackBuddyShared.lblCountryCodeIsRequired
+                        message = Resources.PackBuddyShared.lblNameIsRequired
                     });
                 }
 
-                if (string.IsNullOrEmpty(am.Name))
-                {
-                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
-                    return Json(new
-                    {
-                        status = false,
-                        message = Resources.PackBuddyShared.lblCountryNameIsRequired
-                    });
-                }
                 if (am.Buy == 0)
                 {
                     Response.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -3344,25 +3844,24 @@ namespace FreshMVC.Controllers
                 {
                     using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
                     {
-                        var countryFound = dbContext.CvdCountry.FirstOrDefault(c => c.CcountryCode == am.Code);
-                        if (countryFound != null)
+                        var currencyFound = dbContext.CvdExchangerate.FirstOrDefault(c => c.CexchangeCode == am.Code);
+                        if (currencyFound != null)
                         {
                             Response.StatusCode = (int)HttpStatusCode.BadRequest;
                             return Json(new
                             {
                                 status = false,
-                                message = Resources.PackBuddyShared.msgCountryCodeExists
+                                message = Resources.PackBuddyShared.msgCurrencyFound
                             });
                         }
-                    
-                        var country = new CvdCountry();
 
-                        country.CcountryName = am.Name;
-                        country.CcountryCode = am.Code;
-                        country.CcountryBuy = am.Buy;
-                        country.CcountrySell = am.Sell;
+                        var currency = new CvdExchangerate();
 
-                        dbContext.CvdCountry.Add(country);
+                        currency.CexchangeCode = am.Code;                        
+                        currency.CexchangeBuy = am.Buy;
+                        currency.CexchangeSell = am.Sell;
+
+                        dbContext.CvdExchangerate.Add(currency);
                         dbContext.SaveChanges();
                     }
                 }
@@ -3370,18 +3869,17 @@ namespace FreshMVC.Controllers
                 {
                     using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
                     {
-                        var country = dbContext.CvdCountry.FirstOrDefault(c => c.CcountryId == am.id);
-                        if (country != null)
+                        var currency = dbContext.CvdExchangerate.FirstOrDefault(c => c.CexchangeId == am.id);
+                        if (currency != null)
                         {
-                            country.CcountryName = am.Name;
-                            country.CcountryBuy = am.Buy;
-                            country.CcountrySell = am.Sell;
+                            currency.CexchangeBuy = am.Buy;
+                            currency.CexchangeSell = am.Sell;
                             dbContext.SaveChanges();
                         }
                     }
                 }
 
-                return CountryListing();
+                return ExchangeRate();
             }
             catch (Exception e)
             {
@@ -3395,7 +3893,7 @@ namespace FreshMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult DeleteCountry(int idz = 0)
+        public IActionResult DeleteExchangeRate(int idz = 0)
         {
             try
             {
@@ -3409,15 +3907,15 @@ namespace FreshMVC.Controllers
 
                 using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
                 {
-                    var country = dbContext.CvdCountry.FirstOrDefault(c => c.CcountryId == idz);
-                    if (country != null)
+                    var currency = dbContext.CvdExchangerate.FirstOrDefault(c => c.CexchangeId == idz);
+                    if (currency != null)
                     {
-                        country.CcountryDeletionstate = true;
+                        currency.CexchangeDeletionstate = true;
                         dbContext.SaveChanges();
                     }
                 }
 
-                return CountryListing();
+                return ExchangeRate();
             }
             catch (Exception e)
             {

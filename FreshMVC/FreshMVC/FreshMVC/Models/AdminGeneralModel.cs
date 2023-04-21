@@ -695,17 +695,68 @@ namespace FreshMVC.Models
         public decimal SponsorBonusLevel1 { get; set; }
         public decimal SponsorBonusLevel2 { get; set; }
         public decimal SponsorBonusLevel3 { get; set; }
-        public decimal CoinWithdrawalCharges { get; set; }
-        public decimal CoinMinWithdrawal { get; set; }
-        public decimal CoinMaxWithdrawal { get; set; }
         public string GatewayPaymentHost { get; set; }
         public string GatewayWithdrawalHost { get; set; }
         public string GatewayMemberID { get; set; }
         public string GatewayPaymentKey { get; set; }
         public string SupportPhoneNumber { get; set; }
         public string SupportApkUrl { get; set; }
+        public decimal CoinWithdrawalCharges { get; set; }
+        public decimal CoinMinWithdrawal { get; set; }
+        public decimal CoinMaxWithdrawal { get; set; }
     }
 
+    public class PaginationCompanyWalletModel : PaginationBase
+    {
+        public IFormFile ExcelFile { get; set; }
+        public IEnumerable<SelectListItem> FilteringCriteria { get; set; }
+        public string SelectedFilteringCriteria { get; set; }
+        public string FilterValue { get; set; }
+
+        public List<CompanyWalletModel> List
+        {
+            get; set;
+        }
+
+        public PaginationCompanyWalletModel()
+        {
+            List = new List<CompanyWalletModel>();
+        }
+    }
+
+    public class CompanyWalletModel
+    {
+        public int Number { get; set; }
+        public int id { get; set; }
+        public string Name { get; set; }
+        public IEnumerable<SelectListItem> NetworkTypeOptions { get; set; }
+        public string NetworkType { get; set; }
+        public string WalletAddress { get; set; }
+        public bool IsActive { get; set; }
+    }
+
+    public class PaginationCurrencyModel : PaginationBase
+    {
+        public List<CurrencyModel> List
+        {
+            get; set;
+        }
+
+        public PaginationCurrencyModel()
+        {
+            List = new List<CurrencyModel>();
+        }
+    }
+
+    public class CurrencyModel
+    {
+        public int Number { get; set; }
+        public int id { get; set; }
+        public string Name { get; set; }
+        public string Code { get; set; }
+        public decimal Sell { get; set; }
+        public decimal Buy { get; set; }
+    }
     public class PaymentModel
     {
         public int Number { get; set; }
@@ -713,10 +764,12 @@ namespace FreshMVC.Models
         public string BalanceAfterWdr { get; set; }
         public string BalanceBeforeWdr { get; set; }
         public string ServiceFee { get; set; }
+        public string ExchangeRate { get; set; }
         public string PhoneNumber { get; set; }
         public string MerchantCode { get; set; }
         public string id { get; set; }
         public string Status { get; set; }
+        public int StatusInt { get; set; }
         public string State { get; set; }
         public string Amount { get; set; }
         public string FinalAmount { get; set; }
@@ -731,7 +784,8 @@ namespace FreshMVC.Models
         public string Remark { get; set; }
         public string Signature { get; set; }
         public string BankName { get; set; }
-        public string Bankcode { get; set; }
+        public string Bankcode { get; set; }        
+        public string ConvertedAmount { get; set; }
         public string RefNo { get; set; }
         public string Created { get; set; }
         public string AccountName { get; set; }
@@ -747,6 +801,11 @@ namespace FreshMVC.Models
         public string Mobile { get; set; }        
         public IEnumerable<SelectListItem> BankList { get; set; }
         public string SelectedBank { get; set; }
+        public IEnumerable<SelectListItem> WalletNetworkTypeList { get; set; }
+        public string SelectedWalletNetworkType { get; set; }
+        public string ImagePath { get; set; }
+        public string CompanyWalletAddress { get; set; }
+        public string CompanyNetwork { get; set; }
     }
 
     public class AdminAccessRightModel
@@ -1047,6 +1106,22 @@ namespace FreshMVC.Models
         }
     }
 
+    public class UploadUSDTModel
+    {
+        public string ProtraitPhotoPath { get; set; }
+        public IFormFile ProtraitPhoto { get; set; }
+        public string WalletAddress { get; set; }
+        public IEnumerable<SelectListItem> WalletNetworkTypeList { get; set; }
+        public string SelectedWalletNetworkType { get; set; }
+        public string Amount { get; set; }
+        public string TransactionID { get; set; }
+
+        public UploadUSDTModel()
+        {
+
+        }
+    }
+
     public class MemberHomeModel
     {
         public string ThisYearReceiptCount { get; set; }
@@ -1056,6 +1131,9 @@ namespace FreshMVC.Models
         public List<ProductModel> ActiveProductList { get; set; }
 
         public List<BannerModel> BannerList { get; set; }
+        public string WalletAddress { get; set; }
+        public IEnumerable<SelectListItem> WalletNetworkTypeList { get; set; }
+        public string SelectedWalletNetworkType { get; set; }
 
         public MemberHomeModel()
         {
@@ -1487,6 +1565,9 @@ namespace FreshMVC.Models
         public string Status { get; set; }
         public int StatusInt { get; set; }
         public decimal RedPacketBalance { get; set; }
+        public string TransactionID { get; set; }
+        public string CompanyWalletAddress { get; set; }
+        public string CompanyWalletNetwork { get; set; }
         public RedPacketModel()
         {
         }
@@ -1696,60 +1777,5 @@ namespace FreshMVC.Models
         public string SelectedOption { get; set; }
         public string SelectedOptionText { get; set; }
     }
-
-    public class PaginationCompanyWalletModel : PaginationBase
-    {
-        public IFormFile ExcelFile { get; set; }
-        public IEnumerable<SelectListItem> FilteringCriteria { get; set; }
-        public string SelectedFilteringCriteria { get; set; }
-        public string FilterValue { get; set; }
-
-        public List<CompanyWalletModel> List
-        {
-            get; set;
-        }
-
-        public PaginationCompanyWalletModel()
-        {
-            List = new List<CompanyWalletModel>();
-        }
-    }
-
-    public class CompanyWalletModel
-    {
-        public int Number { get; set; }
-        public int id { get; set; }
-        public string Name { get; set; }
-        public IEnumerable<SelectListItem> NetworkTypeOptions { get; set; }
-        public string NetworkType { get; set; }
-        public string WalletAddress { get; set; }
-        public Boolean IsActive { get; set; }
-    }
-
-
-    public class PaginationCountryModel : PaginationBase
-    {
-        public List<CountryModel> List
-        {
-            get; set;
-        }
-
-        public PaginationCountryModel()
-        {
-            List = new List<CountryModel>();
-        }
-    }
-
-    public class CountryModel
-    {
-        public int Number { get; set; }
-        public int id { get; set; }
-        public string Name { get; set; }
-        public string Code { get; set; }
-        public decimal Sell { get; set; }
-        public decimal Buy { get; set; }
-
-    }
-
 
 }

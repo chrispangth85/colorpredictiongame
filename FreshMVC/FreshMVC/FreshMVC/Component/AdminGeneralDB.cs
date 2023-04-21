@@ -3709,6 +3709,57 @@ namespace FreshMVC.Component
         }
         #endregion
 
+        public static DataSet GetAllRechargeUSDTList(int viewPage, string filterType, string filterValue, string fromDate, string toDate, out int pages, out int ok, out string msg)
+        {
+            SqlConnection sqlConn = DBConn.GetConnection();
+            SqlDataAdapter da = new SqlDataAdapter();
+
+            SqlCommand sqlComm = new SqlCommand("SP_GetAllRechargeUSDT", sqlConn);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter pViewPage = sqlComm.Parameters.Add("@viewPage", SqlDbType.Int);
+            pViewPage.Direction = ParameterDirection.Input;
+            pViewPage.Value = viewPage;
+
+            SqlParameter pFilterType = sqlComm.Parameters.Add("@filterType", SqlDbType.VarChar, 200);
+            pFilterType.Direction = ParameterDirection.Input;
+            pFilterType.Value = filterType;
+
+            SqlParameter pUsername = sqlComm.Parameters.Add("@keyword", SqlDbType.VarChar, 200);
+            pUsername.Direction = ParameterDirection.Input;
+            pUsername.Value = Helper.NVL(filterValue);
+
+            SqlParameter pFromDate = sqlComm.Parameters.Add("@fromDate", SqlDbType.NVarChar, 200);
+            pFromDate.Direction = ParameterDirection.Input;
+            pFromDate.Value = fromDate;
+
+            SqlParameter pToDate = sqlComm.Parameters.Add("@toDate", SqlDbType.NVarChar, 200);
+            pToDate.Direction = ParameterDirection.Input;
+            pToDate.Value = toDate;
+
+            SqlParameter pPages = sqlComm.Parameters.Add("@pages", SqlDbType.Int);
+            pPages.Direction = ParameterDirection.Output;
+
+            SqlParameter pOk = sqlComm.Parameters.Add("@ok", SqlDbType.Int);
+            pOk.Direction = ParameterDirection.Output;
+
+            SqlParameter pMessage = sqlComm.Parameters.Add("@msg", SqlDbType.VarChar, 50);
+            pMessage.Direction = ParameterDirection.Output;
+
+            da.SelectCommand = sqlComm;
+            DataSet ds = new DataSet();
+
+            sqlConn.Open();
+            da.Fill(ds);
+
+            ok = (int)pOk.Value;
+            msg = pMessage.Value.ToString();
+            pages = (int)pPages.Value;
+            sqlConn.Close();
+
+            return ds;
+        }
+
         #region GetAllProduct
         public static DataSet GetAllProducts(int viewPage, string filterType, string filterValue, out int pages, out int ok, out string msg)
         {
@@ -3973,15 +4024,16 @@ namespace FreshMVC.Component
 
             return ds;
         }
+
         #endregion
 
-        #region GetAllCountrys
-        public static DataSet GetAllCountrys(int viewPage, out int pages, out int ok, out string msg)
+        #region GetAllExchangeRate
+        public static DataSet GetAllExchangeRate(int viewPage, out int pages, out int ok, out string msg)
         {
             SqlConnection sqlConn = DBConn.GetConnection();
             SqlDataAdapter da = new SqlDataAdapter();
 
-            SqlCommand sqlComm = new SqlCommand("SP_GetAllCountrys", sqlConn);
+            SqlCommand sqlComm = new SqlCommand("SP_GetAllExchangeRate", sqlConn);
             sqlComm.CommandType = CommandType.StoredProcedure;
 
             SqlParameter pViewPage = sqlComm.Parameters.Add("@viewPage", SqlDbType.Int);

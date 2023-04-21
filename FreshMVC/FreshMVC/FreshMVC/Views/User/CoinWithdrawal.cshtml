@@ -32,26 +32,30 @@
             var netWithdrawalAmount = (($("#withdrawalAmount").val() - ($("#withdrawalAmount").val() * $("#ServiceFee").val()).toFixed(2) / 100)).toFixed(2);
             if (!isNaN(netWithdrawalAmount)) {
                 $('#netWithdrawalAmount').text(netWithdrawalAmount);
+
+                var afterConvertion = (netWithdrawalAmount / parseFloat($("#ExchangeRate").val())).toFixed(2);
+                $('#convertedAmount').text(afterConvertion);
             }
             else {
                 $('#netWithdrawalAmount').text("");
-            }
+            }            
         });
 
         $("#btnSaveAdd").click(function (evt) {
             $.ajax({
                 type: "POST",
-                url: "/User/WithdrawalMethod",
+                url: "/User/CoinWithdrawalMethod",
                 data: {
                     withdrawalAmount: document.getElementById("withdrawalAmount").value,
                     serviceFee: $("#ServiceFee").val(),
-                    bankId: $("#SelectedBank").val(),
+                    walletAdd: $("#walletAdd").val(),
                     password: $("#loginPwd").val(),
+                    walletOption: $("#SelectedWalletNetworkType").val(),
                 },
                 success: function (data) {
                     alertify.alert('Hot Mall', '@resSharedPB.lblWithdrawalSuccessfully', function () {
                         location.href = "/User/Transaction";
-                    });
+                    });                    
                 },
                 error: function (xhr, status, error) {
                     let r = JSON.parse(xhr.responseText);
@@ -94,37 +98,40 @@
 
                             <div class="my-4">
                                 <div class="input-custom max-width-800">
-                                    <input class="width-100 " type="text" name="withdrawalAmount" id="withdrawalAmount"
-                                           placeholder="Enter withdrawal amount">
+                                    <input class="width-100 " type="text" name="withdrawalAmount" id="withdrawalAmount" placeholder="Enter withdrawal amount">
                                 </div>
                             </div>
                             <div class="my-4">
+                                @Html.HiddenFor(model => model.ExchangeRate, new { @id = "ExchangeRate" })
                                 @Html.HiddenFor(model => model.ServiceFee, new { @id = "ServiceFee" })
-                                <p>Fee: @Model.ServiceFee%, to account <label name="netWithdrawalAmount" id="netWithdrawalAmount"></label></p>
+                                <p>@resSharedPB.lblFee: @Model.ServiceFee%, @resSharedPB.lblToAccount <label name="netWithdrawalAmount" id="netWithdrawalAmount"></label></p>
+                            </div>
+                            <div class="my-4">                                
+                                <p>@resSharedPB.lblExchangeRate: @Model.ExchangeRate, @resSharedPB.lblToAccount <label name="convertedAmount" id="convertedAmount"></label></p>
                             </div>
 
                             <h1 class="main-heading-3 text-dark">
                                 @resSharedPB.lblPayout
                             </h1>
-                            <div class="form-check d-flex align-items-center  mt-3">
-                                <input class="form-check-input red-checkbox" name="flexRadioDefault"
-                                       type="radio" value="" id="flexCheckDefault1" checked readonly>
-                                <label class="form-check-label ms-2 mt-1 " for="flexCheckDefault1">
-                                    @resSharedPB.lblBankcard
-                                </label>
+                            <div class="">
+                                <div class="section-inner-wrapper center-block overflow-hidden" style="padding-bottom:0px;">
+                                    <div class="input-group" style="width:500px;">
+                                        <label class="input-group-text" for="">@resSharedPB.lblNetwork</label>
+                                        @Html.DropDownListFor(model => model.SelectedWalletNetworkType, @Model.WalletNetworkTypeList, new { @class = "form-select" })
+                                    </div>
+                                </div>
                             </div>
-
                             <div class="my-4">
                                 <div class="input-group">
                                     <label class="input-group-text" for=""><i class="bi bi-credit-card"></i></label>
-                                    @Html.DropDownListFor(model => model.SelectedBank, @Model.BankList, new { @id = "SelectedBank", @class = "form-select" })
+                                    <input type="text" style="width:94%" name="walletAdd" id="walletAdd" placeholder="@resSharedPB.lblEnterYourWalletAddress">
                                 </div>
                             </div>
 
                             <div class="my-4">
                                 <div class="input-group">
                                     <label class="input-group-text" for="loginPwd"><i class="bi bi-key"></i></label>
-                                    <input type="password" style="width:94%" name="loginPwd" id="loginPwd" placeholder="Enter your login password">
+                                    <input type="password" style="width:94%" name="loginPwd" id="loginPwd" placeholder="@resSharedPB.lblEnterYourPassword">
                                 </div>
                             </div>
 

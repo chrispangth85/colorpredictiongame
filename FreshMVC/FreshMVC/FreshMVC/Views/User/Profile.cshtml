@@ -90,6 +90,23 @@
                 $("#profile-mobile-menu").click();
             });
 
+            $(".walletAddressMenu").click(function (evt) {
+                $.ajax({
+                    type: "POST",
+                    url: "/User/MyWalletAddress",
+                    data: {},
+                    success: function (data) {
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        let r = JSON.parse(xhr.responseText);
+                        alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
+                    }
+                });
+
+                $("#profile-mobile-menu").click();
+            });
+
             $(".referralz").click(function (evt) {
                 $.ajax({
                     type: "POST",
@@ -182,7 +199,8 @@
                         <div class="profile-p">
                             <div class="profile-menu-accordion padding-s pointer">
                                 <div class="middle left heading-bold">
-                                    <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/c-wallet_icon.png" alt="">
+                                    <img class="profile-menu-img mrgn-right-s"
+                                         src="~/HotMall/img/c-wallet_icon.png" alt="">
                                     <!-- <a href="recharge.html" class="text-dark">Balance</a> -->
                                     @resSharedPB.lblBalance
                                 </div>
@@ -190,10 +208,42 @@
                             </div>
 
                             <div class="profile-menu-panel">
-                                <a class="profile-menus width-100 padding-s" href="./Recharge">@resSharedPB.lblRecharge</a>
-                                <a class="profile-menus width-100 padding-s" href="./Withdrawal">@resSharedPB.lblWithdrawal</a>
-                                <a class="profile-menus width-100 padding-s" href="./BankCard">@resSharedPB.lblBankcard</a>
                                 <a class="profile-menus width-100 padding-s" href="./Transaction">@resSharedPB.lblTransaction</a>
+                            </div>
+
+                        </div>
+                        <div class="profile-p">
+                            <div class="profile-menu-accordion padding-s pointer">
+                                <div class="middle left heading-bold">
+                                    <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/c-wallet_icon.png" alt="">
+                                    <!-- <a href="recharge.html" class="text-dark">Balance</a> -->
+                                    @resSharedPB.lblRecharge
+                                </div>
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+
+                            <div class="profile-menu-panel">
+                                <a class="profile-menus width-100 padding-s" href="./Recharge">@resSharedPB.lblRecharge</a>
+                                <a class="profile-menus width-100 padding-s" href="./RechargeUSDT">@resSharedPB.lblRecharge USDT</a>
+                                <a class="profile-menus width-100 padding-s" href="./RechargeUSDTListing">@resSharedPB.lblRecharge USDT Listing</a>
+                            </div>
+
+                        </div>
+                        <div class="profile-p">
+                            <div class="profile-menu-accordion padding-s pointer">
+                                <div class="middle left heading-bold">
+                                    <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/c-wallet_icon.png" alt="">
+                                    <!-- <a href="recharge.html" class="text-dark">Balance</a> -->
+                                    @resSharedPB.lblWithdrawal
+                                </div>
+                                <i class="fa-solid fa-angle-down"></i>
+                            </div>
+
+                            <div class="profile-menu-panel">
+                                <a class="profile-menus width-100 padding-s" href="./BankCard">@resSharedPB.lblBankcard</a>
+                                <a class="profile-menus width-100 padding-s" href="./Withdrawal">@resSharedPB.lblWithdrawal</a>
+                                <a class="profile-menus width-100 padding-s" href="./CoinWithdrawal">@resSharedPB.lblCoinWithdrawal</a>
+                                @*<a class="profile-menus width-100 padding-s walletAddressMenu" href="#">@resSharedPB.lblWalletAddress</a>*@
                             </div>
 
                         </div>
@@ -320,11 +370,42 @@
                                                     <i class="fa-solid fa-angle-down"></i>
                                                 </div>
 
+                                                <div class="profile-menu-panel">                                                                                                                                                            
+                                                    <a class="profile-menus width-100 padding-s" href="./Transaction">@resSharedPB.lblTransaction</a>
+                                                </div>
+
+                                            </div>
+                                            <div class="profile-p">
+                                                <div class="profile-menu-accordion padding-s pointer">
+                                                    <div class="middle left heading-bold">
+                                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/c-wallet_icon.png" alt="">
+                                                        <!-- <a href="recharge.html" class="text-dark">Balance</a> -->
+                                                        @resSharedPB.lblRecharge
+                                                    </div>
+                                                    <i class="fa-solid fa-angle-down"></i>
+                                                </div>
+
                                                 <div class="profile-menu-panel">
                                                     <a class="profile-menus width-100 padding-s" href="./Recharge">@resSharedPB.lblRecharge</a>
-                                                    <a class="profile-menus width-100 padding-s" href="./Withdrawal">@resSharedPB.lblWithdrawal</a>
+                                                    <a class="profile-menus width-100 padding-s" href="./RechargeUSDT">@resSharedPB.lblRecharge USDT</a>
+                                                    <a class="profile-menus width-100 padding-s" href="./RechargeUSDTListing">@resSharedPB.lblRecharge USDT Listing</a>
+                                                </div>
+
+                                            </div>
+                                            <div class="profile-p">
+                                                <div class="profile-menu-accordion padding-s pointer">
+                                                    <div class="middle left heading-bold">
+                                                        <img class="profile-menu-img mrgn-right-s" src="~/HotMall/img/c-wallet_icon.png" alt="">
+                                                        <!-- <a href="recharge.html" class="text-dark">Balance</a> -->
+                                                        @resSharedPB.lblWithdrawal
+                                                    </div>
+                                                    <i class="fa-solid fa-angle-down"></i>
+                                                </div>
+
+                                                <div class="profile-menu-panel">
                                                     <a class="profile-menus width-100 padding-s" href="./BankCard">@resSharedPB.lblBankcard</a>
-                                                    <a class="profile-menus width-100 padding-s" href="./Transaction">@resSharedPB.lblTransaction</a>
+                                                    <a class="profile-menus width-100 padding-s" href="./Withdrawal">@resSharedPB.lblWithdrawal</a>
+                                                    <a class="profile-menus width-100 padding-s" href="./CoinWithdrawal">@resSharedPB.lblCoinWithdrawal</a>
                                                 </div>
 
                                             </div>

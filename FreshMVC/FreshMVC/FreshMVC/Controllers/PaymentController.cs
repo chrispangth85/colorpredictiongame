@@ -78,7 +78,7 @@ namespace FreshMVC.Controllers
                     if (paymentLog != null && paymentLog.CcashStatus.Value == 0)
                     {
                         // deposit to user account
-                        AdminDB.CashWalletOperation(paymentLog.CusrUsername, paymentLog.CcashCashin, "Recharge", 0, "", orderid, "1");
+                        AdminDB.CashWalletOperation(paymentLog.CusrUsername, paymentLog.CcashCashin, "Recharge", orderid, "1");
 
                         // update payment log
                         paymentLog.CcashStatus = 1;

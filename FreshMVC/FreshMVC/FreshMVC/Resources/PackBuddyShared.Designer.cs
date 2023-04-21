@@ -394,7 +394,7 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Buy Rate.
+        ///   Looks up a localized string similar to Buy.
         /// </summary>
         public static string lblBuy {
             get {
@@ -493,7 +493,16 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to USDT Withdrawal Charges.
+        ///   Looks up a localized string similar to Coin Withdrawal.
+        /// </summary>
+        public static string lblCoinWithdrawal {
+            get {
+                return ResourceManager.GetString("lblCoinWithdrawal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coin Withdrawal Charges.
         /// </summary>
         public static string lblCoinWithdrawalCharges {
             get {
@@ -547,47 +556,20 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Converted Amount.
+        /// </summary>
+        public static string lblConvertedAmount {
+            get {
+                return ResourceManager.GetString("lblConvertedAmount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Copyright.
         /// </summary>
         public static string lblCopyrightz {
             get {
                 return ResourceManager.GetString("lblCopyrightz", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Country Code.
-        /// </summary>
-        public static string lblCountryCode {
-            get {
-                return ResourceManager.GetString("lblCountryCode", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Country Code is required.
-        /// </summary>
-        public static string lblCountryCodeIsRequired {
-            get {
-                return ResourceManager.GetString("lblCountryCodeIsRequired", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Country Name.
-        /// </summary>
-        public static string lblCountryName {
-            get {
-                return ResourceManager.GetString("lblCountryName", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Country Name is required.
-        /// </summary>
-        public static string lblCountryNameIsRequired {
-            get {
-                return ResourceManager.GetString("lblCountryNameIsRequired", resourceCulture);
             }
         }
         
@@ -633,6 +615,15 @@ namespace FreshMVC.Resources {
         public static string lblCurrPwd {
             get {
                 return ResourceManager.GetString("lblCurrPwd", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Dashboard.
+        /// </summary>
+        public static string lblDashboard {
+            get {
+                return ResourceManager.GetString("lblDashboard", resourceCulture);
             }
         }
         
@@ -718,11 +709,38 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter your login password.
+        /// </summary>
+        public static string lblEnterYourPassword {
+            get {
+                return ResourceManager.GetString("lblEnterYourPassword", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enter your wallet address.
+        /// </summary>
+        public static string lblEnterYourWalletAddress {
+            get {
+                return ResourceManager.GetString("lblEnterYourWalletAddress", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Ethereum.
         /// </summary>
         public static string lblEtherum {
             get {
                 return ResourceManager.GetString("lblEtherum", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exchange Rate.
+        /// </summary>
+        public static string lblExchangeRate {
+            get {
+                return ResourceManager.GetString("lblExchangeRate", resourceCulture);
             }
         }
         
@@ -741,6 +759,15 @@ namespace FreshMVC.Resources {
         public static string lblFailed {
             get {
                 return ResourceManager.GetString("lblFailed", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fee.
+        /// </summary>
+        public static string lblFee {
+            get {
+                return ResourceManager.GetString("lblFee", resourceCulture);
             }
         }
         
@@ -804,6 +831,15 @@ namespace FreshMVC.Resources {
         public static string lblFirstName {
             get {
                 return ResourceManager.GetString("lblFirstName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to First Recharge.
+        /// </summary>
+        public static string lblFirstRecharge {
+            get {
+                return ResourceManager.GetString("lblFirstRecharge", resourceCulture);
             }
         }
         
@@ -1015,11 +1051,29 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Invalid Transaction ID.
+        /// </summary>
+        public static string lblInvalidTransactionID {
+            get {
+                return ResourceManager.GetString("lblInvalidTransactionID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Invalid username.
         /// </summary>
         public static string lblInvalidUsername {
             get {
                 return ResourceManager.GetString("lblInvalidUsername", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Invalid Wallet Address.
+        /// </summary>
+        public static string lblInvalidWalletAddress {
+            get {
+                return ResourceManager.GetString("lblInvalidWalletAddress", resourceCulture);
             }
         }
         
@@ -1236,6 +1290,15 @@ namespace FreshMVC.Resources {
         public static string lblNavigate {
             get {
                 return ResourceManager.GetString("lblNavigate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Network.
+        /// </summary>
+        public static string lblNetwork {
+            get {
+                return ResourceManager.GetString("lblNetwork", resourceCulture);
             }
         }
         
@@ -1654,7 +1717,7 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Recharge Commission.
+        ///   Looks up a localized string similar to First Charge Bonus.
         /// </summary>
         public static string lblRechargeCommission {
             get {
@@ -1744,6 +1807,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Rejected.
+        /// </summary>
+        public static string lblRejected {
+            get {
+                return ResourceManager.GetString("lblRejected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Remark.
         /// </summary>
         public static string lblRemark {
@@ -1807,7 +1879,7 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Sell Rate.
+        ///   Looks up a localized string similar to Sell.
         /// </summary>
         public static string lblSell {
             get {
@@ -1906,6 +1978,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Submit Payment Proof.
+        /// </summary>
+        public static string lblSubmitPaymentProof {
+            get {
+                return ResourceManager.GetString("lblSubmitPaymentProof", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Success.
         /// </summary>
         public static string lblSuccess {
@@ -1960,6 +2041,33 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to To Account.
+        /// </summary>
+        public static string lblToAccount {
+            get {
+                return ResourceManager.GetString("lblToAccount", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Today Topup.
+        /// </summary>
+        public static string lblTodayTopUp {
+            get {
+                return ResourceManager.GetString("lblTodayTopUp", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Today Withdrawal.
+        /// </summary>
+        public static string lblTodayWithdrawal {
+            get {
+                return ResourceManager.GetString("lblTodayWithdrawal", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to TopUp.
         /// </summary>
         public static string lblTopUp {
@@ -1974,6 +2082,15 @@ namespace FreshMVC.Resources {
         public static string lblTotalBalance {
             get {
                 return ResourceManager.GetString("lblTotalBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Claimed Wallet.
+        /// </summary>
+        public static string lblTotalClaimedWallet {
+            get {
+                return ResourceManager.GetString("lblTotalClaimedWallet", resourceCulture);
             }
         }
         
@@ -2041,11 +2158,56 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Total Member.
+        /// </summary>
+        public static string lblTotalMember {
+            get {
+                return ResourceManager.GetString("lblTotalMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total New Member.
+        /// </summary>
+        public static string lblTotalNewMember {
+            get {
+                return ResourceManager.GetString("lblTotalNewMember", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Platform Wallet Balance.
+        /// </summary>
+        public static string lblTotalPlatformWalletBalance {
+            get {
+                return ResourceManager.GetString("lblTotalPlatformWalletBalance", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Total Recharge.
         /// </summary>
         public static string lblTotalRecharge {
             get {
                 return ResourceManager.GetString("lblTotalRecharge", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Red Packet Give Out.
+        /// </summary>
+        public static string lblTotalRedPacket {
+            get {
+                return ResourceManager.GetString("lblTotalRedPacket", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Total Topup.
+        /// </summary>
+        public static string lblTotalTopUp {
+            get {
+                return ResourceManager.GetString("lblTotalTopUp", resourceCulture);
             }
         }
         
@@ -2077,11 +2239,29 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Transaction ID.
+        /// </summary>
+        public static string lblTransactionID {
+            get {
+                return ResourceManager.GetString("lblTransactionID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Tron.
         /// </summary>
         public static string lblTron {
             get {
                 return ResourceManager.GetString("lblTron", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to TRX.
+        /// </summary>
+        public static string lblTRX {
+            get {
+                return ResourceManager.GetString("lblTRX", resourceCulture);
             }
         }
         
@@ -2109,6 +2289,15 @@ namespace FreshMVC.Resources {
         public static string lblUpdateSuccessfully {
             get {
                 return ResourceManager.GetString("lblUpdateSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to USDT (TRC20).
+        /// </summary>
+        public static string lblUSDTTRC {
+            get {
+                return ResourceManager.GetString("lblUSDTTRC", resourceCulture);
             }
         }
         
@@ -2293,6 +2482,15 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Withdraw Successfully.
+        /// </summary>
+        public static string lblWithdrawalSuccessfully {
+            get {
+                return ResourceManager.GetString("lblWithdrawalSuccessfully", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Withdraw Host.
         /// </summary>
         public static string lblWithdrawHost {
@@ -2365,6 +2563,24 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Coin Withdrawal Listing.
+        /// </summary>
+        public static string mnuCoinWithdrawalListing {
+            get {
+                return ResourceManager.GetString("mnuCoinWithdrawalListing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Coin Withdrawal Log.
+        /// </summary>
+        public static string mnuCoinWithdrawalLog {
+            get {
+                return ResourceManager.GetString("mnuCoinWithdrawalLog", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Company Wallet.
         /// </summary>
         public static string mnuCompanyWallet {
@@ -2374,29 +2590,20 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Country Exchange Rate.
-        /// </summary>
-        public static string mnuCountry {
-            get {
-                return ResourceManager.GetString("mnuCountry", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Country Exchange Rate.
-        /// </summary>
-        public static string mnuCountryExchangeRate {
-            get {
-                return ResourceManager.GetString("mnuCountryExchangeRate", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Daily Report.
         /// </summary>
         public static string mnuDailyReport {
             get {
                 return ResourceManager.GetString("mnuDailyReport", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Exchange Rate.
+        /// </summary>
+        public static string mnuExchangeRate {
+            get {
+                return ResourceManager.GetString("mnuExchangeRate", resourceCulture);
             }
         }
         
@@ -2599,11 +2806,11 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Country Code Existed.
+        ///   Looks up a localized string similar to Currency Found, Please Use Other Name.
         /// </summary>
-        public static string msgCountryCodeExists {
+        public static string msgCurrencyFound {
             get {
-                return ResourceManager.GetString("msgCountryCodeExists", resourceCulture);
+                return ResourceManager.GetString("msgCurrencyFound", resourceCulture);
             }
         }
         
@@ -2842,7 +3049,7 @@ namespace FreshMVC.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Phone number must be 10 digit.
+        ///   Looks up a localized string similar to Phone number must be 8 number and above (including country code).
         /// </summary>
         public static string msgPhoneNumberIndiaMustBe10Digit {
             get {

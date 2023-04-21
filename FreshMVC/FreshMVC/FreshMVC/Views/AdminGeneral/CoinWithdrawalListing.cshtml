@@ -50,14 +50,13 @@
 
         $.ajax({
             type: "POST",
-            url: "/AdminGeneral/WithdrawalLogs",
+            url: "/AdminGeneral/CoinWithdrawalListing",
             data: {
                 selectedPage: page,
                 filterType: selectedOption,
                 filterValue: filterValue,
                 fromDate: fromDate,
                 toDate: toDate,
-                type: "@ViewBag.type"
             },
             success: function (data) {
                 $("#main-content").html(data);
@@ -71,22 +70,69 @@
         });
     });
 
-   
+     $("#DeleteData").click(function (e) {
+        deleteProduct($("#TemporaryOrderID").val());
+    });
+
+    function deleteProduct(id) {
+        if (confirm("@resShared.msgConfirmToReject")) {
+            $.ajax({
+                url: "/AdminGeneral/RejectWithdrawal",
+                type: "POST",
+                data: { idz: id, type: "coin" },
+                success: function (data) {
+                    alert("@resShared.lblUpdateSuccessfully");
+                    $("#main-content").html(data);
+                    event.stopPropagation();
+                },
+                error: function (xhr, status, error) {
+             	    var errorM = xhr.responseText;
+                    errorM = errorM.replace('""', '');
+
+                    alert(errorM);
+                    $('#Loading').hide();
+                }
+            });
+        }
+
+        $("#taskmodal").modal('hide');
+    };
+
+    $("#EditData").click(function (e) {
+        manualApprove($("#TemporaryOrderID").val());
+    });
+
+
+    function manualApprove(id) {
+        if (confirm("@resShared.msgConfirmToApprove")) {
+            $.ajax({
+                url: "/AdminGeneral/ManualApproveWithdrawal",
+                type: "POST",
+                data: { idz: id, type: "coin"},
+                success: function (data) {
+                    alert("@resShared.lblUpdateSuccessfully");
+                    $("#main-content").html(data);
+                    event.stopPropagation();
+                },
+                error: function (xhr, status, error) {
+             	    var errorM = xhr.responseText;
+                    errorM = errorM.replace('""', '');
+
+                    alert(errorM);
+                    $('#Loading').hide();
+                }
+            });
+        }
+
+        $("#taskmodal").modal('hide');
+    };
 </script>
 
 <div class="container-fluid">
     <div class="block-header">
         <div class="row">
             <div class="col-lg-6 col-md-8 col-sm-12">
-                @if (ViewBag.type == "coin")
-                {
-                    <h2>@resShared.mnuCoinWithdrawalLog</h2>
-                }
-                else
-                {
-                    <h2>@resShared.mnuWithdrawalLog</h2>
-                }
-
+                <h2>@resShared.mnuCoinWithdrawalListing</h2>
                 <ul class="breadcrumb">
                     <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
                     <li class="breadcrumb-item active">@resShared.mnuListing</li>
@@ -136,7 +182,7 @@
             </div>
 
             <div class="grid" style="margin-left: 5px;" id="grid">
-                <a href="@Url.Action("DownloadWithdrawalLog", "AdminGeneral", new {filterType= @Model.SelectedFilteringCriteria, filterValue= @Model.FilterValue, fromDate = @Model.FromDate, toDate = @Model.ToDate, type = @ViewBag.type})" class="btn btn-primary" style="float:right;width:180px;" target="_blank">
+                <a href="@Url.Action("DownloadWithdrawalListing", "AdminGeneral", new {filterType= @Model.SelectedFilteringCriteria, filterValue= @Model.FilterValue, fromDate = @Model.FromDate, toDate = @Model.ToDate, type="coin"})" class="btn btn-primary" style="float:right;width:180px;" target="_blank">
                     @resShared.btnDownload
                 </a>
             </div>
@@ -167,15 +213,12 @@
                         <th>
                             @resShared.lblFinalAmount
                         </th>
-                        @if (ViewBag.type == "coin")
-                        {
-                            <th>
-                                @resShared.lblExchangeRate
-                            </th>
-                            <th>
-                                @resShared.lblConvertedAmount
-                            </th>
-                        }
+                        <th>
+                            @resShared.lblExchangeRate
+                        </th>
+                        <th>
+                            @resShared.lblConvertedAmount
+                        </th>
                         <th>
                             @resShared.lblApplicationTime
                         </th>
@@ -229,15 +272,12 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.FinalAmount)
                     </td>
-                    @if (ViewBag.type == "coin")
-                    {
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ExchangeRate)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.ConvertedAmount)
-                        </td>
-                    }
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ExchangeRate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ConvertedAmount)
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Created)
                     </td>
@@ -258,12 +298,12 @@
                            address="@item.Address"
                            mobile="@item.Mobile"
                            username="@item.Username"
-                           email="@item.Email"
                            amount="@item.Amount"
-                           fee="@item.ServiceFee"
                            exchangerate="@item.ExchangeRate"
                            convertedAmount="@item.ConvertedAmount"
+                           fee="@item.ServiceFee"
                            finalamount="@item.FinalAmount"
+                           email="@item.Email"
                            href="#">@resShared.lblView</a>
                     </td>
                 </tr>
@@ -318,68 +358,31 @@
                     <label class="form-control-label">@resShared.lblFinalAmount</label>
                     <input class="form-control" id="finalamount" value="" disabled />
                 </div>
-                @if (ViewBag.type == "coin")
-                {
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblExchangeRate</label>
-                        <input class="form-control" id="exchangerate" value="" disabled />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblConvertedAmount</label>
-                        <input class="form-control" id="convertedamount" value="" disabled />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblNetworkType</label>
-                        <input class="form-control" id="coin" value="" disabled />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblWalletAddress</label>
-                        <input class="form-control" id="walletAdd" value="" disabled />
-                    </div>
-                }
-                else
-                {
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblActualName</label>
-                        <input class="form-control" id="name" value="" disabled />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblIFSCCode</label>
-                        <input class="form-control" id="ifsccode" value="" disabled />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblBankName</label>
-                        <input class="form-control" id="bankname" value="" disabled />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblBankAccount</label>
-                        <input class="form-control" id="bankaccount" value="" disabled />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblState</label>
-                        <input class="form-control" id="state" value="" disabled />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblCity</label>
-                        <input class="form-control" id="city" value="" disabled />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblMobile</label>
-                        <input class="form-control" id="mobile" value="" disabled />
-                    </div>
-                    <div class="form-floating mb-3">
-                        <label class="form-control-label">@resShared.lblAddress</label>
-                        <input class="form-control" id="address" value="" disabled />
-                    </div>
-                }
+                <div class="form-floating mb-3">
+                    <label class="form-control-label">@resShared.lblExchangeRate</label>
+                    <input class="form-control" id="exchangerate" value="" disabled />
+                </div>
+                <div class="form-floating mb-3">
+                    <label class="form-control-label">@resShared.lblConvertedAmount</label>
+                    <input class="form-control" id="convertedamount" value="" disabled />
+                </div>
+                <div class="form-floating mb-3">
+                    <label class="form-control-label">@resShared.lblNetworkType</label>
+                    <input class="form-control" id="coin" value="" disabled />
+                </div>
+                <div class="form-floating mb-3">
+                    <label class="form-control-label">@resShared.lblWalletAddress</label>
+                    <input class="form-control" id="walletAdd" value="" disabled />
+                </div>
 
                 <div class="form-floating mb-3">
-                    <label class="form-control-label">@resShared.lblEmail</label>
-                    <input class="form-control" id="email" value="" disabled />
+                    <label class="form-control-label">@resShared.lblMobile</label>
+                    <input class="form-control" id="mobile" value="" disabled />
                 </div>
             </div>
-            <div class="modal-footer justify-content-center">                
-                <a href="#" class="btn btn-outline-secondary d-block w-100 btn-close" data-bs-dismiss="modal" aria-label="Close">@resShared.lblClose</a>
+            <div class="modal-footer justify-content-center">
+                <a href="#" class="btn btn-outline-secondary d-block w-100" data-bs-dismiss="modal" id="EditData">@resShared.lblManualApprove</a>
+                <a href="#" class="btn btn-outline-secondary d-block w-100" data-bs-dismiss="modal" id="DeleteData">@resShared.lblReject</a>
             </div>
         </div>
     </div>
@@ -396,27 +399,12 @@
         var id = $(this).attr("withdrawalid");
         $("#TemporaryOrderID").val(id);
 
-        $("#username").val($(this).attr("username"));
-        $("#name").val($(this).attr("bankname"));
+        $("#username").val($(this).attr("username"));        
+        $("#coin").val($(this).attr("subbranch"));
+        $("#walletAdd").val($(this).attr("cardno"));
 
-        if ("@ViewBag.type" == "coin")
-        {
-            $("#coin").val($(this).attr("subbranch"));
-            $("#walletAdd").val($(this).attr("cardno"));
-            $("#exchangerate").val($(this).attr("exchangerate"));
-            $("#convertedamount").val($(this).attr("convertedAmount"));
-        }
-        else
-        { 
-            $("#ifsccode").val($(this).attr("subbranch"));
-            $("#bankname").val($(this).attr("accountname"));
-            $("#bankaccount").val($(this).attr("cardno"));
-            $("#city").val($(this).attr("city"));
-            $("#state").val($(this).attr("state"));
-        
-            $("#address").val($(this).attr("address"));
-            $("#mobile").val($(this).attr("mobile"));
-        }
+        $("#exchangerate").val($(this).attr("exchangerate"));
+        $("#convertedamount").val($(this).attr("convertedAmount"));
 
         $("#email").val($(this).attr("email"));
 
@@ -426,5 +414,6 @@
 
         $("#taskmodal").modal('show');
     });
+
 
 </script>

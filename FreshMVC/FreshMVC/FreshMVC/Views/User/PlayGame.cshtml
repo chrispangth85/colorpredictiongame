@@ -52,6 +52,7 @@
                             <div class="d-flex align-items-center mt-lg-0 mt-md-0 mt-3">
                                 <div>
                                     <a href="./Recharge" class="blue-btn-recharge">Recharge</a>
+                                    <a href="./RechargeUSDT" class="blue-btn-recharge">Recharge (USDT)</a>
                                 </div>
                                 @*Hide*@
                                 @*<div class="ms-3">
@@ -103,7 +104,7 @@
                                             <div>
                                                 <div class="d-flex flex-column ">
                                                     <div class="text-bold text-s mb-1">Count Down</div>
-                                                    <button class="continue-btn continue-enable mb-0 " id="btnContinue" type="button" style="background-color:green; color:white; max-width:100px;">
+                                                    <button class="continue-btn continue-enable mb-0 btnContinue" type="button" style="background-color:green; color:white; max-width:100px;">
                                                         Continue
                                                     </button>
                                                     <div class="clock-count-down">
@@ -227,7 +228,15 @@
                                                                     <td class="text-center" style="color: red; font-weight: bold;">@x.Price</td>
                                                                 }*@
 
-                                                            <td class="green-number text-center">@x.ResultNumber</td>
+                                                            @if (x.ResultNumber == 0 || x.ResultNumber == 2 || x.ResultNumber == 4 || x.ResultNumber == 6 || x.ResultNumber == 8)
+                                                            {
+                                                                <td class="red-number text-center">@x.ResultNumber</td>
+                                                            }
+                                                            else
+                                                            {
+                                                                <td class="green-number text-center">@x.ResultNumber</td>
+                                                            }
+
                                                             <td class="text-center">
                                                                 <div class="d-flex justify-content-center">
                                                                     @if (x.ResultNumber == 0 || x.ResultNumber == 5)
@@ -660,7 +669,7 @@
                 });
             }
 
-            $("#btnContinue").click(function (evt) {
+            $(".btnContinue").click(function (evt) {
                 location.reload();
             });
 

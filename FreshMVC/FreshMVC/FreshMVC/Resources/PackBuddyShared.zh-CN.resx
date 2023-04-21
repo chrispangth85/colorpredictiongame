@@ -937,7 +937,7 @@
     <value>可用选项</value>
   </data>
   <data name="lblRechargeCommission" xml:space="preserve">
-    <value>充值佣金</value>
+    <value>首次充值红利</value>
   </data>
   <data name="lblRemark" xml:space="preserve">
     <value>备注</value>
@@ -959,5 +959,104 @@
   </data>
   <data name="mnuWallet" xml:space="preserve">
     <value>钱包</value>
+  </data>
+  <data name="lblBuy" xml:space="preserve">
+    <value>买</value>
+  </data>
+  <data name="lblBuyRateIsRequired" xml:space="preserve">
+    <value>购买率是必需的</value>
+  </data>
+  <data name="lblCoinWithdrawal" xml:space="preserve">
+    <value>提币</value>
+  </data>
+  <data name="lblCoinWithdrawalCharges" xml:space="preserve">
+    <value>取币手续费</value>
+  </data>
+  <data name="lblConvertedAmount" xml:space="preserve">
+    <value>转换金额</value>
+  </data>
+  <data name="lblEnterYourPassword" xml:space="preserve">
+    <value>输入您的登录密码</value>
+  </data>
+  <data name="lblEnterYourWalletAddress" xml:space="preserve">
+    <value>输入你的钱包地址</value>
+  </data>
+  <data name="lblExchangeRate" xml:space="preserve">
+    <value>汇率</value>
+  </data>
+  <data name="lblFee" xml:space="preserve">
+    <value>费用</value>
+  </data>
+  <data name="lblInvalidWalletAddress" xml:space="preserve">
+    <value>无效的钱包地址</value>
+  </data>
+  <data name="lblIsActive" xml:space="preserve">
+    <value>活跃</value>
+  </data>
+  <data name="lblNetworkType" xml:space="preserve">
+    <value>网络类型</value>
+  </data>
+  <data name="lblSell" xml:space="preserve">
+    <value>卖</value>
+  </data>
+  <data name="lblSellRateIsRequired" xml:space="preserve">
+    <value>卖出价是必需的</value>
+  </data>
+  <data name="lblToAccount" xml:space="preserve">
+    <value>帐户</value>
+  </data>
+  <data name="lblWalletName" xml:space="preserve">
+    <value>钱包名称</value>
+  </data>
+  <data name="lblWithdrawalSuccessfully" xml:space="preserve">
+    <value>提现成功</value>
+  </data>
+  <data name="mnuCoinWithdrawalListing" xml:space="preserve">
+    <value>提币取款交易</value>
+  </data>
+  <data name="mnuCoinWithdrawalLog" xml:space="preserve">
+    <value>提币取款交易记录</value>
+  </data>
+  <data name="mnuCompanyWallet" xml:space="preserve">
+    <value>公司钱包</value>
+  </data>
+  <data name="mnuExchangeRate" xml:space="preserve">
+    <value>汇率</value>
+  </data>
+  <data name="mnuSettings" xml:space="preserve">
+    <value>设置</value>
+  </data>
+  <data name="msgCurrencyFound" xml:space="preserve">
+    <value>请使用其他名称</value>
+  </data>
+  <data name="lblDashboard" xml:space="preserve">
+    <value>仪表板</value>
+  </data>
+  <data name="lblTodayTopUp" xml:space="preserve">
+    <value>今日充值</value>
+  </data>
+  <data name="lblTodayWithdrawal" xml:space="preserve">
+    <value>今日取款</value>
+  </data>
+  <data name="lblTotalClaimedWallet" xml:space="preserve">
+    <value>总认领钱包</value>
+  </data>
+  <data name="lblTotalMember" xml:space="preserve">
+    <value>会员总数</value>
+  </data>
+  <data name="lblTotalNewMember" xml:space="preserve">
+    <value>新会员总数</value>
+  </data>
+  <data name="lblTotalPlatformWalletBalance" xml:space="preserve">
+    <value>平台钱包总余额</value>
+  </data>
+  <data name="lblTotalRedPacket" xml:space="preserve">
+    <value>红包发放总量</value>
+  </data>
+  <data name="lblTotalTopUp" xml:space="preserve">
+    <value>总充值</value>
+  </data>
+  <data name="lblTotalWithdrawal" xml:space="preserve">
+    <value>总提款</value>
   </data>
 </root>

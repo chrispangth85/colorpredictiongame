@@ -22,7 +22,7 @@ namespace FreshMVC.Component
         public const string merchantCode = "10306";
         public const string merchantKey = "usi5iboe5ep6ozz7tpeahsfxo8xc4sz8";
         public const string bankCode = "902";
-        
+
         private static string _numbers = "0123456789";
 
         public static string MD5(string s)
@@ -68,6 +68,8 @@ namespace FreshMVC.Component
                 case "RECHARGE_COM1":
                 case "RECHARGE_COM2":
                     return Resources.PackBuddyShared.lblRechargeCommission;
+                case "COINWDR":
+                    return Resources.PackBuddyShared.lblCoinWithdrawal;
                 default:
                     return remark;
             }
@@ -90,22 +92,26 @@ namespace FreshMVC.Component
             return filteringCriteriaList;
         }
 
-        public static IEnumerable<SelectListItem> ConstructsWalletNetworkType()
+        public static IEnumerable<SelectListItem> ConstructsWalletNetworkType(string option = "recharge")
         {
             List<SelectListItem> filteringCriteriaList = new List<SelectListItem>();
 
-            SelectListItem fcAll = new SelectListItem();
-            fcAll.Text = Resources.PackBuddyShared.lblTron;
-            fcAll.Value = Resources.PackBuddyShared.lblTron;
-            filteringCriteriaList.Add(fcAll);
+            if (option == "recharge")
+            {
+                SelectListItem fcAll = new SelectListItem();
+                fcAll.Text = Resources.PackBuddyShared.lblUSDTTRC;
+                fcAll.Value = Resources.PackBuddyShared.lblUSDTTRC;
+                filteringCriteriaList.Add(fcAll);
+            }
 
             SelectListItem fcMoto = new SelectListItem();
-            fcMoto.Text = Resources.PackBuddyShared.lblEtherum;
-            fcMoto.Value = Resources.PackBuddyShared.lblEtherum;
+            fcMoto.Text = Resources.PackBuddyShared.lblTRX;
+            fcMoto.Value = Resources.PackBuddyShared.lblTRX;
             filteringCriteriaList.Add(fcMoto);
 
             return filteringCriteriaList;
-        }
+        }    
+
         public static string GenerateRandomDigit(int length)
         {
             StringBuilder builder = new StringBuilder(length);

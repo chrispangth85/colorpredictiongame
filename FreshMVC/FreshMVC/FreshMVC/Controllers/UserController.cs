@@ -908,7 +908,7 @@ namespace FreshMVC.Controllers
 
                 using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
                 {
-                    var found = dbContext.CvdRedPacket.FirstOrDefault(c => c.CusrUsername == usernameCookie && c.CredpId == int.Parse(id));
+                    var found = dbContext.CvdRedPacket.FirstOrDefault(c => c.CusrUsername == usernameCookie && c.CredpId == int.Parse(id) && c.CredpStatus == 0);
 
                     if (found != null)
                     {
@@ -2016,7 +2016,174 @@ namespace FreshMVC.Controllers
 
         #endregion
 
+        #region RechargeUSDT
+        public ActionResult RechargeUSDT(string network = "")
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new MemberHomeModel();
+            am.WalletAddress = "";
+
+            if(network == "")
+            {
+                network = "USDT (TRC20)";
+            }
+            else
+            {
+                am.SelectedWalletNetworkType = network;
+            }
+
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var foundList = dbContext.CvdCompanywallet.Where(c => c.CcomIsactive && c.CcomNetworktype == network);
+
+                if(foundList.Count() > 0)
+                {
+                    var found = foundList.OrderBy(r => Guid.NewGuid()).FirstOrDefault();
+                    if (found != null)
+                    {
+                        am.WalletAddress = found.CcomWalletaddress;
+                        am.SelectedWalletNetworkType = found.CcomNetworktype;
+                    }
+                }                
+            }
+
+            #region NetworkType
+            #region Construct Wallet Network Type
+            var types = Misc.ConstructsWalletNetworkType();
+
+            am.WalletNetworkTypeList = from c in types select new SelectListItem { Selected = false, Text = c.Text, Value = c.Value };
+            #endregion
+            #endregion
+
+            #region USDT Wallet + QR
+            ViewBag.Referral = string.Format(am.WalletAddress);
+
+            QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            QRCodeData qrCodeDataAndroid = qrGenerator.CreateQrCode(ViewBag.Referral, QRCodeGenerator.ECCLevel.Q);
+            QRCode qrCodeAndroid = new QRCode(qrCodeDataAndroid);
+            Bitmap qrCodeImageAndroid = qrCodeAndroid.GetGraphic(20);
+
+            // Create a rectangle for the entire bitmap
+            RectangleF rectf = new RectangleF(0, 0, qrCodeImageAndroid.Width, qrCodeImageAndroid.Height - 30);
+
+            // Create graphic object that will draw onto the bitmap
+            Graphics g = Graphics.FromImage(qrCodeImageAndroid);
+
+            // ------------------------------------------
+            // Ensure the best possible quality rendering
+            // ------------------------------------------
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            // The interpolation mode determines how intermediate values between two endpoints are calculated.
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+
+            // Use this property to specify either higher quality, slower rendering, or lower quality, faster rendering of the contents of this Graphics object.
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            // This one is important
+            g.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+
+            // Create string formatting options (used for alignment)
+            StringFormat format = new StringFormat()
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Near
+            };
+
+            // Create string formatting options (used for alignment)
+            StringFormat bottomFormat = new StringFormat()
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Far
+            };
+
+            // Flush all graphics changes to the bitmap
+            g.Flush();
+
+            System.IO.MemoryStream msAndroid = new MemoryStream();
+            qrCodeImageAndroid.Save(msAndroid, ImageFormat.Jpeg);
+            byte[] byteImageAndroid = msAndroid.ToArray();
+
+            ViewBag.QRCodeImage = "data:image/png;base64," + Convert.ToBase64String(byteImageAndroid);
+
+            ViewBag.HeaderPage = "RechargeUSDT"; 
+            #endregion
+
+            return View("RechargeUSDT", am);
+        }
+        #endregion
+
         #region Withdrawal
+
+        public ActionResult CoinWithdrawal()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new PaymentModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var userFound = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie);
+                if (userFound != null)
+                {
+                    am.Amount = userFound.CusrCashwlt.Value.ToString("0.00");
+                }
+
+                var serviceFeeFound = dbContext.CvdParameter.FirstOrDefault(c => c.CparaName == "CoinWithdrawalCharges");
+                if (serviceFeeFound != null)
+                {
+                    am.ServiceFee = serviceFeeFound.CparaDecimalvalue.ToString("0.00");
+                }
+
+                var exchangeRateFound = dbContext.CvdExchangerate.FirstOrDefault(c => c.CexchangeCode.ToLower() == "trx");
+                if (exchangeRateFound != null)
+                {
+                    am.ExchangeRate = exchangeRateFound.CexchangeSell.Value.ToString("0.00");
+                }
+            }
+
+
+            #region Construct Wallet Network Type
+            var types = Misc.ConstructsWalletNetworkType("withdrawal");
+
+            am.WalletNetworkTypeList = from c in types select new SelectListItem { Selected = false, Text = c.Text, Value = c.Value };
+            #endregion
+
+            return View("CoinWithdrawal", am);
+        }
+
         public ActionResult Withdrawal()
         {
             string usernameCookie = "";
@@ -2072,6 +2239,164 @@ namespace FreshMVC.Controllers
 
 
             return View("Withdrawal", am);
+        }
+
+        public IActionResult CoinWithdrawalMethod(string password, decimal withdrawalAmount, decimal serviceFee, string walletAdd, string walletOption = "")
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            if (withdrawalAmount <= 0)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = Resources.PackBuddyShared.msgInvalidAmount
+                });
+            }
+
+            if (string.IsNullOrEmpty(walletAdd))
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = Resources.PackBuddyShared.lblInvalidWalletAddress
+                });
+            }
+
+            if (string.IsNullOrEmpty(password))
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = Resources.PackBuddyShared.msgInvalidPassword
+                }); ;
+            }
+
+            decimal withdrawwalLimit = 0;
+            decimal balanceAmount = 0;
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var withdrawalSettingFound = dbContext.CvdParameter.Where(c => c.CparaName == "CoinMinWithdrawal" || c.CparaName == "CoinMaxWithdrawal").ToList();
+                decimal minWithdrawalAmount = 0;
+                decimal maxWithdrawalAmount = 0;
+
+                if (withdrawalSettingFound != null)
+                {
+                    foreach (CvdParameter withdrawalSetting in withdrawalSettingFound)
+                    {
+                        if (withdrawalSetting.CparaName == "CoinMinWithdrawal")
+                        {
+                            minWithdrawalAmount = withdrawalSetting.CparaDecimalvalue;
+                        }
+
+                        if (withdrawalSetting.CparaName == "CoinMaxWithdrawal")
+                        {
+                            maxWithdrawalAmount = withdrawalSetting.CparaDecimalvalue;
+                        }
+                    }
+                }
+
+                if (minWithdrawalAmount > withdrawalAmount)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = string.Format("{0} {1}", Resources.PackBuddyShared.msgMinWithdrawalAmount, minWithdrawalAmount)
+                    });
+                }
+
+                if (withdrawalAmount > maxWithdrawalAmount)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = string.Format("{0} {1}", Resources.PackBuddyShared.msgMaxWithdrawalAmount, maxWithdrawalAmount)
+                    });
+                }
+
+                var withdrawalStatus = dbContext.CvdCashwalletlog.FirstOrDefault(c => c.CusrUsername.ToLower() == usernameCookie.ToLower() && c.CcashStatus == 0 && (c.CcashCashname == "WDR" || c.CcashCashname == "COINWDR"));
+                if (withdrawalStatus != null)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.msgPendingWithdrwawal
+                    });
+                }
+
+
+                var found = dbContext.CvdUser.FirstOrDefault(c => c.CusrUsername == usernameCookie && (c.CroleId == 3 || c.CroleId == 2));
+                if (found != null)
+                {
+                    balanceAmount = found.CusrCashwlt.Value;
+
+                    // dunno just in case bah
+                    withdrawwalLimit = found.CusrRechargewlt.Value < 0 ? 0 : found.CusrRechargewlt.Value;
+                }
+            }
+
+            if (withdrawwalLimit > 0)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = string.Format(Resources.PackBuddyShared.msgBalanceTurnOverToWithdrwal, withdrawwalLimit)
+                });
+            }
+
+            if (withdrawalAmount > balanceAmount)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = Resources.PackBuddyShared.msgInsufficientWalletBalance
+                });
+            }
+
+            string message = ValidatePassword(usernameCookie, password);
+            if (string.IsNullOrEmpty(message))
+            {
+                withdrawalAmount = 0 - withdrawalAmount;
+                var paymentId = string.Format("WDRTRX_{0}{1}", DateTime.Today.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmmss"));
+                walletOption = walletOption == Resources.PackBuddyShared.lblTRX ? "TRX" : walletOption;
+                AdminDB.CashWalletOperation(usernameCookie, withdrawalAmount, "COINWDR", paymentId, "0", serviceFee, 0, "SYS", walletAdd, walletOption);
+            }
+            else
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new { status = false, message = message });
+
+            }
+
+            return StatusCode((int)HttpStatusCode.OK);
         }
 
         public IActionResult WithdrawalMethod(string password, decimal withdrawalAmount, decimal serviceFee, int bankId)
@@ -2172,7 +2497,7 @@ namespace FreshMVC.Controllers
                     });
                 }
 
-                var withdrawalStatus = dbContext.CvdCashwalletlog.FirstOrDefault(c => c.CusrUsername.ToLower() == usernameCookie.ToLower() && c.CcashStatus == 0 && c.CcashCashname == "WDR");
+                var withdrawalStatus = dbContext.CvdCashwalletlog.FirstOrDefault(c => c.CusrUsername.ToLower() == usernameCookie.ToLower() && c.CcashStatus == 0 && (c.CcashCashname == "WDR" || c.CcashCashname == "COINWDR"));
                 if (withdrawalStatus != null)
                 {
                     Response.StatusCode = (int)HttpStatusCode.BadRequest;
@@ -2219,7 +2544,7 @@ namespace FreshMVC.Controllers
             {
                 withdrawalAmount = 0 - withdrawalAmount;
                 var paymentId = string.Format("WDR_{0}{1}", DateTime.Today.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmmss"));
-                AdminDB.CashWalletOperation(usernameCookie, withdrawalAmount, "WDR", 0, "", paymentId, "0", serviceFee, bankId);
+                AdminDB.CashWalletOperation(usernameCookie, withdrawalAmount, "WDR", paymentId, "0", serviceFee, bankId);
             }
             else
             {
@@ -2230,7 +2555,6 @@ namespace FreshMVC.Controllers
 
             return StatusCode((int)HttpStatusCode.OK);
         }
-
 
         private string ValidatePassword(string userName, string password)
         {
@@ -2363,6 +2687,7 @@ namespace FreshMVC.Controllers
         #endregion
 
         #region CreatePaymentTwo + ReturnUrl
+
         public IActionResult CreatePaymentTwo(decimal amount, string bankName, string accountName, string cardNo, string branch, string province, string city)
         {
             string username = "";
@@ -2389,7 +2714,7 @@ namespace FreshMVC.Controllers
 
             var payment = new PaymentModel();
             var host = Dns.GetHostEntry(Dns.GetHostName());
-            var paymentId = string.Format("{0}{1}  ", DateTime.Today.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmmss"));
+            var paymentId = string.Format("{0}{1}", DateTime.Today.ToString("yyyyMMdd"), DateTime.Now.ToString("HHmmss"));
 
             var url = this.Request.Host.Host.ToLower();
 
@@ -2428,13 +2753,13 @@ namespace FreshMVC.Controllers
 
                 var dateTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
                 var dataSign = string.Format("pay_amount={0}&pay_applydate={1}&pay_bankcode={2}&pay_callbackurl={3}&pay_memberid={4}&pay_notifyurl={5}&pay_orderid={6}&key={7}",
-                    amount.ToString("#0.00"), dateTime, Misc.bankCode, Misc._baseUrl + "/Payment/CallBackUrl", merchantCode, Misc._baseUrl + "/User/ReturnUrl", paymentId, merchantKey);
+                    amount.ToString(), dateTime, Misc.bankCode, Misc._baseUrl + "/Payment/CallBackUrl", merchantCode, Misc._baseUrl + "/User/ReturnUrl", paymentId, merchantKey);
 
                 var dataMd5 = Misc.MD5(dataSign).ToUpper();
 
-                payment.MerchantCode = Misc.merchantCode;
+                payment.MerchantCode = merchantCode;
                 payment.RefNo = paymentId;
-                payment.Amount = amount.ToString("#0.00");
+                payment.Amount = amount.ToString();
                 payment.BankName = bankName;
                 payment.Created = dateTime;
                 payment.AccountName = accountName;
@@ -2522,7 +2847,7 @@ namespace FreshMVC.Controllers
                     paymentModel.Remark = Misc.ConvertoReadableName(transaction.CcashCashname);
                     paymentModel.FinalAmount = Convert.ToString(Convert.ToDecimal(transaction.CcashCashin) == 0 ? Convert.ToDecimal(transaction.CcashCashout) : Convert.ToDecimal(transaction.CcashCashin));
                     paymentModel.Created = transaction.CcashCreatedon.ToString("dd/MM/yyyy HH:mm:ss");
-                    paymentModel.Status = transaction.CcashStatus == 0 ? Resources.PackBuddyShared.lblInProgress : transaction.CcashStatus == 1 ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
+                    paymentModel.Status = transaction.CcashStatus == 0 ? Resources.PackBuddyShared.lblPending : transaction.CcashStatus == 1 ? Resources.PackBuddyShared.lblSuccess : Resources.PackBuddyShared.lblFailed;
                     am.List.Add(paymentModel);
                 }
             }
@@ -2575,7 +2900,7 @@ namespace FreshMVC.Controllers
                     if (paymentLog != null && paymentLog.CcashStatus.Value == 0)
                     {
                         // deposit to user account
-                        AdminDB.CashWalletOperation(paymentLog.CusrUsername, paymentLog.CcashCashin, "Recharge", 0, "", orderid, "1");
+                        AdminDB.CashWalletOperation(paymentLog.CusrUsername, paymentLog.CcashCashin, "Recharge", orderid, "1");
 
                         // update payment log
                         paymentLog.CcashStatus = 1;
@@ -2752,6 +3077,328 @@ namespace FreshMVC.Controllers
             ViewBag.CurrentLanguage = currentLanguage;
 
             return PartialView("Languages", am);
+        }
+        #endregion
+
+        #region MyWalletAddress
+        public ActionResult MyWalletAddress()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            if (usernameCookie == "")
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new MemberHomeModel();
+
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var found = dbContext.CvdUserInfo.FirstOrDefault(c => c.CusrUsername == usernameCookie);
+                if (found != null)
+                {
+                    am.WalletAddress = found.MemberWalletAddress;
+                    am.SelectedWalletNetworkType = found.MemberWalletNetwork;
+                }
+            }
+
+            #region Construct Wallet Network Type
+            var types = Misc.ConstructsWalletNetworkType();
+
+            am.WalletNetworkTypeList = from c in types select new SelectListItem { Selected = false, Text = c.Text, Value = c.Value };
+            #endregion
+
+            return PartialView("MyWalletAddress", am);
+        }
+
+        [HttpPost]
+        public IActionResult UpdateWalletAddress(string walletAddress, string network)
+        {
+            try
+            {
+                string usernameCookie = "";
+                string id = "";
+                try
+                {
+                    string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                    usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+                }
+                catch (Exception e)
+                {
+                    return RedirectToAction("ClientLogin", "UserLogin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                if (usernameCookie == "")
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidUsername
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var found = dbContext.CvdUserInfo.FirstOrDefault(c => c.CusrUsername == usernameCookie);
+
+                    if (found != null)
+                    {
+                        found.MemberWalletNetwork = network;
+                        found.MemberWalletAddress = walletAddress;
+
+                        var result = dbContext.SaveChanges();
+                    }
+                    else
+                    {
+                        Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        return Json(new
+                        {
+                            status = false,
+                            message = Resources.PackBuddyShared.lblInvalidUsername
+                        });
+                    }
+                }
+
+                return MyWalletAddress();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+        #endregion
+
+        #region PaymentUSDT
+        public ActionResult PaymentUSDT(string walletAddress = "", string network = "")
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new UploadUSDTModel();
+            am.WalletAddress = walletAddress;
+            am.SelectedWalletNetworkType = network;
+
+            using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+            {
+                var foundList = dbContext.CvdCompanywallet.FirstOrDefault(c => c.CcomIsactive && c.CcomNetworktype == network && c.CcomWalletaddress == walletAddress);
+
+                if (foundList == null)
+                {
+                    return RechargeUSDT(network);
+                }
+            }
+
+            #region NetworkType
+            #region Construct Wallet Network Type
+            var types = Misc.ConstructsWalletNetworkType();
+
+            am.WalletNetworkTypeList = from c in types select new SelectListItem { Selected = false, Text = c.Text, Value = c.Value };
+            #endregion
+            #endregion
+
+            return View("PaymentUSDT", am);
+        }
+
+        [HttpPost]
+        public IActionResult PaymentUSDTMethod(UploadUSDTModel am)
+        {
+            try
+            {
+                string usernameCookie = "";
+                try
+                {
+                    string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                    usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+                }
+                catch (Exception e)
+                {
+                    return RedirectToAction("ClientLogin", "UserLogin", new
+                    {
+                        reloadPage = true
+                    });
+                }
+
+                string directoryBasePath = Path.Combine(Path.Combine("Uploads", "PaymentUSDT"));
+                string basePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, directoryBasePath);
+
+                if (am.ProtraitPhoto != null && am.ProtraitPhoto.FileName != string.Empty)
+                {
+                    if (Directory.Exists(basePath) == false)
+                    {
+                        Directory.CreateDirectory(basePath);
+                    }
+
+                    string ranAlphaNum = Misc.GenerateRandomAlphNumeric(5);
+                    string filename = string.Format("{1}_{0}", am.ProtraitPhoto.FileName, ranAlphaNum);
+
+                    string path = Path.Combine(basePath, filename);
+
+                    using (var stream = new FileStream(path, FileMode.Create))
+                    {
+                        am.ProtraitPhoto.CopyTo(stream);
+                    }
+
+                    am.ProtraitPhotoPath = filename;
+                }
+                else if ((am.ProtraitPhotoPath == "" || am.ProtraitPhotoPath == null))
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidImage
+                    });
+                }
+
+                decimal dAmount = 0;
+                Decimal.TryParse(am.Amount, out dAmount);
+
+                if (dAmount == 0)
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidAmount
+                    });
+                }
+
+                if (Helper.NVL(am.TransactionID) == "")
+                {
+                    Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                    return Json(new
+                    {
+                        status = false,
+                        message = Resources.PackBuddyShared.lblInvalidTransactionID
+                    });
+                }
+
+                using (SpeedyDbContext dbContext = new SpeedyDbContext(optionBuilder.Options))
+                {
+                    var tempo = new CvdDepositUsdt();
+                    tempo.CusrUsername = usernameCookie;
+                    tempo.CdepoAmount = dAmount;
+                    tempo.CdepoImagepath = am.ProtraitPhotoPath != null && am.ProtraitPhotoPath.Contains("//") ? tempo.CdepoImagepath : am.ProtraitPhotoPath;
+                    tempo.CdepoWalletAddress = "";//not important. We won't know they using what address to transfer
+                    tempo.CdepoWalletNetwork = "";//not important
+                    tempo.CdepoWalletCompanyAddress = am.WalletAddress;
+                    tempo.CdepoWalletCompanyNetwork = am.SelectedWalletNetworkType;
+                    tempo.CdepoTransactionId = am.TransactionID;
+                    tempo.CdepoStatus = 0;
+                    tempo.CdepoCreatedon = DateTime.Now;
+                    tempo.CdepoUpdatedby = "";
+
+                    dbContext.CvdDepositUsdt.Add(tempo);
+                    dbContext.SaveChanges();
+                }
+
+                return RechargeUSDTListing();
+            }
+            catch (Exception e)
+            {
+                Response.StatusCode = (int)HttpStatusCode.BadRequest;
+                return Json(new
+                {
+                    status = false,
+                    message = e.ToString()
+                });
+            }
+        }
+        #endregion
+
+        #region RechargeUSDTListing
+        public ActionResult RechargeUSDTListing()
+        {
+            string usernameCookie = "";
+            try
+            {
+                string encryptedUsernameCookie = HttpContext.Request.Cookies["UserIDCookie"];
+                usernameCookie = Authentication.Decrypt(encryptedUsernameCookie);
+            }
+            catch (Exception e)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var am = new PaginationRedPacketModel();
+
+            if (usernameCookie == "" || usernameCookie == null)
+            {
+                return RedirectToAction("ClientLogin", "UserLogin", new
+                {
+                    reloadPage = true
+                });
+            }
+
+            var dsAdmin = MerchantGeneralDB.GetDepositUSDTByUsername(usernameCookie);
+
+            //Not completed task
+            foreach (DataRow dr in dsAdmin.Tables[0].Rows)
+            {
+                RedPacketModel temp = new RedPacketModel();
+                temp.ID = int.Parse(dr["CDEPO_ID"].ToString());
+                temp.TransactionID = dr["CDEPO_TRANSACTION_ID"].ToString();
+                temp.CompanyWalletAddress = dr["CDEPO_WALLET_COMPANY_ADDRESS"].ToString();
+                temp.CompanyWalletNetwork = dr["CDEPO_WALLET_COMPANY_NETWORK"].ToString();
+                temp.Username = dr["CUSR_USERNAME"].ToString();
+                temp.Amount = decimal.Parse(dr["CDEPO_AMOUNT"].ToString());
+                temp.CreatedOn = DateTime.Parse(dr["CDEPO_CREATEDON"].ToString()).ToString("dd/MM/yyyy HH:mm");
+
+                if (dr["CDEPO_STATUS"].ToString() == "0")
+                {
+                    temp.Status = Resources.PackBuddyShared.lblPending;
+                }
+                else if (dr["CDEPO_STATUS"].ToString() == "1")
+                {
+                    temp.Status = Resources.PackBuddyShared.lblApprove;
+                }
+                else if (dr["CDEPO_STATUS"].ToString() == "-1")
+                {
+                    temp.Status = Resources.PackBuddyShared.lblReject;
+                }
+
+                am.List.Add(temp);
+            }
+
+            return View("RechargeUSDTListing", am);
         }
         #endregion
     }

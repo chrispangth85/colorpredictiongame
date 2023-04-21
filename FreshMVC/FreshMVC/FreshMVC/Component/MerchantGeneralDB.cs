@@ -302,5 +302,30 @@ namespace FreshMVC.Component
             return ds;
         }
         #endregion
+
+        #region GetDepositUSDTByUsername
+        public static DataSet GetDepositUSDTByUsername(string username)
+        {
+            SqlConnection sqlConn = DBConn.GetConnection();
+            SqlDataAdapter da = new SqlDataAdapter();
+
+            SqlCommand sqlComm = new SqlCommand("SP_GetDepositUSDTByUsername", sqlConn);
+            sqlComm.CommandType = CommandType.StoredProcedure;
+
+            SqlParameter pUsername = sqlComm.Parameters.Add("@username", SqlDbType.NVarChar);
+            pUsername.Direction = ParameterDirection.Input;
+            pUsername.Value = username;
+
+            da.SelectCommand = sqlComm;
+            DataSet ds = new DataSet();
+
+            sqlConn.Open();
+            da.Fill(ds);
+
+            sqlConn.Close();
+
+            return ds;
+        }
+        #endregion
     }
 }

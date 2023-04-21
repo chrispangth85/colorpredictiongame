@@ -102,7 +102,7 @@
             });
 
             $("#AdminPermissionSetup").click(function (evt) {
-                removeActiveClass();
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#AdminPermissionSetup').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -124,9 +124,31 @@
                 });
             });
 
+            $("#dailyReport").click(function (evt) {
+                $('#dailyReport').addClass('active');
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/dailyReport",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
 
             $("#adminListing").click(function (evt) {
-                removeActiveClass();
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#adminListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -150,7 +172,7 @@
 
 
             $("#systemConfiguration").click(function (evt) {
-                removeActiveClass();
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#systemConfiguration').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -173,8 +195,8 @@
             });
 
             $("#companyWallet").click(function (evt) {
-                removeActiveClass();
-                $('#systemConfiguration').addClass('active');
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#companyWallet').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
                 $.ajax({
@@ -195,15 +217,14 @@
                 });
             });
 
-
-            $("#countryExchangeRate").click(function (evt) {
-                removeActiveClass();
-                $('#systemConfiguration').addClass('active');
+            $("#exchangeRate").click(function (evt) {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#exchangeRate').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
                 $.ajax({
                     type: "POST",
-                    url: "/AdminGeneral/CountryListing",
+                    url: "/AdminGeneral/ExchangeRate",
                     data: {
                     },
                     success: function (data) {
@@ -217,33 +238,10 @@
                         alert(errorM);
                     }
                 });
-            });
-
-            $("#dailyReport").click(function (evt) {
-                removeActiveClass();
-                $('#dailyReport').addClass('active');
-                $('.page-loader-wrapper').show();
-                evt.preventDefault();
-                $.ajax({
-                    type: "POST",
-                    url: "/AdminGeneral/dailyReport",
-                    data: {
-                    },
-                    success: function (data) {
-                        $('.page-loader-wrapper').hide();
-                        $("#main-content").html(data);
-                    },
-                    error: function (xhr, status, error) {
-                        $('.page-loader-wrapper').hide();
-                        var errorM = xhr.responseText;
-                        errorM = errorM.replace('""', '');
-                        alert(errorM);
-                    }
-                });
-            });
+            });            
 
             $("#lotteryBetListing").click(function (evt) {
-                removeActiveClass();
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#lotteryBetListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -266,7 +264,7 @@
             });
 
             $("#gameListing").click(function (evt) {
-                removeActiveClass();
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#gameListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -289,7 +287,7 @@
             });
 
             $("#sessionListing").click(function (evt) {
-                removeActiveClass();
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#sessionListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -312,9 +310,10 @@
             });
 
             $("#bannerListing").click(function (evt) {
-                removeActiveClass();
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#bannerListing').addClass('active');
                 $('.page-loader-wrapper').show();
+                $('#bannerListing').addClass('active');
                 evt.preventDefault();
                 $.ajax({
                     type: "POST",
@@ -335,7 +334,10 @@
             });
 
             $("#cashWalletLogs").click(function (evt) {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#cashWalletLogs').addClass('active');
                 $('.page-loader-wrapper').show();
+                $('#cashWalletLogs').addClass('active');
                 evt.preventDefault();
                 $.ajax({
                     type: "POST",
@@ -355,9 +357,36 @@
                 });
             });
 
-            $("#rechargeListing").click(function (evt) {
+            $("#rechargeTopUp").click(function (evt) {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#rechargeTopUp').addClass('active');
                 $('.page-loader-wrapper').show();
+                $('#rechargeTopUp').addClass('active');
                 evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/CashTopUp",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+            
+
+            $("#rechargeListing").click(function (evt) {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#rechargeListing').addClass('active');
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();                
                 $.ajax({
                     type: "POST",
                     url: "/AdminGeneral/RechargeListing",
@@ -376,8 +405,33 @@
                 });
             });
 
-            $("#withdrawalListing").click(function (evt) {
+            $("#rechargeUSDTListing").click(function (evt) {
                 $('.page-loader-wrapper').show();
+                $('#rechargeUSDTListing').addClass('active');
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/RechargeUSDTListing",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
+            $("#withdrawalListing").click(function (evt) {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#withdrawalListing').addClass('active');
+                $('.page-loader-wrapper').show();
+                $('#withdrawalListing').addClass('active');
                 evt.preventDefault();
                 $.ajax({
                     type: "POST",
@@ -397,8 +451,57 @@
                 });
             });
 
-            $("#withdrawalLogs").click(function (evt) {
+            $("#coinwithdrawalListing").click(function (evt) {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#coinwithdrawalListing').addClass('active');
                 $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/CoinWithdrawalListing",
+                    data: {
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
+            $("#coinwithdrawalLogs").click(function (evt) {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#coinwithdrawalLogs').addClass('active');
+                $('.page-loader-wrapper').show();
+                evt.preventDefault();
+                $.ajax({
+                    type: "POST",
+                    url: "/AdminGeneral/withdrawalLogs",
+                    data: { type: "coin"
+                    },
+                    success: function (data) {
+                        $('.page-loader-wrapper').hide();
+                        $("#main-content").html(data);
+                    },
+                    error: function (xhr, status, error) {
+                        $('.page-loader-wrapper').hide();
+                        var errorM = xhr.responseText;
+                        errorM = errorM.replace('""', '');
+                        alert(errorM);
+                    }
+                });
+            });
+
+            $("#withdrawalLogs").click(function (evt) {
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
+                $('#withdrawalLogs').addClass('active');
+                $('.page-loader-wrapper').show();
+                $('#withdrawalLogs').addClass('active');
                 evt.preventDefault();
                 $.ajax({
                     type: "POST",
@@ -419,7 +522,7 @@
             });
 
             $("#productListing").click(function (evt) {
-                removeActiveClass();
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#productListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -441,9 +544,9 @@
                 });
             });
 
-            
+
             $("#userListing").click(function (evt) {
-                removeActiveClass();
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#userListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -466,7 +569,7 @@
             });
 
             $("#redpacketListing").click(function (evt) {
-                removeActiveClass();
+                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
                 $('#redpacketListing').addClass('active');
                 $('.page-loader-wrapper').show();
                 evt.preventDefault();
@@ -487,11 +590,7 @@
                     }
                 });
             });
-            function removeActiveClass() {
-                $(".mainMenuKH li").removeClass("active");//this will remove the active class from previously active menu item
-                $("#systemConfiguration").removeClass("active");
-                $("#dailyReport").removeClass("active");
-            }
+
         });
     </script>
 </head>
@@ -586,121 +685,162 @@
                                 <li><a href="./Home"><i class="icon-speedometer"></i><span>HR Dashboard</span></a></li>
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("UserType") == "admin")
                                 {
-                                    <li>
-                                        <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuAdmin</span></a>
-                                        <ul class="mainMenuKH">
-                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewAdminListing") == "true")
+                                <li>
+                                    <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuAdmin</span></a>
+                                    <ul class="mainMenuKH">
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewAdminListing") == "true")
                                             {
-                                                <li id="adminListing" style="cursor:pointer"><a>@resShared.mnuAdminListing</a></li>
+                                        <li id="adminListing" style="cursor:pointer"><a>@resShared.mnuAdminListing</a></li>
                                             }
-                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewAdminAccessControl") == "true")
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewAdminAccessControl") == "true")
                                             {
-                                                <li id="AdminPermissionSetup" style="cursor:pointer"><a>@resShared.mnuAccessControl</a></li>
+                                        <li id="AdminPermissionSetup" style="cursor:pointer"><a>@resShared.mnuAccessControl</a></li>
                                             }
-                                        </ul>
-                                    </li>
+                                    </ul>
+                                </li>
                                 }
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewUserListing") == "true")
                                 {
-                                    <li>
-                                        <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuUser</span></a>
-                                        <ul class="mainMenuKH">
-                                            <li id="userListing" style="cursor:pointer"><a>@resShared.mnuUserListing</a></li>
-                                        </ul>
-                                    </li>
+                                <li>
+                                    <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuUser</span></a>
+                                    <ul class="mainMenuKH">
+                                        <li id="userListing" style="cursor:pointer"><a>@resShared.mnuUserListing</a></li>
+                                    </ul>
+                                </li>
                                 }
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewProductListing") == "true")
                                 {
-                                    <li>
-                                        <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuProduct</span></a>
-                                        <ul class="mainMenuKH">
-                                            <li id="productListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
-                                        </ul>
-                                    </li>
+                                <li>
+                                    <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuProduct</span></a>
+                                    <ul class="mainMenuKH">
+                                        <li id="productListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
+                                    </ul>
+                                </li>
                                 }
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewProductListing") == "true" ||
-                                @HttpContextAccessor.HttpContext.Session.GetString("ViewSessionListing") == "true" ||
-                                @HttpContextAccessor.HttpContext.Session.GetString("ViewLotteryBetListing") == "true")
+                             @HttpContextAccessor.HttpContext.Session.GetString("ViewSessionListing") == "true" ||
+                             @HttpContextAccessor.HttpContext.Session.GetString("ViewLotteryBetListing") == "true")
                                 {
-                                    <li>
-                                        <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuGame</span></a>
-                                        <ul class="mainMenuKH">
-                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewGameListing") == "true")
+                                <li>
+                                    <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuGame</span></a>
+                                    <ul class="mainMenuKH">
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewGameListing") == "true")
                                             {
-                                                <li id="gameListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
+                                        <li id="gameListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
                                             }
-                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewSessionListing") == "true")
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewSessionListing") == "true")
                                             {
-                                                <li id="sessionListing" style="cursor:pointer"><a>@resShared.mnuSessionListing</a></li>
+                                        <li id="sessionListing" style="cursor:pointer"><a>@resShared.mnuSessionListing</a></li>
                                             }
-                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewLotteryBetListing") == "true")
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewLotteryBetListing") == "true")
                                             {
-                                                <li id="lotteryBetListing" style="cursor:pointer"><a>@resShared.mnuLotteryBetListing</a></li>
+                                        <li id="lotteryBetListing" style="cursor:pointer"><a>@resShared.mnuLotteryBetListing</a></li>
                                             }
-                                        </ul>
-                                    </li>
+                                    </ul>
+                                </li>
                                 }
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewRedPacket") == "true")
                                 {
-                                    <li>
-                                        <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuRedPacket</span></a>
-                                        <ul class="mainMenuKH">
-                                            <li id="redpacketListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
-                                        </ul>
-                                    </li>
+                                <li>
+                                    <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuRedPacket</span></a>
+                                    <ul class="mainMenuKH">
+                                        <li id="redpacketListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
+                                    </ul>
+                                </li>
                                 }
                                 @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewBannerListing") == "true")
                                 {
-                                    <li>
-                                        <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuBanner</span></a>
-                                        <ul class="mainMenuKH">
-                                            <li id="bannerListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
-                                        </ul>
-                                    </li>
+                                <li>
+                                    <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuBanner</span></a>
+                                    <ul class="mainMenuKH">
+                                        <li id="bannerListing" style="cursor:pointer"><a>@resShared.mnuListing</a></li>
+                                    </ul>
+                                </li>
                                 }
-                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewRechargeListing") == "true" ||
-                               @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalListing") == "true" ||
-                               @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalLog") == "true")
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewTopUp") == "true")
                                 {
-                                    <li>
-                                        <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuTransaction</span></a>
-                                        <ul class="mainMenuKH">
-                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewCashWalletLog") == "true")
+                                <li>
+                                    <a class="has-arrow"><i class="icon-users"></i><span>@resShared.mnuWallet</span></a>
+                                    <ul class="mainMenuKH">
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewTopUp") == "true")
                                             {
-                                                <li id="cashWalletLogs" style="cursor:pointer"><a>@resShared.mnuCashWalletLog</a></li>
+                                        <li id="rechargeTopUp"><a><i class="icon-settings"></i><span>@resShared.mnuCashTopUp</span></a></li>
                                             }
-                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewRechargeListing") == "true")
-                                            {
-                                                <li id="rechargeListing" style="cursor:pointer"><a>@resShared.mnuRechargeListing</a></li>
-                                            }
-                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalListing") == "true")
-                                            {
-                                                <li id="withdrawalListing" style="cursor:pointer"><a>@resShared.mnuWithdrawalListing</a></li>
-                                            }
-                                            @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalLog") == "true")
-                                            {
-                                                <li id="withdrawalLogs" style="cursor:pointer"><a>@resShared.mnuWithdrawalLog</a></li>
-                                            }
-                                        </ul>
-                                    </li>
+                                    </ul>
+                                </li>
                                 }
-                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewConfiguration") == "true")
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewCashWalletLog") == "true" ||
+                                 @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalListing") == "true" ||
+                                @HttpContextAccessor.HttpContext.Session.GetString("ViewRecharge") == "true" ||
+                                @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalListing") == "true" ||
+                                @HttpContextAccessor.HttpContext.Session.GetString("ViewCoinWithdrawalList") == "true" ||
+                                @HttpContextAccessor.HttpContext.Session.GetString("ViewCoinWithdrawalLog") == "true" ||
+                                @HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalLog") == "true")
                                 {
-                                    <li>
-                                        <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuSystemConfiguration</span></a>
-                                        <ul class="mainMenuKH">
-                                            <li id="systemConfiguration" style="cursor:pointer"><a>@resShared.mnuSettings</a></li>
-                                        </ul>
-                                        <ul class="mainMenuKH">
-                                            <li id="companyWallet" style="cursor:pointer"><a>@resShared.mnuCompanyWallet</a></li>
-                                        </ul>
-                                        <ul class="mainMenuKH">
-                                            <li id="countryExchangeRate" style="cursor:pointer"><a>@resShared.mnuCountryExchangeRate</a></li>
-                                        </ul>
-                                    </li>
+                                <li>
+                                    <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuTransaction</span></a>
+                                    <ul class="mainMenuKH">
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewCashWalletLog") == "true")
+                                        {
+                                            <li id="cashWalletLogs" style="cursor:pointer"><a>@resShared.mnuCashWalletLog</a></li>
+                                        }
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewRecharge") == "true")
+                                        {
+                                            <li id="rechargeListing" style="cursor:pointer"><a>@resShared.mnuRechargeListing</a></li>
+                                        }
+                                        <li id="rechargeUSDTListing" style="cursor:pointer"><a>@resShared.mnuRechargeListing USDT</a></li>
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalListing") == "true")
+                                        {
+                                            <li id="withdrawalListing" style="cursor:pointer"><a>@resShared.mnuWithdrawalListing</a></li>
+                                        }
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewWithdrawalLog") == "true")
+                                        {
+                                            <li id="withdrawalLogs" style="cursor:pointer"><a>@resShared.mnuWithdrawalLog</a></li>
+                                        }
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewCoinWithdrawalList") == "true")
+                                        {
+                                            <li id="coinwithdrawalListing" style="cursor:pointer"><a>@resShared.mnuCoinWithdrawalListing</a></li>
+                                        }
+                                        @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewCoinWithdrawalLog") == "true")
+                                        {
+                                            <li id="coinwithdrawalLogs" style="cursor:pointer"><a>@resShared.mnuCoinWithdrawalLog</a></li>
+                                        }
+                                    </ul>
+                                </li>
                                 }
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewSettings") == "true" ||
+                                 @HttpContextAccessor.HttpContext.Session.GetString("ViewWallet") == "true" ||
+                                @HttpContextAccessor.HttpContext.Session.GetString("ViewExchangeRate") == "true")
+                                {
+                                <li>
+                                    <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuSystemConfiguration</span></a>
+                                    @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewSettings") == "true")
+                                            {
+                                    <ul class="mainMenuKH">
+                                        <li id="systemConfiguration" style="cursor:pointer"><a>@resShared.mnuSettings</a></li>
+                                    </ul>
+                                }
+                                    @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewWallet") == "true")
+                                            {
+                                    <ul class="mainMenuKH">
+                                        <li id="companyWallet" style="cursor:pointer"><a>@resShared.mnuCompanyWallet</a></li>
+                                    </ul>
+                                }
+                                    @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewExchangeRate") == "true")
+                                            {
+                                    <ul class="mainMenuKH">
+                                        <li id="exchangeRate" style="cursor:pointer"><a>@resShared.mnuExchangeRate</a></li>
+                                    </ul>
+                                }
+                                </li>
+                                }
+                                @if (@HttpContextAccessor.HttpContext.Session.GetString("ViewDailyReports") == "true")
+                                {
                                 <li id="dailyReport">
-                                    <a class="has-arrow"><i class="icon-speedometer"></i><span>@resShared.mnuDailyReport</span></a>
+                                    <a><i class="icon-speedometer"></i><span>@resShared.mnuDailyReport</span></a>
+                                </li>
+                                }
+                                <li id="">
                                 </li>
                             </ul>
                         </nav>
@@ -714,16 +854,118 @@
                 <div class="block-header">
                     <div class="row">
                         <div class="col-lg-6 col-md-8 col-sm-12">
-                            <h2>Dashboard</h2>
+                            <h2>@resShared.lblDashboard</h2>
                             <ul class="breadcrumb">
                                 <li class="breadcrumb-item"><a href="./Home"><i class="icon-home"></i></a></li>
-                                <li class="breadcrumb-item active">Dashboard</li>
+                                <li class="breadcrumb-item active">@resShared.lblDashboard</li>
                             </ul>
                         </div>
                     </div>
                 </div>
 
             </div>
+
+            <div class="row clearfix">
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                    <div class="card text-center bg-info">
+                        <div class="body">
+                            <div class="p-15 text-light">
+                                <h3>@ViewBag.TopUp</h3>
+                                <span>@resShared.lblTotalTopUp</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                    <div class="card text-center bg-info">
+                        <div class="body">
+                            <div class="p-15 text-light">
+                                <h3>@ViewBag.TotalWithdrawal</h3>
+                                <span>@resShared.lblTotalWithdrawal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                    <div class="card text-center bg-info">
+                        <div class="body">
+                            <div class="p-15 text-light">
+                                <h3>@ViewBag.TodayTopUp</h3>
+                                <span>@resShared.lblTodayTopUp</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                    <div class="card text-center bg-info">
+                        <div class="body">
+                            <div class="p-15 text-light">
+                                <h3>@ViewBag.TodayWithdrawal</h3>
+                                <span>@resShared.lblTodayWithdrawal</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                    <div class="card text-center bg-info">
+                        <div class="body">
+                            <div class="p-15 text-light">
+                                <h3>@ViewBag.TotalPlatformWalletBalance</h3>
+                                <span>@resShared.lblTotalPlatformWalletBalance</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                    <div class="card text-center bg-info">
+                        <div class="body">
+                            <div class="p-15 text-light">
+                                <h3>@ViewBag.TotalMember</h3>
+                                <span>@resShared.lblTotalMember</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                    <div class="card text-center bg-info">
+                        <div class="body">
+                            <div class="p-15 text-light">
+                                <h3>@ViewBag.TotalNewMember</h3>
+                                <span>@resShared.lblTotalNewMember</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                    <div class="card text-center bg-info">
+                        <div class="body">
+                            <div class="p-15 text-light">
+                                <h3>@ViewBag.TotalRedPacket</h3>
+                                <span>@resShared.lblTotalRedPacket</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-lg-3 col-md-4 col-sm-4">
+                    <div class="card text-center bg-info">
+                        <div class="body">
+                            <div class="p-15 text-light">
+                                <h3>@ViewBag.TotalClaimedWallet</h3>
+                                <span>@resShared.lblTotalClaimedWallet</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
     </div>

@@ -54,10 +54,10 @@
                 <h3 class="mb-1">@resShared.lblWelcomeToMall </h3>
                 <p class="text-muted mb-4"></p>
 
-                <select name="countries" id="countries" style="width:border:none;text-align:left;width:100%;" class="">
-                    <option value='91' data-image="images/msdropdown/icons/blank.gif" data-imagecss="flag in" data-title="Malaysia">India(+91)</option>
+                <!--<select name="countries" id="countries" style="width:border:none;text-align:left;width:100%;" class="">
+                    <option value='91' data-image="images/msdropdown/icons/blank.gif" data-imagecss="flag in" data-title="Malaysia">India(+91)</option>-->
                     @*<option value='60' data-image="images/msdropdown/icons/blank.gif" data-imagecss="flag my" data-title="Malaysia">Malaysia(+60)</option>*@
-                </select>
+                <!--</select>-->
 
                 <div class="form-group form-floating is-valid">
                     <input type="tel" class="form-control" value="" id="username" placeholder="@@resShared.lblPhone" autocomplete="off">
@@ -146,7 +146,7 @@
                     $.ajax({
                         type: "POST",
                         url: "/UserLogin/ValidateLogin",
-                        data: { userName: $('#username').val(), countrycode: $('#countries').val(), password: $('#password').val() },
+                        data: { userName: $('#username').val(), countrycode: ''/*$('#countries').val()*/, password: $('#password').val() },
                         success: function (data) {
                             location.href = "/User/Home";
                         },

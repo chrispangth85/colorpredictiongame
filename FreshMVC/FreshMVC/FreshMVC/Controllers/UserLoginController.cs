@@ -75,8 +75,8 @@ namespace FreshMVC.Controllers
                 string email = "";
 
                 //help user to remove the initial 0
-                userName = Misc.MassagePhoneNumber(userName, countrycode);
-                userName = string.Format("{0}{1}", countrycode, userName);
+                userName = Misc.MassagePhoneNumber(userName, Helper.NVL(countrycode));
+                userName = string.Format("{0}{1}", Helper.NVL(countrycode), userName);
 
                 var ds = AdminDB.GetUserByUsername(userName, out int ok, out string msg);
                 if (ds.Tables[0].Rows.Count == 0)
@@ -230,9 +230,10 @@ namespace FreshMVC.Controllers
         {
             try
             {
+                countrycode = Helper.NVL(countrycode);
                 phone = Misc.MassagePhoneNumber(phone, countrycode);
 
-                if(countrycode == "91" && phone.Length != 10)
+                if(phone.Length < 8)
                 {
                     Response.StatusCode = (int)HttpStatusCode.BadRequest;
                     return Json(new
@@ -315,6 +316,14 @@ namespace FreshMVC.Controllers
                     usr.CusrDeletionstate = false;
 
                     dbContext.CvdUser.Add(usr);
+                    dbContext.SaveChanges();
+
+                    CvdUserInfo usrInfo = new CvdUserInfo();
+                    usrInfo.CusrUsername = phone;
+                    usrInfo.MemberWalletAddress = "";
+                    usrInfo.MemberWalletNetwork = "";
+
+                    dbContext.CvdUserInfo.Add(usrInfo);
                     dbContext.SaveChanges();
 
                     //update the level 2-5

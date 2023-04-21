@@ -229,7 +229,7 @@
     <value>Block</value>
   </data>
   <data name="lblBuy" xml:space="preserve">
-    <value>Buy Rate</value>
+    <value>Buy</value>
   </data>
   <data name="lblBuyRateIsRequired" xml:space="preserve">
     <value>Buy Rate is required</value>
@@ -261,8 +261,11 @@
   <data name="lblClose" xml:space="preserve">
     <value>Close</value>
   </data>
+  <data name="lblCoinWithdrawal" xml:space="preserve">
+    <value>Coin Withdrawal</value>
+  </data>
   <data name="lblCoinWithdrawalCharges" xml:space="preserve">
-    <value>USDT Withdrawal Charges</value>
+    <value>Coin Withdrawal Charges</value>
   </data>
   <data name="lblCompleted" xml:space="preserve">
     <value>Completed</value>
@@ -279,20 +282,11 @@
   <data name="lblConfirmPassword" xml:space="preserve">
     <value>Confirm Password</value>
   </data>
+  <data name="lblConvertedAmount" xml:space="preserve">
+    <value>Converted Amount</value>
+  </data>
   <data name="lblCopyrightz" xml:space="preserve">
     <value>Copyright</value>
-  </data>
-  <data name="lblCountryCode" xml:space="preserve">
-    <value>Country Code</value>
-  </data>
-  <data name="lblCountryCodeIsRequired" xml:space="preserve">
-    <value>Country Code is required</value>
-  </data>
-  <data name="lblCountryName" xml:space="preserve">
-    <value>Country Name</value>
-  </data>
-  <data name="lblCountryNameIsRequired" xml:space="preserve">
-    <value>Country Name is required</value>
   </data>
   <data name="lblCreatedOn" xml:space="preserve">
     <value>Created On</value>
@@ -308,6 +302,9 @@
   </data>
   <data name="lblCurrPwd" xml:space="preserve">
     <value>Current password</value>
+  </data>
+  <data name="lblDashboard" xml:space="preserve">
+    <value>Dashboard</value>
   </data>
   <data name="lblDeal" xml:space="preserve">
     <value>Deal</value>
@@ -336,14 +333,26 @@
   <data name="lblEnd" xml:space="preserve">
     <value>End</value>
   </data>
+  <data name="lblEnterYourPassword" xml:space="preserve">
+    <value>Enter your login password</value>
+  </data>
+  <data name="lblEnterYourWalletAddress" xml:space="preserve">
+    <value>Enter your wallet address</value>
+  </data>
   <data name="lblEtherum" xml:space="preserve">
     <value>Ethereum</value>
+  </data>
+  <data name="lblExchangeRate" xml:space="preserve">
+    <value>Exchange Rate</value>
   </data>
   <data name="lblExtraInfo" xml:space="preserve">
     <value>Extra Info</value>
   </data>
   <data name="lblFailed" xml:space="preserve">
     <value>Failed</value>
+  </data>
+  <data name="lblFee" xml:space="preserve">
+    <value>Fee</value>
   </data>
   <data name="lblFifthLevel" xml:space="preserve">
     <value>Fifth Level</value>
@@ -365,6 +374,9 @@
   </data>
   <data name="lblFirstName" xml:space="preserve">
     <value>First Name</value>
+  </data>
+  <data name="lblFirstRecharge" xml:space="preserve">
+    <value>First Recharge</value>
   </data>
   <data name="lblForgetPassword" xml:space="preserve">
     <value>Forget Password</value>
@@ -435,8 +447,14 @@
   <data name="lblInvalidTitle" xml:space="preserve">
     <value>Invalid Title</value>
   </data>
+  <data name="lblInvalidTransactionID" xml:space="preserve">
+    <value>Invalid Transaction ID</value>
+  </data>
   <data name="lblInvalidUsername" xml:space="preserve">
     <value>Invalid username</value>
+  </data>
+  <data name="lblInvalidWalletAddress" xml:space="preserve">
+    <value>Invalid Wallet Address</value>
   </data>
   <data name="lblIsActive" xml:space="preserve">
     <value>Is Active</value>
@@ -509,6 +527,9 @@
   </data>
   <data name="lblNavigate" xml:space="preserve">
     <value>Navigate</value>
+  </data>
+  <data name="lblNetwork" xml:space="preserve">
+    <value>Network</value>
   </data>
   <data name="lblNetworkType" xml:space="preserve">
     <value>Network Type</value>
@@ -649,7 +670,7 @@
     <value>Recharge Amount</value>
   </data>
   <data name="lblRechargeCommission" xml:space="preserve">
-    <value>Recharge Commission</value>
+    <value>First Charge Bonus</value>
   </data>
   <data name="lblRechargeTime" xml:space="preserve">
     <value>Recharge Time</value>
@@ -678,6 +699,9 @@
   <data name="lblReject" xml:space="preserve">
     <value>Reject</value>
   </data>
+  <data name="lblRejected" xml:space="preserve">
+    <value>Rejected</value>
+  </data>
   <data name="lblRemark" xml:space="preserve">
     <value>Remark</value>
   </data>
@@ -700,7 +724,7 @@
     <value>Select Bank Card</value>
   </data>
   <data name="lblSell" xml:space="preserve">
-    <value>Sell Rate</value>
+    <value>Sell</value>
   </data>
   <data name="lblSellRateIsRequired" xml:space="preserve">
     <value>Sell Rate is required</value>
@@ -732,6 +756,9 @@
   <data name="lblStatus" xml:space="preserve">
     <value>Status</value>
   </data>
+  <data name="lblSubmitPaymentProof" xml:space="preserve">
+    <value>Submit Payment Proof</value>
+  </data>
   <data name="lblSuccess" xml:space="preserve">
     <value>Success</value>
   </data>
@@ -750,11 +777,23 @@
   <data name="lblTo" xml:space="preserve">
     <value>To</value>
   </data>
+  <data name="lblToAccount" xml:space="preserve">
+    <value>To Account</value>
+  </data>
+  <data name="lblTodayTopUp" xml:space="preserve">
+    <value>Today Topup</value>
+  </data>
+  <data name="lblTodayWithdrawal" xml:space="preserve">
+    <value>Today Withdrawal</value>
+  </data>
   <data name="lblTopUp" xml:space="preserve">
     <value>TopUp</value>
   </data>
   <data name="lblTotalBalance" xml:space="preserve">
     <value>Total Balance</value>
+  </data>
+  <data name="lblTotalClaimedWallet" xml:space="preserve">
+    <value>Total Claimed Wallet</value>
   </data>
   <data name="lblTotalCommission" xml:space="preserve">
     <value>Total Commission</value>
@@ -777,8 +816,23 @@
   <data name="lblTotalInterest" xml:space="preserve">
     <value>Total Interest</value>
   </data>
+  <data name="lblTotalMember" xml:space="preserve">
+    <value>Total Member</value>
+  </data>
+  <data name="lblTotalNewMember" xml:space="preserve">
+    <value>Total New Member</value>
+  </data>
+  <data name="lblTotalPlatformWalletBalance" xml:space="preserve">
+    <value>Total Platform Wallet Balance</value>
+  </data>
   <data name="lblTotalRecharge" xml:space="preserve">
     <value>Total Recharge</value>
+  </data>
+  <data name="lblTotalRedPacket" xml:space="preserve">
+    <value>Total Red Packet Give Out</value>
+  </data>
+  <data name="lblTotalTopUp" xml:space="preserve">
+    <value>Total Topup</value>
   </data>
   <data name="lblTotalWithdrawal" xml:space="preserve">
     <value>Total Withdrawal</value>
@@ -789,8 +843,14 @@
   <data name="lblTransactionDate" xml:space="preserve">
     <value>Transaction Date</value>
   </data>
+  <data name="lblTransactionID" xml:space="preserve">
+    <value>Transaction ID</value>
+  </data>
   <data name="lblTron" xml:space="preserve">
     <value>Tron</value>
+  </data>
+  <data name="lblTRX" xml:space="preserve">
+    <value>TRX</value>
   </data>
   <data name="lblType" xml:space="preserve">
     <value>Type</value>
@@ -800,6 +860,9 @@
   </data>
   <data name="lblUpdateSuccessfully" xml:space="preserve">
     <value>Update Successfully</value>
+  </data>
+  <data name="lblUSDTTRC" xml:space="preserve">
+    <value>USDT (TRC20)</value>
   </data>
   <data name="lblUsed" xml:space="preserve">
     <value>Used</value>
@@ -861,6 +924,9 @@
   <data name="lblWithdrawalAmount" xml:space="preserve">
     <value>Withdrawal Amount</value>
   </data>
+  <data name="lblWithdrawalSuccessfully" xml:space="preserve">
+    <value>Withdraw Successfully</value>
+  </data>
   <data name="lblWithdrawHost" xml:space="preserve">
     <value>Withdraw Host</value>
   </data>
@@ -885,17 +951,20 @@
   <data name="mnuCashWalletLog" xml:space="preserve">
     <value>Cash Wallet Log</value>
   </data>
+  <data name="mnuCoinWithdrawalListing" xml:space="preserve">
+    <value>Coin Withdrawal Listing</value>
+  </data>
+  <data name="mnuCoinWithdrawalLog" xml:space="preserve">
+    <value>Coin Withdrawal Log</value>
+  </data>
   <data name="mnuCompanyWallet" xml:space="preserve">
     <value>Company Wallet</value>
   </data>
-  <data name="mnuCountry" xml:space="preserve">
-    <value>Country Exchange Rate</value>
-  </data>
-  <data name="mnuCountryExchangeRate" xml:space="preserve">
-    <value>Country Exchange Rate</value>
-  </data>
   <data name="mnuDailyReport" xml:space="preserve">
     <value>Daily Report</value>
+  </data>
+  <data name="mnuExchangeRate" xml:space="preserve">
+    <value>Exchange Rate</value>
   </data>
   <data name="mnuGame" xml:space="preserve">
     <value>Game</value>
@@ -963,8 +1032,8 @@
   <data name="msgConfirmToReject" xml:space="preserve">
     <value>Are you sure you want to reject this transaction ?</value>
   </data>
-  <data name="msgCountryCodeExists" xml:space="preserve">
-    <value>Country Code Existed</value>
+  <data name="msgCurrencyFound" xml:space="preserve">
+    <value>Currency Found, Please Use Other Name</value>
   </data>
   <data name="msgDurationMustBeLongerThan60Seconds" xml:space="preserve">
     <value>Duration must be longer than 60 seconds</value>
@@ -1045,7 +1114,7 @@
     <value>Phone is not registered</value>
   </data>
   <data name="msgPhoneNumberIndiaMustBe10Digit" xml:space="preserve">
-    <value>Phone number must be 10 digit</value>
+    <value>Phone number must be 8 number and above (including country code)</value>
   </data>
   <data name="msgPleaseAgreeRules" xml:space="preserve">
     <value>You are required to agree with the rules</value>

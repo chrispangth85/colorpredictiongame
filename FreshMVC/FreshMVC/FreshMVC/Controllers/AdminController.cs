@@ -128,6 +128,22 @@ namespace FreshMVC.Controllers
 
             TemporaryAddressModel model = new TemporaryAddressModel();
 
+            var dsHomeData = AdminDB.GetAdminHomeData(out _, out _);
+
+            foreach (DataRow dr in dsHomeData.Tables[0].Rows)
+            {
+                ViewBag.TopUp = decimal.Parse(dr["TotalTopUp"].ToString()).ToString("#,##0.00");
+                ViewBag.TotalWithdrawal = decimal.Parse(dr["TotalWDR"].ToString()).ToString("#,##0.00");
+                ViewBag.TodayTopUp = decimal.Parse(dr["TodayTopUp"].ToString()).ToString("#,##0.00");
+                ViewBag.TodayWithdrawal = decimal.Parse(dr["TodayWDR"].ToString()).ToString("#,##0.00");
+                ViewBag.TotalMember = dr["TotalMember"].ToString();
+                ViewBag.TotalNewMember = dr["TotalNewMember"].ToString();
+
+                ViewBag.TotalPlatformWalletBalance = decimal.Parse(dr["TotalPlatform"].ToString()).ToString("#,##0.00");
+                ViewBag.TotalRedPacket = decimal.Parse(dr["TotalRedPacket"].ToString()).ToString("#,##0.00");
+                ViewBag.TotalClaimedWallet = decimal.Parse(dr["TotalClaimed"].ToString()).ToString("#,##0.00");
+            }
+
             return View("Home", model);
         }
         #endregion

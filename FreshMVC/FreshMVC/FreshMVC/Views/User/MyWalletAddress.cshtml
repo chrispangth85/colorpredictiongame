@@ -1,0 +1,62 @@
+﻿@using FreshMVC.Models
+@using resSharedPB = FreshMVC.Resources.PackBuddyShared;
+@model MemberHomeModel
+
+<script>
+    $(document).ready(function () {
+
+        $("#btnSaveAdd").click(function (evt) {
+            $.ajax({
+                type: "POST",
+                url: "/User/UpdateWalletAddress",
+                data: {
+                    walletAddress: document.getElementById("walletAddressz").value,
+                    network: $("#SelectedWalletNetworkType").val()
+                },
+                success: function (data) {
+                    Swal.fire({
+                        title: "@resSharedPB.lblUpdateSuccessfully",
+                        allowOutsideClick: () => !Swal.isLoading()
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            location.href = "/User/Profile";
+                        }
+                    });
+                    
+                },
+                error: function (xhr, status, error) {
+                    let r = JSON.parse(xhr.responseText);
+                    alertify.dialog('alert').set({ title: 'Hot Mall' }).set({ transition: 'zoom', message: r.message }).show();
+                }
+            });
+        });
+
+    });
+</script>
+
+<section class="section-inner-wrapper p-lg-0 px-3 py-0 overflow-hidden">
+    <form action="">
+        <div class="row">
+            <div class="col-lg-6 mx-auto my-lg-3 my-3">
+
+                <div class="my-4">
+                    <div class="input-group">
+                        <label class="input-group-text" for="">@resSharedPB.lblNetwork</label>
+                        @Html.DropDownListFor(model => model.SelectedWalletNetworkType, @Model.WalletNetworkTypeList, new { @class = "form-select" })
+                    </div>
+                </div>
+                <div class="my-4">
+                    <div class="input-custom max-width-800">
+                        <input class="width-100 " type="text" id="walletAddressz"
+                               placeholder="@resSharedPB.lblWalletAddress" value="@Model.WalletAddress">
+                    </div>
+                </div>
+
+                <div class="my-4">
+                    <a href="#" id="btnSaveAdd"
+                       class="blue-btn-recharge w-100 text-center">@resSharedPB.lblUpdate</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</section>
